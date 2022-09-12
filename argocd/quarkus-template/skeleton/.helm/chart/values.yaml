@@ -2,6 +2,12 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+namespace:
+  enabled: true
+  name: assemble
+  argocd:
+    name: default
+
 replicaCount: 1
 
 image:
