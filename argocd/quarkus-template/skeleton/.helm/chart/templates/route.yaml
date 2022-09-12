@@ -1,0 +1,22 @@
+{{- if .Values.route.enabled -}}
+{{- $fullName := include "quarkus-template.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+  labels:
+    {{- include "quarkus-template.labels" . | nindent 4 }}
+  name: {{ $fullName }}
+  namespace: {{ .Values.namespace.name }}
+spec:
+  host: {{ .Values.route.host }}
+  path: {{.Values.route.path }}
+  port:
+    targetPort: {{ $svcPort }}
+  to:
+    kind: Service
+    name: {{ $fullName }}
+  wildcardPolicy: None
+{{- end }}
