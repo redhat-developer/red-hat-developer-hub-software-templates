@@ -1,0 +1,27 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: {{ .Values.app.name }}-el
+spec:
+  serviceAccountName: pipeline
+  triggers:
+    - bindings:
+        - kind: ClusterTriggerBinding
+          ref: github-push
+      interceptors:
+        - params:
+            - name: eventTypes
+              value: ["push"]
+          ref:
+            name: github
+        - params:
+            - name: filter
+              value: >-
+                (body.ref.contains('{{ .Values.repo.branch }}'))
+            - name: overlays
+              value: null
+          ref:
+            name: cel
+      template:
+        ref: {{ .Values.app.name }}-run-pipeline
