@@ -1,0 +1,6 @@
+app:
+  name: quarkus-app
+  imageUrl: quarkus-app
+
+repo:
+  branch: main

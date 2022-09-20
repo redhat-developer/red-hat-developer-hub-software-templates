@@ -1,0 +1,36 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: {{ .Values.app.name }}-run-pipeline
+spec:
+  params:
+    - name: git-revision
+      description: The git revision
+      default: main
+    - name: git-repo-url
+      description: The repo url
+    - name: output-image
+      description: reference of the image that will get created
+      default: {{ .Values.app.imageUrl }}
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: {{ .Values.app.name }}-pipeline-$(uid)
+      spec:
+        params:
+          - name: source-repo
+            value: $(tt.params.git-repo-url)
+          - name: source-branch
+            value: $(tt.params.git-revision)
+          - name: output-image
+            value: $(tt.params.output-image)
+        pipelineRef:
+          name: {{ .Values.app.name }}-pipeline
+        serviceAccountName: pipeline
+        timeout: 1h0m0s
+        workspaces:
+          - name: {{ .Values.app.name }}-source
+            persistentVolumeClaim:
+              claimName: {{ .Values.app.name }}-source
