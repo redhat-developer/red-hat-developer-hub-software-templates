@@ -63,7 +63,7 @@ spec:
 
   steps:
     - id: template
-      name: Fetch Skeleton + Template
+      name: Generating component
       action: fetch:template
       input:
         url: ./skeleton
@@ -80,7 +80,7 @@ spec:
           http_port: 8080
 
     - id: publish
-      name: Publish
+      name: Publishing to Source Code Repository
       action: publish:github
       input:
         allowedHosts: ["github.com"]
@@ -88,7 +88,7 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
 
     - id: register
-      name: Register
+      name: Registering to the Catalog
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
@@ -96,8 +96,8 @@ spec:
 
   output:
     links:
-      - title: Repository
+      - title: Source Code Repository
         url: ${{ steps.publish.output.remoteUrl }}
-      - title: Open in catalog
+      - title: Open Component in catalog
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
