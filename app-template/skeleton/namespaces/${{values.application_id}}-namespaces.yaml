@@ -1,0 +1,15 @@
+{% for environment in values.environments.split(",") %}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${{values.application_id}}-${{environment}}
+  labels:
+    app : ${{values.application_id}}
+    team: ${{values.owner}}
+    build-namespace: ${{values.application_id}}-build
+    size: ${{values.size}}
+    environment: ${{environment}}
+    goldilocks.fairwinds.com/enabled: "true"
+    argocd.argoproj.io/managed-by: ${{values.application_id}}-build
+{% endfor %}
