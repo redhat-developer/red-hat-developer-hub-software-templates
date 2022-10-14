@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/${{values.application_id}}/${{values.application_id}}-gitops.git
+    repoURL: https://github.com/${{values.organization}}/${{values.application_id}}-gitops.git
     path: components
     directory:
       include: "*.yaml"
