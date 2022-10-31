@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: {{ .Values.app.name }}-pipeline-
+  labels:
+    tekton.dev/pipeline: {{ .Values.app.name }}-pipeline
+    type: pipeline
+spec:
+  params:
+    - name: source-repo
+      value: 'https://github.com/{{ .Values.app.org }}/{{ .Values.app.name }}.git'
+    - name: source-branch
+      value: {{ .Values.repo.branch }}
+    - name: output-image
+      value: {{ .Values.app.name }}-image
+  pipelineRef:
+    name: {{ .Values.app.name }}-pipeline
+  serviceAccountName: pipeline
+  workspaces:
+    - persistentVolumeClaim:
+        claimName: {{ .Values.app.name }}-source
+      name: {{ .Values.app.name }}-source

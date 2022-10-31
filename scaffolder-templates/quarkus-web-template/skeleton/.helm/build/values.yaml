@@ -1,6 +1,8 @@
 app:
   name: quarkus-app
   imageUrl: quarkus-app
+  org: halkyonio
 
 repo:
   branch: main
+
