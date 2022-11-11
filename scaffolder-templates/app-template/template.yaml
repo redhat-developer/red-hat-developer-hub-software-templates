@@ -15,6 +15,7 @@ spec:
       required:
         - application_id
         - owner
+	- organization
         - size
         - environments
         - description
@@ -34,7 +35,15 @@ spec:
           ui:field: OwnerPicker
           ui:options:
             allowedKinds: 
-              - Group                
+              - Group 
+	organization:
+          title: Organization
+          type: string
+          description: Organization of this application
+          ui:field: OrganizationPicker
+          ui:options:
+            allowedKinds:
+              - Group               
         size:
           title: Size
           type: string
@@ -58,13 +67,14 @@ spec:
           description: ${{ parameters.description }}
           size: ${{ parameters.size }}
           owner: ${{ parameters.owner }}
+	  organization: ${{ parameters.organization }}
           environments: ${{ parameters.environments }}
 
     - id: pull-request
       name: make a pr with the new namespaces
       action: publish:github:pull-request
       input:
-        repoUrl: github.com?repo=approved-namespaces&owner=${{ parameters.owner }}
+        repoUrl: github.com?repo=approved-namespaces&owner=${{ parameters.organization }}
         branchName: ${{ parameters.application_id }}
         title: namespaces for ${{ parameters.application_id }}
         description: namespaces for ${{ parameters.application_id }}
@@ -84,7 +94,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.application_id }}
-        repoUrl: github.com?repo=${{ parameters.application_id }}-gitops&owner=${{ parameters.owner }}
+        repoUrl: github.com?repo=${{ parameters.application_id }}-gitops&owner=${{ parameters.organization }}
         repoVisibility: public
         sourcePath: ./app-gitops
         deleteBranchOnMerge: true

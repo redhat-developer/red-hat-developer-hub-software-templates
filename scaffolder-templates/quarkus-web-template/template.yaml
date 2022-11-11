@@ -18,6 +18,7 @@ spec:
       required:
         - component_id
         - owner
+	- organization
         - java_package_name
       properties:
         component_id:
@@ -49,6 +50,14 @@ spec:
           ui:options:
             allowedKinds:
               - Group
+	organization:
+          title: Organization
+          type: string
+          description: Organization of this application
+          ui:field: OrganizationPicker
+          ui:options:
+            allowedKinds:
+              - Group
     - title: Choose a location
       required:
         - repoUrl
@@ -76,6 +85,7 @@ spec:
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
+	  organization: ${{ parameters.organization }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
 
@@ -93,7 +103,33 @@ spec:
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
+ 
+    - id: template-tenant-gitops 
+      name: tenant Argcd Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./app-gitops
+        copyWithoutRender: []
+        values:
+          component_id: ${{ parameters.component_id }}
+          description: ${{ parameters.description }}
+          artifact_id: ${{ parameters.component_id }}
+          java_package_name: ${{ parameters.java_package_name }}
+          owner: ${{ parameters.owner }}
+          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+          http_port: 8080
+          application: ${{ parameters.application }}
+        targetPath: ./tenant-gitops          
 
+    - id: pull-request
+      name: make a pr with the new argocd
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.application.split(":")[1] }}-gitops&owner=${{ parameters.organization }}
+        branchName: ${{ parameters.component_id }}
+        title: argocd apps for ${{ parameters.component_id }}
+        description: argocd apps ${{ parameters.component_id }}
+        sourcePath: ./tenant-gitops
   output:
     links:
       - title: Source Code Repository
