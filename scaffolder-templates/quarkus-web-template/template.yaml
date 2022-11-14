@@ -18,7 +18,7 @@ spec:
       required:
         - component_id
         - owner
-	- organization
+        - organization
         - java_package_name
       properties:
         component_id:
@@ -50,7 +50,7 @@ spec:
           ui:options:
             allowedKinds:
               - Group
-	organization:
+        organization:
           title: Organization
           type: string
           description: Organization of this application
@@ -85,7 +85,7 @@ spec:
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-	  organization: ${{ parameters.organization }}
+          organization: ${{ parameters.organization }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
 
