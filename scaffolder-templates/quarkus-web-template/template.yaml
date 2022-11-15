@@ -118,14 +118,14 @@ spec:
           owner: ${{ parameters.owner }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
-          application: ${{ parameters.application }}
+          organization: ${{ parameters.organization }}
         targetPath: ./tenant-gitops          
 
     - id: pull-request
       name: make a pr with the new argocd
       action: publish:github:pull-request
       input:
-        repoUrl: github.com?repo=${{ parameters.application.split(":")[1] }}-gitops&owner=${{ parameters.organization }}
+        repoUrl: github.com?repo=${{ parameters.organization.split(":")[1] }}-gitops&owner=${{ parameters.organization }}
         branchName: ${{ parameters.component_id }}
         title: argocd apps for ${{ parameters.component_id }}
         description: argocd apps ${{ parameters.component_id }}
