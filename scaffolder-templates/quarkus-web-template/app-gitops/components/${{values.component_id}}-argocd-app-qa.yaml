@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ${{ values.component_id }}-qa
-  namespace: ${{values.organization.split(":")[1]}}-build
+  namespace: ${{ values.component_id }}-build
   finalizers:
     - resources-finalizer.argocd.argoproj.io  
 spec:
@@ -20,7 +20,7 @@ spec:
             tag: dummy
   destination:
     server: https://kubernetes.default.svc
-    namespace: ${{values.organization.split(":")[1]}}-qa
+    namespace: ${{ values.component_id }}-qa
   syncPolicy:
     automated: 
       prune: true
@@ -38,6 +38,6 @@ spec:
   - group: networking.istio.io
     kind: VirtualService
     name: ${{ values.component_id }}
-    namespace: ${{values.organization.split(":")[1]}}-qa
+    namespace: ${{ values.component_id }}-qa
     jsonPointers:
     - /spec/hosts                          
