@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: quarkus-web-template
   title: Quarkus Service
-  description: Create a simple microservice using Quarkus Java
+  description: Create a simple microservice using Quarkus Java with GitOps
   tags:
     - recommended
     - java
