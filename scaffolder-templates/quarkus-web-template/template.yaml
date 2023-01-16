@@ -126,7 +126,7 @@ spec:
       action: publish:github
       input:
         allowedHosts: ["github.com"]
-        repoUrl: ${{ parameters.repoUrl | parseRepoUrl }}-gitops
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ parameters.owner }}
         description: argocd apps ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
   output:
@@ -136,3 +136,5 @@ spec:
       - title: Open Component in catalog
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
+      - title: GitOps Repository
+        url: ${{ steps.pull-request.output.remoteUrl }}
