@@ -122,12 +122,11 @@ spec:
         targetPath: ./tenant-gitops          
 
     - id: pull-request
-      name: make a pr with the new argocd
-      action: publish:github:pull-request
+      name: make new argocd repo
+      action: publish:github
       input:
+        allowedHosts: ["github.com"]
         repoUrl: github.com?repo=${{ parameters.organization.split(":")[1] }}-gitops&owner=${{ parameters.organization }}
-        branchName: ${{ parameters.component_id }}
-        title: argocd apps for ${{ parameters.component_id }}
         description: argocd apps ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
   output:
