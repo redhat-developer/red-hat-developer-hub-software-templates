@@ -126,7 +126,7 @@ spec:
       action: publish:github
       input:
         allowedHosts: ["github.com"]
-        repoUrl: github.com?repo=${{ parameters.component_id }}-gitops&owner=${{ parameters.owner }}
+        repoUrl: ${{ parameters.repoUrl | parseRepoUrl }}-gitops
         description: argocd apps ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
   output:
