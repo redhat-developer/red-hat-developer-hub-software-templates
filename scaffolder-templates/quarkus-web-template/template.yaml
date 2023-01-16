@@ -125,9 +125,8 @@ spec:
       name: make new argocd repo
       action: publish:github
       input:
-        allowedHosts: ["github.com"]
-        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ parameters.owner }}
-        description: argocd apps ${{ parameters.component_id }}
+        repoUrl: github.com?repo=${{ parameters.component_id }}-gitops&owner=${{ parameters.owner }}
+        description: argocd apps ${{ parameters.component_id }} [repo] ${{ (parameters.repoUrl | parseRepoUrl).repo }} [owner] ${{ (parameters.repoUrl | parseRepoUrl).owner }}
         sourcePath: ./tenant-gitops
   output:
     links:
