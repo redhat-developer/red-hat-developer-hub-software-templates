@@ -103,6 +103,13 @@ spec:
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
+        
+    - id: write
+      name: Writing Catalog Info
+      action: catalog:write
+      input:
+        entity: ${{ steps.register.output.entityRef }}
+        filePath: "/catalog-info.yaml"
  
     - id: template-tenant-gitops 
       name: Generating GitOps Components
