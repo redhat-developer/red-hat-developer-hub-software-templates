@@ -105,7 +105,7 @@ spec:
         catalogInfoPath: "/catalog-info.yaml"
  
     - id: template-tenant-gitops 
-      name: tenant Argcd Fetch Skeleton + Template
+      name: Generating GitOps Components
       action: fetch:template
       input:
         url: ./app-gitops
@@ -116,13 +116,13 @@ spec:
           artifact_id: ${{ parameters.component_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          destination: ${{ parameters.repoUrl | parseRepoUrl }}
+          destination: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
           http_port: 8080
           organization: ${{ parameters.organization }}
         targetPath: ./tenant-gitops          
 
     - id: pull-request
-      name: make a pr with the new argocd
+      name: Publishing to GitOps Repository
       action: publish:github:pull-request
       input:
         repoUrl: github.com?repo=${{ parameters.organization }}-gitops&owner=${{ parameters.organization }}
