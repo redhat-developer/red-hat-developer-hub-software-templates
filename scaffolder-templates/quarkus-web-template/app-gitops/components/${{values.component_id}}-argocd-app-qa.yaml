@@ -2,13 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ${{ values.component_id }}-qa
-  namespace: ${{ values.component_id }}-build
+  namespace: ${{ values.organization }}-build
   finalizers:
     - resources-finalizer.argocd.argoproj.io  
 spec:
   project: default
   source:
-    repoURL: https://github.com/${{ values.organization }}/${{ values.component_id }}
+    repoURL: ${{ values.destination }}
     targetRevision: HEAD
     path: .helm/chart
     helm:
@@ -20,7 +20,7 @@ spec:
             tag: dummy
   destination:
     server: https://kubernetes.default.svc
-    namespace: ${{ values.component_id }}-qa
+    namespace: ${{ values.organization }}-qa
   syncPolicy:
     automated: 
       prune: true
@@ -38,6 +38,6 @@ spec:
   - group: networking.istio.io
     kind: VirtualService
     name: ${{ values.component_id }}
-    namespace: ${{ values.component_id }}-qa
+    namespace: ${{ values.organization }}-qa
     jsonPointers:
     - /spec/hosts                          
