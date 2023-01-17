@@ -54,10 +54,6 @@ spec:
           title: Organization
           type: string
           description: Organization of this application
-          ui:field: OrganizationPicker
-          ui:options:
-            allowedKinds:
-              - Group
     - title: Choose a location
       required:
         - repoUrl
