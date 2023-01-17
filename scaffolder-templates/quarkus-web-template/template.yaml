@@ -116,7 +116,7 @@ spec:
           artifact_id: ${{ parameters.component_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          destination: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          destination: https://github.com/${{ parameters.organization }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           http_port: 8080
           organization: ${{ parameters.organization }}
         targetPath: ./tenant-gitops          
