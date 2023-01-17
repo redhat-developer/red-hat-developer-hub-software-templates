@@ -54,6 +54,10 @@ spec:
           title: Organization
           type: string
           description: Organization of this application
+          #ui:field: OrganizationPicker
+          #ui:options:
+          #  allowedKinds:
+          #    - Group
     - title: Choose a location
       required:
         - repoUrl
@@ -118,12 +122,17 @@ spec:
         targetPath: ./tenant-gitops          
 
     - id: pull-request
-      name: make new argocd repo
-      action: publish:github
+      name: make a pr with the new argocd
+      action: publish:github:pull-request
       input:
-        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        repoUrl: github.com?repo=${{ parameters.organization }}-gitops&owner=${{ parameters.organization }}
+        branchName: ${{ parameters.component_id }}
+        title: argocd apps for ${{ parameters.component_id }}
         description: argocd apps ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
+        #repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        #description: argocd apps ${{ parameters.component_id }}
+        #sourcePath: ./tenant-gitops
   output:
     links:
       - title: Source Code Repository
