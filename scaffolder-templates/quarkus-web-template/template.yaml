@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: quarkus-web-template
   title: Quarkus Service
-  description: Create a simple microservice using Quarkus
+  description: Create a simple microservice using Quarkus 1
   tags:
     - recommended
     - java
@@ -18,7 +18,6 @@ spec:
       required:
         - component_id
         - owner
-        - organization
         - java_package_name
       properties:
         component_id:
