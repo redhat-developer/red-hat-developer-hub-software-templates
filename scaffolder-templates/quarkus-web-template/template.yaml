@@ -50,10 +50,10 @@ spec:
           ui:options:
             allowedKinds:
               - Group
-        organization:
-          title: Organization
-          type: string
-          description: Organization of this application
+        #organization:
+          #title: Organization
+          #type: string
+          #description: Organization of this application
           #ui:field: OrganizationPicker
           #ui:options:
           #  allowedKinds:
@@ -85,7 +85,7 @@ spec:
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          organization: ${{ parameters.organization }}
+          organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
 
@@ -116,17 +116,19 @@ spec:
           artifact_id: ${{ parameters.component_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          destination: https://github.com/${{ parameters.organization }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           http_port: 8080
-          organization: ${{ parameters.organization }}
+          organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
         targetPath: ./tenant-gitops          
 
     - id: pull-request
       name: Publishing to GitOps Repository
-      action: publish:github:pull-request
+      #action: publish:github:pull-request
+      action: publish:github
       input:
-        repoUrl: github.com?repo=${{ parameters.organization }}-gitops&owner=${{ parameters.organization }}
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).owner }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
         branchName: ${{ parameters.component_id }}
+        defaultBranch: ${{ parameters.component_id }}
         title: argocd apps for ${{ parameters.component_id }}
         description: argocd apps ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
@@ -140,5 +142,3 @@ spec:
       - title: Open Component in catalog
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
-      - title: GitOps Repository
-        url: ${{ steps.pull-request.output.remoteUrl }}
