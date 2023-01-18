@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: quarkus-web-template
   title: Quarkus Service
-  description: Create a simple microservice using Quarkus 4
+  description: Create a simple microservice using Quarkus 5
   tags:
     - recommended
     - java
@@ -49,6 +49,10 @@ spec:
           ui:options:
             allowedKinds:
               - Group
+        gitops:
+          title: Include GitOps
+          type: boolean
+          description: Should the component include a GitOps workflow
         #organization:
           #title: Organization
           #type: string
@@ -106,6 +110,7 @@ spec:
     - id: template-tenant-gitops 
       name: Generating GitOps Components
       action: fetch:template
+      if: ${{ parameters.gitops }}
       input:
         url: ./app-gitops
         copyWithoutRender: []
@@ -118,9 +123,18 @@ spec:
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           http_port: 8080
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        targetPath: ./tenant-gitops          
+        targetPath: ./tenant-gitops  
+        
+    - id: create-repo
+      if: ${{ parameters.gitops }}
+      name: Creating GitOps Repository
+      action: github:repo:create
+      input:
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).owner }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        description: App of Apps for ArgoCD
 
     - id: pull-request
+      if: ${{ parameters.gitops }}
       name: Publishing to GitOps Repository
       #action: publish:github:pull-request
       action: github:repo:push
