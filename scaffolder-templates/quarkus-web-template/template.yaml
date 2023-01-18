@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: quarkus-web-template
   title: Quarkus Service
-  description: Create a simple microservice using Quarkus 5
+  description: Create a simple microservice using Quarkus 6
   tags:
     - recommended
     - java
@@ -124,23 +124,13 @@ spec:
           http_port: 8080
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
         targetPath: ./tenant-gitops  
-        
-    - id: create-repo
-      if: ${{ parameters.gitops }}
-      name: Creating GitOps Repository
-      action: github:repo:create
-      input:
-        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).owner }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        description: App of Apps for ArgoCD
 
-    - id: pull-request
+    - id: publish-gitops
       if: ${{ parameters.gitops }}
       name: Publishing to GitOps Repository
-      #action: publish:github:pull-request
       action: github:repo:push
       input:
-        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).owner }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        #branchName: ${{ parameters.component_id }}
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
         defaultBranch: ${{ parameters.component_id }}
         title: argocd apps for ${{ parameters.component_id }}
         description: argocd apps ${{ parameters.component_id }}
