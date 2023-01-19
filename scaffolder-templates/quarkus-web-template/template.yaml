@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: quarkus-web-template
   title: Quarkus Service
-  description: Create a simple microservice using Quarkus 6
+  description: Create a simple microservice using Quarkus
   tags:
     - recommended
     - java
@@ -44,23 +44,11 @@ spec:
         owner:
           title: Owner
           type: string
-          description: Owner of the component
+          description: IdP owner of the component
           ui:field: OwnerPicker
           ui:options:
             allowedKinds:
               - Group
-        gitops:
-          title: Include GitOps
-          type: boolean
-          description: Should the component include a GitOps workflow
-        #organization:
-          #title: Organization
-          #type: string
-          #description: Organization of this application
-          #ui:field: OrganizationPicker
-          #ui:options:
-          #  allowedKinds:
-          #    - Group
     - title: Choose a location
       required:
         - repoUrl
@@ -96,7 +84,6 @@ spec:
       name: Publishing to Source Code Repository
       action: publish:github
       input:
-        allowedHosts: ["github.com"]
         description: This is ${{ parameters.component_id }}
         repoUrl: ${{ parameters.repoUrl }}
 
@@ -107,12 +94,11 @@ spec:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
  
-    - id: template-tenant-gitops 
-      name: Generating GitOps Components
+    - id: template-tenant-resources 
+      name: Generating Resource Components
       action: fetch:template
-      if: ${{ parameters.gitops }}
       input:
-        url: ./app-gitops
+        url: ./manifests
         copyWithoutRender: []
         values:
           component_id: ${{ parameters.component_id }}
@@ -120,24 +106,20 @@ spec:
           artifact_id: ${{ parameters.component_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-resource
           http_port: 8080
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        targetPath: ./tenant-gitops  
+        targetPath: ./tenant-resources  
 
-    - id: publish-gitops
-      if: ${{ parameters.gitops }}
-      name: Publishing to GitOps Repository
+    - id: publish-resource
+      name: Publishing to Resource Repository
       action: github:repo:push
       input:
-        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-resource&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
         defaultBranch: ${{ parameters.component_id }}
         title: argocd apps for ${{ parameters.component_id }}
         description: argocd apps ${{ parameters.component_id }}
-        sourcePath: ./tenant-gitops
-        #repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        #description: argocd apps ${{ parameters.component_id }}
-        #sourcePath: ./tenant-gitops
+        sourcePath: ./tenant-resources
   output:
     links:
       - title: Source Code Repository
