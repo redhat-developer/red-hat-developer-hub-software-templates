@@ -49,6 +49,10 @@ spec:
           ui:options:
             allowedKinds:
               - Group
+        gitops:
+          title: Include GitOps
+          type: boolean
+          description: Should the component include a GitOps workflow
     - title: Choose a location
       required:
         - repoUrl
@@ -94,8 +98,9 @@ spec:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
  
-    - id: template-tenant-resources 
-      name: Generating Resource Components
+    - id: template-gitops-deployment
+      if: ${{ parameters.gitops }}
+      name: Generating Deployment Resources
       action: fetch:template
       input:
         url: ./manifests
@@ -106,20 +111,39 @@ spec:
           artifact_id: ${{ parameters.component_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-resource
+          destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
           http_port: 8080
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        targetPath: ./tenant-resources  
+        targetPath: ./tenant-gitops  
 
-    - id: publish-resource
+    - id: template-gitops-argocd
+      if: ${{ parameters.gitops }}
+      name: Generating ArgoCD Resources
+      action: fetch:template
+      input:
+        url: ../gitops-template
+        copyWithoutRender: []
+        values:
+          component_id: ${{ parameters.component_id }}
+          description: ${{ parameters.description }}
+          artifact_id: ${{ parameters.component_id }}
+          java_package_name: ${{ parameters.java_package_name }}
+          owner: ${{ parameters.owner }}
+          destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
+          http_port: 8080
+          organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        targetPath: ./tenant-gitops  
+
+    - id: publish-gitops
+      if: ${{ parameters.gitops }}
       name: Publishing to Resource Repository
       action: github:repo:push
       input:
-        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-resource&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
         defaultBranch: ${{ parameters.component_id }}
         title: argocd apps for ${{ parameters.component_id }}
         description: argocd apps ${{ parameters.component_id }}
-        sourcePath: ./tenant-resources
+        sourcePath: ./tenant-gitops
   output:
     links:
       - title: Source Code Repository
