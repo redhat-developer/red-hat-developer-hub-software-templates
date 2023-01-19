@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: quarkus-web-template
   title: Quarkus Service
-  description: Create a simple microservice using Quarkus
+  description: Create a simple microservice using Quarkus 1
   tags:
     - recommended
     - java
@@ -137,12 +137,13 @@ spec:
     - id: publish-gitops
       if: ${{ parameters.gitops }}
       name: Publishing to Resource Repository
-      action: github:repo:push
+      #action: github:repo:push
+      action: publish:github
       input:
         repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        defaultBranch: ${{ parameters.component_id }}
-        title: argocd apps for ${{ parameters.component_id }}
-        description: argocd apps ${{ parameters.component_id }}
+        #defaultBranch: ${{ parameters.component_id }}
+        title: gitops resources for ${{ parameters.component_id }}
+        description: gitops resources for ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
   output:
     links:
