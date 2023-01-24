@@ -112,8 +112,8 @@ spec:
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
-          http_port: 8080
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
+          http_port: 8080
         targetPath: ./tenant-gitops  
 
     - id: template-gitops-argocd

@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  generateName: {{ .Values.app.name }}-pipeline-
+  name: {{ .Values.app.name }}-pipeline-run-init
   labels:
     tekton.dev/pipeline: {{ .Values.app.name }}-pipeline
     type: pipeline

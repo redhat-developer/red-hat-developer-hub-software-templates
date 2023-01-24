@@ -3,7 +3,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: ${{ values.component_id }}-dev
-  namespace: ${{ values.organization }}-build
+  namespace: assemble-argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io  
 spec:
@@ -11,23 +11,16 @@ spec:
   source:
     repoURL: ${{ values.destination }}
     targetRevision: HEAD
-    path: .helm/chart
-    helm:
-      valueFiles:
-        - ../value-files/values-dev.yaml
-      values: |
-        quarkus-run: 
-          image:
-            tag: dummy
+    path: ./helm/app
   destination:
     server: https://kubernetes.default.svc
-    namespace: ${{ values.organization }}-dev
+    namespace: ${{ values.component_id }}-dev
   syncPolicy:
     automated: 
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=false
+    - CreateNamespace=true
     - RespectIgnoreDifferences=true
     - ApplyOutOfSyncOnly=true    
     retry:
