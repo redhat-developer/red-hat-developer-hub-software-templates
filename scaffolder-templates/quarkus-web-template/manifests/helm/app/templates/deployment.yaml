@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "quarkus-template.fullname" . }}
-  namespace: {{ .Values.namespace.name }}
   labels:
     {{- include "quarkus-template.labels" . | nindent 4 }}
 spec:
