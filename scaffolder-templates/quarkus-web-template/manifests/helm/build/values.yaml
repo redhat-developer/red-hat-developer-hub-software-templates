@@ -1,7 +1,7 @@
 app:
-  name: quarkus-app
+  name: ${{values.component_id}}
   imageUrl: quarkus-app
-  org: halkyonio
+  org: ${{values.organization}}
 
 repo:
   branch: main

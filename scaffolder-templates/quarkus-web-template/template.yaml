@@ -112,9 +112,21 @@ spec:
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
-          http_port: 8080
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        targetPath: ./tenant-gitops  
+          http_port: 8080
+        targetPath: ./tenant-gitops-helm
+
+    - id: publish-gitops
+      if: ${{ parameters.gitops }}
+      name: Publishing to Resource Repository
+      #action: github:repo:push
+      action: publish:github
+      input:
+        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        #defaultBranch: ${{ parameters.component_id }}
+        title: gitops resources for ${{ parameters.component_id }}
+        description: gitops resources for ${{ parameters.component_id }}
+        sourcePath: ./tenant-gitops-helm
 
     - id: template-gitops-argocd
       if: ${{ parameters.gitops }}
@@ -132,19 +144,18 @@ spec:
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
           http_port: 8080
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        targetPath: ./tenant-gitops  
+        targetPath: ./tenant-gitops-argocd
 
-    - id: publish-gitops
+    - id: argocd-application-pr
       if: ${{ parameters.gitops }}
-      name: Publishing to Resource Repository
-      #action: github:repo:push
-      action: publish:github
+      name: Opening Pull Request to Organization ArgoCD Application Repository
+      action: publish:github:pull-request
       input:
-        repoUrl: github.com?repo=${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
-        #defaultBranch: ${{ parameters.component_id }}
-        title: gitops resources for ${{ parameters.component_id }}
-        description: gitops resources for ${{ parameters.component_id }}
-        sourcePath: ./tenant-gitops
+        repoUrl: github.com?repo=manifests&owner=${{ (parameters.repoUrl | parseRepoUrl).owner }}
+        branchName: ${{ parameters.component_id }}
+        title: ArgoCD resources for ${{ parameters.component_id }}
+        description: ArgoCD  resources for ${{ parameters.component_id }}
+        sourcePath: ./tenant-gitops-argocd
   output:
     links:
       - title: Source Code Repository
