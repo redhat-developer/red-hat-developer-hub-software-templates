@@ -8,7 +8,7 @@ metadata:
 spec:
   params:
     - name: source-repo
-      value: 'https://github.com/{{ .Values.app.org }}/{{ .Values.app.name }}.git'
+      value: '{{ .Values.app.source }}.git'
     - name: source-branch
       value: {{ .Values.repo.branch }}
     - name: output-image

@@ -113,6 +113,7 @@ spec:
           owner: ${{ parameters.owner }}
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
+          source_destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           http_port: 8080
         targetPath: ./tenant-gitops-helm
 
