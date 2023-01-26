@@ -20,3 +20,5 @@ spec:
     - persistentVolumeClaim:
         claimName: {{ .Values.app.name }}-source
       name: {{ .Values.app.name }}-source
+    - name: maven-settings
+      emptyDir: {}
