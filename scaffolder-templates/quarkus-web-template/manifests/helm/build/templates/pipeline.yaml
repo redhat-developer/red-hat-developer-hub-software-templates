@@ -29,12 +29,23 @@ spec:
       workspaces:
         - name: output
           workspace: {{ .Values.app.name }}-source
+    - name: package
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: ClusterTask
+        name: maven
+      workspaces:
+        - name: source
+          workspace: {{ .Values.app.name }}-source
+        - name: maven-settings
+          workspace: maven-settings
     - name: buildah
       params:
         - name: IMAGE
           value: $(params.output-image)
       runAfter:
-        - git-clone
+        - package
       taskRef:
         kind: ClusterTask
         name: buildah
@@ -43,3 +54,4 @@ spec:
           workspace: {{ .Values.app.name }}-source
   workspaces:
     - name: {{ .Values.app.name }}-source
+    - name: maven-settings
