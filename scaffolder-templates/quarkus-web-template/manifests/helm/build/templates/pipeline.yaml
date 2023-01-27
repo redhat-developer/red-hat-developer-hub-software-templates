@@ -44,6 +44,8 @@ spec:
       params:
         - name: IMAGE
           value: $(params.output-image)
+        - name: TLSVERIFY
+          value: 'false'
       runAfter:
         - package
       taskRef:
