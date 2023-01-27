@@ -12,7 +12,7 @@ spec:
     - name: source-branch
       value: {{ .Values.repo.branch }}
     - name: output-image
-      value: image-registry.openshift-image-registry.svc:5000/{{ .Values.app.namespace }}/{{ .Values.app.name }}-image:latest
+      value: image-registry.openshift-image-registry.svc:5000/{{ Release.Namespace }}/{{ .Values.app.name }}-image:latest
   pipelineRef:
     name: {{ .Values.app.name }}-pipeline
   serviceAccountName: pipeline
