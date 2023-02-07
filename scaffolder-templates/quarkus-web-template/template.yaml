@@ -91,6 +91,7 @@ spec:
         description: This is ${{ parameters.component_id }}
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
+        repoVisibility: public
 
     - id: register
       name: Registering to the Catalog
