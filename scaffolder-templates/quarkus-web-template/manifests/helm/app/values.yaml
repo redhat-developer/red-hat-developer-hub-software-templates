@@ -11,7 +11,7 @@ namespace:
 replicaCount: 1
 
 image:
-  repository: image-registry.openshift-image-registry.svc:5000/my-quarkus-app3-dev/${{values.component_id}}-image
+  repository: image-registry.openshift-image-registry.svc:5000/${{values.component_id}}-dev/${{values.component_id}}-image
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest
