@@ -40,17 +40,15 @@ spec:
           workspace: {{ .Values.app.name }}-source
         - name: maven-settings
           workspace: maven-settings
-    - name: buildah
+    - name: build-and-push
       params:
         - name: IMAGE
           value: $(params.output-image)
-        - name: TLSVERIFY
-          value: 'false'
       runAfter:
         - package
       taskRef:
-        kind: ClusterTask
-        name: buildah
+        kind: Task
+        name: kaniko
       workspaces:
         - name: source
           workspace: {{ .Values.app.name }}-source
