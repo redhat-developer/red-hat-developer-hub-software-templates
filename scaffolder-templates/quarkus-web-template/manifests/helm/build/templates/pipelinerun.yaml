@@ -1,18 +1,18 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  generateName: {{ .Values.app.name }}-pipeline-
+  name: {{ .Values.app.name }}-pipeline-run-init
   labels:
     tekton.dev/pipeline: {{ .Values.app.name }}-pipeline
     type: pipeline
 spec:
   params:
     - name: source-repo
-      value: 'https://github.com/{{ .Values.app.org }}/{{ .Values.app.name }}.git'
+      value: '{{ .Values.app.source }}.git'
     - name: source-branch
       value: {{ .Values.repo.branch }}
     - name: output-image
-      value: {{ .Values.app.name }}-image
+      value: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/{{ .Values.app.name }}-image:latest
   pipelineRef:
     name: {{ .Values.app.name }}-pipeline
   serviceAccountName: pipeline
@@ -20,3 +20,5 @@ spec:
     - persistentVolumeClaim:
         claimName: {{ .Values.app.name }}-source
       name: {{ .Values.app.name }}-source
+    - name: maven-settings
+      emptyDir: {}

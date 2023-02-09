@@ -1,32 +1,26 @@
+---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ${{ values.component_id }}-prod
-  namespace: ${{values.organization.split(":")[1]}}-build
+  name: ${{ values.component_id }}-dev
+  namespace: assemble-argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io  
 spec:
   project: default
   source:
-    repoURL: https://github.com/${{ values.organization }}/${{ values.component_id }}
+    repoURL: ${{ values.destination }}
     targetRevision: HEAD
-    path: .helm/chart
-    helm:
-      valueFiles:
-        - ../value-files/values-prod.yaml
-      values: | 
-        quarkus-run: 
-          image:
-            tag: dummy
+    path: ./helm/app
   destination:
     server: https://kubernetes.default.svc
-    namespace: ${{values.organization.split(":")[1]}}-prod
+    namespace: ${{ values.component_id }}-dev
   syncPolicy:
     automated: 
       prune: true
       selfHeal: true
     syncOptions:
-    - CreateNamespace=false
+    - CreateNamespace=true
     - RespectIgnoreDifferences=true
     - ApplyOutOfSyncOnly=true    
     retry:
@@ -34,10 +28,3 @@ spec:
         duration: 5s # the amount to back off. Default unit is seconds, but could also be a duration (e.g. "2m", "1h")
         factor: 2 # a factor to multiply the base duration after each failed retry
         maxDuration: 10m # the maximum amount of time allowed for the backoff strategy
-  ignoreDifferences:      
-  - group: networking.istio.io
-    kind: VirtualService
-    name: ${{ values.component_id }}
-    namespace: ${{values.organization.split(":")[1]}}-prod
-    jsonPointers:
-    - /spec/hosts                   

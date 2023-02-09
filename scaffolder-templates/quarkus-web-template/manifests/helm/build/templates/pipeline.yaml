@@ -29,17 +29,29 @@ spec:
       workspaces:
         - name: output
           workspace: {{ .Values.app.name }}-source
-    - name: buildah
-      params:
-        - name: IMAGE
-          value: $(params.output-image)
+    - name: package
       runAfter:
         - git-clone
       taskRef:
         kind: ClusterTask
-        name: buildah
+        name: maven
+      workspaces:
+        - name: source
+          workspace: {{ .Values.app.name }}-source
+        - name: maven-settings
+          workspace: maven-settings
+    - name: build-and-push
+      params:
+        - name: IMAGE
+          value: $(params.output-image)
+      runAfter:
+        - package
+      taskRef:
+        kind: Task
+        name: kaniko
       workspaces:
         - name: source
           workspace: {{ .Values.app.name }}-source
   workspaces:
     - name: {{ .Values.app.name }}-source
+    - name: maven-settings

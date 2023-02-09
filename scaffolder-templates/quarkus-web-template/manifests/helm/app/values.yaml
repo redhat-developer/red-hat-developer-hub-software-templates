@@ -4,14 +4,14 @@
 
 namespace:
   enabled: true
-  name: assemble
+  name: ${{values.component_id}}
   argocd:
     name: default
 
 replicaCount: 1
 
 image:
-  repository: hello-world
+  repository: image-registry.openshift-image-registry.svc:5000/${{values.component_id}}-dev/${{values.component_id}}-image
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: latest

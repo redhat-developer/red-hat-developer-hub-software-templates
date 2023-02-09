@@ -1,0 +1,9 @@
+app:
+  name: ${{values.component_id}}
+  imageUrl: ${{values.component_id}}
+  org: ${{values.organization}}
+  source: ${{ values.source_destination }}
+
+repo:
+  branch: main
+
