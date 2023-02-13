@@ -8,7 +8,17 @@ metadata:
   annotations:
     github.com/project-slug: ${{values.destination.owner + "/" + values.destination.repo}}
     backstage.io/techdocs-ref: dir:.
+  tags:
+    - java
+    - quarkus
+  links:
+    - url: https://devspaces.apps.cluster-xrwpk.xrwpk.sandbox897.opentlc.com/#${{values.source_destination}}?che-editor=che-incubator/che-code/insiders&devfilePath=.devfile-vscode.yaml
+      title: CodeReady Workspaces (VS Code)
+      icon: web
+    - url: https://devspaces.apps.cluster-xrwpk.xrwpk.sandbox897.opentlc.com/#${{values.source_destination}}?che-editor=che-incubator/che-idea/next&devfilePath=.devfile-intellij.yaml
+      title: CodeReady Workspaces (JetBrains IntelliJ)
+      icon: web
 spec:
-  type: website
+  type: service
   lifecycle: experimental
   owner: ${{values.owner | dump}}

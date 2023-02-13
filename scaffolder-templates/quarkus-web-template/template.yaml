@@ -83,6 +83,7 @@ spec:
           organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
+          source_destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
 
     - id: publish
       name: Publishing to Source Code Repository
