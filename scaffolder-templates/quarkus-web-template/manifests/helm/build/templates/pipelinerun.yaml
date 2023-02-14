@@ -8,17 +8,22 @@ metadata:
 spec:
   params:
     - name: source-repo
-      value: '{{ .Values.app.source }}.git'
+      value: '{{ .Values.git.repo }}.git'
     - name: source-branch
-      value: {{ .Values.repo.branch }}
+      value: {{ .Values.git.branch }}
     - name: output-image
-      value: image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/{{ .Values.app.name }}-image:latest
+      value: {{ include "image.url" . }}
   pipelineRef:
     name: {{ .Values.app.name }}-pipeline
   serviceAccountName: pipeline
   workspaces:
-    - persistentVolumeClaim:
-        claimName: {{ .Values.app.name }}-source
-      name: {{ .Values.app.name }}-source
+    - name: {{ .Values.app.name }}-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
     - name: maven-settings
       emptyDir: {}

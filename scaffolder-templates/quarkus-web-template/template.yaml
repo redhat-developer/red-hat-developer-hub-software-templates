@@ -24,19 +24,36 @@ spec:
           title: Name
           type: string
           description: Unique name of the component
+          default: my-quarkus-app
           ui:field: EntityNamePicker
         group_id:
           title: Group Id
           type: string
+          default: redhat.assemble
           description: Maven Group Id
         artifact_id:
           title: Artifact Id
           type: string
+          default: quarkus-app
           description: Maven Artifact Id
         java_package_name:
           title: Java Package Name
+          default: org.redhat.assemble
           type: string
           description: Name for the java package. eg (com.redhat.blah)
+        image_host:
+          title: Name
+          type: string
+          description: Host for storing image (defaults to openshift internal)
+          default: image-registry.openshift-image-registry.svc:5000
+        image_name:
+          title: Name
+          type: string
+          description: Build Image Name <COMPONENT_ID>-DEV/<COMPONENT_ID> to use internal registry
+        image_tag:
+          title: Name
+          type: string
+          description: Build Image tag
         description:
           title: Description
           type: string
@@ -80,7 +97,6 @@ spec:
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
-          organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
           destination: ${{ parameters.repoUrl | parseRepoUrl }}
           http_port: 8080
 
@@ -110,12 +126,11 @@ spec:
         values:
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
-          artifact_id: ${{ parameters.component_id }}
-          java_package_name: ${{ parameters.java_package_name }}
-          owner: ${{ parameters.owner }}
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
-          organization: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-          source_destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          source_repository: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          image_host: ${{ parameters.image_host }}
+          image_name: ${{ parameters.image_name }}
+          image_tag: ${{ parameters.image_tag }}
           http_port: 8080
         targetPath: ./tenant-gitops
 

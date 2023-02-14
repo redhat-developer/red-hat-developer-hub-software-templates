@@ -44,12 +44,12 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 8080
+  port: ${{values.port}}
 
-route:
-  enabled: true
-  host: chart-example.local
-  path: /
+## Uncomment to include Route information
+# route:
+#   host: chart-example.local
+#   path: /
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
