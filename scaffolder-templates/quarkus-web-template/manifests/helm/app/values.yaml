@@ -46,8 +46,7 @@ service:
   type: ClusterIP
   port: ${{values.port}}
 
-## Uncomment to include Route information
-# route:
+route: {}
 #   host: chart-example.local
 #   path: /
 
