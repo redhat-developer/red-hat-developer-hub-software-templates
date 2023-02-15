@@ -14,7 +14,7 @@ spec:
   type: service
 
   parameters:
-    - title: Provide some simple information
+    - title: Provide Information for Application
       required:
         - component_id
         - owner
@@ -41,19 +41,6 @@ spec:
           default: org.redhat.assemble
           type: string
           description: Name for the java package. eg (com.redhat.blah)
-        image_host:
-          title: Name
-          type: string
-          description: Host for storing image (defaults to openshift internal)
-          default: image-registry.openshift-image-registry.svc:5000
-        image_name:
-          title: Name
-          type: string
-          description: Build Image Name <COMPONENT_ID>-DEV/<COMPONENT_ID> to use internal registry
-        image_tag:
-          title: Name
-          type: string
-          description: Build Image tag
         description:
           title: Description
           type: string
@@ -66,11 +53,33 @@ spec:
           ui:options:
             allowedKinds:
               - Group
+    - title: Provide Build Information
+      properties:
+        image_host:
+          title: Image Host
+          type: string
+          description: Host for storing image (defaults to openshift internal)
+          default: image-registry.openshift-image-registry.svc:5000
+        image_name:
+          title: Image Name
+          default: my-quarkus-dev/my-quarkus-app
+          type: string
+          description: Build Image Name <NAMESPACE><COMPONENT_ID> to use internal registry
+        image_tag:
+          title: Image Tag
+          default: latest
+          type: string
+          description: Build Image tag
+        dev_namespace:
+          title: Development Namespace
+          default: my-quarkus-dev
+          type: string
+          description: Development namespace
         gitops:
           title: Include GitOps
           type: boolean
           description: Should the component include a GitOps workflow
-    - title: Choose a location
+    - title: Choose source repository information
       required:
         - repoUrl
       properties:
