@@ -54,6 +54,8 @@ spec:
             allowedKinds:
               - Group
     - title: Provide Build Information
+      required:
+        - dev_namespace
       properties:
         image_host:
           title: Image Host
@@ -79,7 +81,7 @@ spec:
           title: Include GitOps
           type: boolean
           description: Should the component include a GitOps workflow
-    - title: Choose source repository information
+    - title: Application repository Information
       required:
         - repoUrl
       properties:
@@ -137,7 +139,7 @@ spec:
           description: ${{ parameters.description }}
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
           source_repository: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
-          namespace: ${{ parameters.namespace }}
+          namespace: ${{ parameters.dev_namespace }}
           image_host: ${{ parameters.image_host }}
           image_name: ${{ parameters.image_name }}
           image_tag: ${{ parameters.image_tag }}
