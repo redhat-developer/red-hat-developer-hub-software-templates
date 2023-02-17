@@ -16,9 +16,9 @@ spec:
           ref:
             name: github
         - params:
-            - name: filter
+            - name: git-revision
               value: >-
-                (body.ref.contains('{{ .Values.repo.branch }}'))
+                (body.ref.contains('{{ .Values.git.branch }}'))
             - name: overlays
               value: null
           ref:

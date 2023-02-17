@@ -10,11 +10,14 @@ spec:
     - name: source-repo
       description: source repo that contains the application code
       type: string
+      default: {{ .Values.git.repo }}
     - name: source-branch
       description: source branch to build from
+      default: {{ .Values.git.branch }}
       type: string
     - name: output-image
       description: reference of the image that will get created
+      default: {{ include "image.url" . }}
       type: string
   tasks:
     - name: git-clone
@@ -28,7 +31,7 @@ spec:
         name: git-clone
       workspaces:
         - name: output
-          workspace: {{ .Values.app.name }}-source
+          workspace: source-folder
     - name: package
       runAfter:
         - git-clone
@@ -37,7 +40,7 @@ spec:
         name: maven
       workspaces:
         - name: source
-          workspace: {{ .Values.app.name }}-source
+          workspace: source-folder
         - name: maven-settings
           workspace: maven-settings
     - name: build-and-push
@@ -51,7 +54,7 @@ spec:
         name: kaniko
       workspaces:
         - name: source
-          workspace: {{ .Values.app.name }}-source
+          workspace: source-folder
   workspaces:
-    - name: {{ .Values.app.name }}-source
+    - name: source-folder
     - name: maven-settings

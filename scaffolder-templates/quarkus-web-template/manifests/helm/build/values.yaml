@@ -1,9 +1,11 @@
 app:
   name: ${{values.component_id}}
-  imageUrl: ${{values.component_id}}
-  org: ${{values.organization}}
-  source: ${{ values.source_destination }}
 
-repo:
+git:
   branch: main
+  repo: ${{ values.source_repository }}
 
+image:
+  host: ${{ values.image_host }}
+  name: ${{ values.image_name }}
+  tag: ${{ values.image_tag }}
