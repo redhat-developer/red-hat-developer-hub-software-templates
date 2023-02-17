@@ -54,8 +54,6 @@ spec:
             allowedKinds:
               - Group
     - title: Provide Build Information
-      required:
-        - dev_namespace
       properties:
         image_host:
           title: Image Host
@@ -72,11 +70,6 @@ spec:
           default: latest
           type: string
           description: Build Image tag
-        dev_namespace:
-          title: Development Namespace
-          default: my-quarkus-dev
-          type: string
-          description: Development namespace
         gitops:
           title: Include GitOps
           type: boolean
@@ -139,7 +132,7 @@ spec:
           description: ${{ parameters.description }}
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
           source_repository: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
-          namespace: ${{ parameters.dev_namespace }}
+          namespace: ${{ parameters.component_id }}-dev
           image_host: ${{ parameters.image_host }}
           image_name: ${{ parameters.image_name }}
           image_tag: ${{ parameters.image_tag }}
