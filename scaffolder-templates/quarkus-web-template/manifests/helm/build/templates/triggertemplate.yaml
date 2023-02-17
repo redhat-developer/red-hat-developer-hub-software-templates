@@ -7,12 +7,12 @@ spec:
   params:
     - name: git-revision
       description: The git revision
-      default: main
+      default: {{ .Values.git.branch }}
     - name: git-repo-url
       description: The repo url
     - name: output-image
       description: reference of the image that will get created
-      default: {{ .Values.app.imageUrl }}
+      default: {{ include "image.url" . }}
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -31,6 +31,6 @@ spec:
         serviceAccountName: pipeline
         timeout: 1h0m0s
         workspaces:
-          - name: {{ .Values.app.name }}-source
+          - name: source-folder
             persistentVolumeClaim:
-              claimName: {{ .Values.app.name }}-source
+              claimName: source-folder
