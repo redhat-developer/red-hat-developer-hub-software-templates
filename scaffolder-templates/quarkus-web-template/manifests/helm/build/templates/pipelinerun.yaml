@@ -2,6 +2,9 @@ apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   name: {{ .Values.app.name }}-pipeline-run-init
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
   labels:
     tekton.dev/pipeline: {{ .Values.app.name }}-pipeline
     type: pipeline
