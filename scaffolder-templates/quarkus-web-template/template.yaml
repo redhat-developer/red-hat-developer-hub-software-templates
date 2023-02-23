@@ -92,7 +92,7 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
-        copyWithoutRender:
+        copyWithoutTemplating:
           - .github/workflows/*
         values:
           component_id: ${{ parameters.component_id }}
@@ -118,15 +118,15 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
- 
+        catalogInfoPath: '/catalog-info.yaml'
+
     - id: template-gitops-deployment
       if: ${{ parameters.gitops }}
       name: Generating Deployment Resources
       action: fetch:template
       input:
         url: ./manifests
-        copyWithoutRender: []
+        copyWithoutTemplating: []
         values:
           component_id: ${{ parameters.component_id }}
           description: ${{ parameters.description }}
@@ -158,7 +158,7 @@ spec:
         argoInstance: main
         namespace: assemble-argocd
         repoUrl: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops.git
-        path: "argocd/"
+        path: 'argocd/'
 
   output:
     links:

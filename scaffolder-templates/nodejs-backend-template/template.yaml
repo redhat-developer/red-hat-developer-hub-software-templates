@@ -1,30 +1,35 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: nodejs-helloworld-template
-  title: NodeJS HelloWorld Service
-  description: Create a simple microservice using NodeJS
+  name: nodejs-backend-template
+  title: Node.js Backend Template
+  description: Create a simple Node.js backend
   tags:
     - recommended
     - nodejs
     - javascript
     - typescript
+    - express
 spec:
-  owner: service@example.com
+  owner: janus-idp
   type: service
 
   parameters:
-    - title: Provide some simple information
+    - title: Provide the GitHub location
       required:
-        - component_id
-        - owner
-        - organization
+        - org
+        - repo
       properties:
-        component_id:
-          title: Name
+        org:
+          title: GitHub Organization
           type: string
-          description: Unique name of the component
-          ui:field: EntityNamePicker
+        repo:
+          title: Repository
+          type: string
+    - title: Provide information about the new component
+      required:
+        - owner
+      properties:
         description:
           title: Description
           type: string
@@ -33,54 +38,49 @@ spec:
           title: Owner
           type: string
           description: Owner of the component
+          default: 'group: janus-idp'
           ui:field: OwnerPicker
           ui:options:
             allowedKinds:
               - Group
-        organization:
-          title: Organization
-          type: string
-          description: Organization of this application
-          ui:field: OrganizationPicker
-          ui:options:
-            allowedKinds:
-              - Group
-    - title: Choose a location
+    - title: Choose a starter project
       required:
-        - repoUrl
+        - ci
       properties:
-        repoUrl:
-          title: Repository Location
+        ci:
+          title: Select a CI method
           type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
-
+          default: GitHub Action
+          enum:
+            - ./github-action-skeleton
+          enumNames:
+            - GitHub Action
   steps:
     - id: template
-      name: Generating component
+      name: Generating Component
       action: fetch:template
       input:
-        url: ./skeleton
-        copyWithoutRender:
+        url: ${{ parameters.ci }}
+        copyWithoutTemplating:
           - .github/workflows/
         values:
-          component_id: ${{ parameters.component_id }}
+          component_id: ${{ parameters.repo }}
           description: ${{ parameters.description }}
+          destination: ${{ parameters.org }}/${{ parameters.repo }}
+          org: ${{ parameters.org }}
           owner: ${{ parameters.owner }}
-          organization: ${{ parameters.organization }}
 
     - id: publish
       name: Publishing to Source Code Repository
       action: publish:github
       input:
         allowedHosts: ["github.com"]
-        description: This is ${{ parameters.component_id }}
-        repoUrl: ${{ parameters.repoUrl }}
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=${{ parameters.org }}&repo=${{ parameters.repo }}
+        defaultBranch: main
 
     - id: register
-      name: Registering to the Catalog
+      name: Registering the component
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
