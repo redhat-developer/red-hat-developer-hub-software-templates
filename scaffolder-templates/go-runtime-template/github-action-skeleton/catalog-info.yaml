@@ -10,5 +10,5 @@ metadata:
     backstage.io/techdocs-ref: dir:.
 spec:
   type: website
-  lifecycle: experimental
+  lifecycle: production
   owner: ${{values.owner | dump}}

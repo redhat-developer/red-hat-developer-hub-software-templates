@@ -1,9 +1,9 @@
 {
-  "name": "nodejs-helloworld",
+  "name": "${{values.component_id}}",
   "version": "1.0.0",
-  "description": "",
+  "description": "${{values.description}}",
   "scripts": {
-    "start": "node index.ts"
+    "start": "node src/index.ts"
   },
   "keywords": [],
   "author": "",

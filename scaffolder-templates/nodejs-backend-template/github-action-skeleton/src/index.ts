@@ -5,8 +5,8 @@ const router = express.Router();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-router.get('/', function(req, res) {
-    res.send('Hello World!');
+router.get('/', function (req, res) {
+  res.send('Hello World!');
 });
 
 app.use('/', router);

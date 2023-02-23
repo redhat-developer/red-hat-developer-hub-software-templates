@@ -9,13 +9,13 @@ metadata:
 spec:
   owner: service@example.com
   type: system
-  
+
   parameters:
     - title: Provide information on this application
       required:
         - application_id
         - owner
-	- organization
+        - organization
         - size
         - environments
         - description
@@ -34,40 +34,40 @@ spec:
           description: Owner of this applications
           ui:field: OwnerPicker
           ui:options:
-            allowedKinds: 
-              - Group 
-	organization:
+            allowedKinds:
+              - Group
+        organization:
           title: Organization
           type: string
           description: Organization of this application
           ui:field: OrganizationPicker
           ui:options:
             allowedKinds:
-              - Group               
+              - Group
         size:
           title: Size
           type: string
           description: Desired size of the environments in which this application will run
-          enum: ["small","medium","large"]
+          enum: ['small', 'medium', 'large']
         environments:
           title: Environments
           type: string
           description: Environments needed by this application
-          enum: ["build,dev,qa,prod"]
+          enum: ['build,dev,qa,prod']
 
   steps:
-    - id: template-namespaces 
+    - id: template-namespaces
       name: Fetch Skeleton + Template
       action: fetch:template
       input:
         url: ./skeleton
-        copyWithoutRender: []
+        copyWithoutTemplating: []
         values:
           application_id: ${{ parameters.application_id }}
           description: ${{ parameters.description }}
           size: ${{ parameters.size }}
           owner: ${{ parameters.owner }}
-	  organization: ${{ parameters.organization }}
+          organization: ${{ parameters.organization }}
           environments: ${{ parameters.environments }}
 
     - id: pull-request
@@ -84,7 +84,7 @@ spec:
       action: fetch:template
       input:
         url: ./app-gitops
-        copyWithoutRender: []
+        copyWithoutTemplating: []
         values: {}
         targetPath: ./app-gitops
 
