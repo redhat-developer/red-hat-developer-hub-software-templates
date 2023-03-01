@@ -1,0 +1,27 @@
+name: ArgoCD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  login:
+    name: OpenShift Login and apply ArgoCD
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in and set context
+        uses: redhat-actions/oc-login@v1
+        with:
+          openshift_server_url: ${{ secrets.OPENSHIFT_SERVER }}
+          openshift_token: ${{ secrets.OPENSHIFT_TOKEN }}
+          namespace: ${{ secrets.OPENSHIFT_NAMESPACE }}
+          insecure_skip_tls_verify: true
+
+      - name: Create/Update ArgoCD app
+        run: |
+          oc apply -n ${{ secrets.OPENSHIFT_NAMESPACE }} -f manifests/argocd/app.yaml
