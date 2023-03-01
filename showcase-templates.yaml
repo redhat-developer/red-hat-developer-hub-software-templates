@@ -8,5 +8,5 @@ spec:
   targets:
     - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/go-runtime-template/template.yaml
     - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/nodejs-backend-template/template.yaml
-    - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/quarkus-web-template/template.yaml
+    - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/python-template/template.yaml
     
