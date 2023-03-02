@@ -1,5 +1,5 @@
 {
-  "name": "${{values.component_id}}",
+  "name": "${{values.repo_name}}",
   "version": "1.0.0",
   "description": "${{values.description}}",
   "scripts": {

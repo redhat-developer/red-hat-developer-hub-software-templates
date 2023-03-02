@@ -12,7 +12,7 @@ spec:
   type: service
 
   parameters:
-    - title: Provide the GitHub location
+    - title: Provide information about GitHub location
       required:
         - org
         - repo
@@ -30,17 +30,30 @@ spec:
         description:
           title: Description
           type: string
-          description: Help others understand what this component is for.
+          description: Help others understand what this component is for
         owner:
           title: Owner
           type: string
           description: Owner of the component
-          default: 'group: janus-idp'
+          default: 'group: janus-authors'
           ui:field: OwnerPicker
           ui:options:
             allowedKinds:
               - Group
-    - title: Choose a CI method
+    - title: Provide information about ArgoCD deployment
+      required:
+        - namespace
+        - imageNamespace
+      properties:
+        namespace:
+          title: Namespace
+          type: string
+          description: The namespace for deploying resources
+        imageNamespace:
+          title: Image Namespace
+          type: string
+          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }}
+    - title: Provide information about the CI method
       required:
         - ci
       properties:
@@ -49,23 +62,43 @@ spec:
           type: string
           default: GitHub Action
           enum:
-            - ./github-action-skeleton
+            - ../../scaffolder-skeletons/github-actions-skeleton/
           enumNames:
             - GitHub Action
   steps:
-    - id: template
-      name: Generating Component
+    - id: ci-template
+      name: Generating the CI component
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
         copyWithoutTemplating:
           - .github/workflows/
+
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
         values:
-          component_id: ${{ parameters.repo }}
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
           description: ${{ parameters.description }}
-          destination: ${{ parameters.org }}/${{ parameters.repo }}
-          org: ${{ parameters.org }}
-          owner: ${{ parameters.owner }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+
+    - id: catalog-template
+      name: Generating catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
 
     - id: publish
       name: Publishing to Source Code Repository

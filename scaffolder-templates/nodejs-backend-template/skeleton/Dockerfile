@@ -18,7 +18,4 @@ COPY --from=deps /opt/app-root/src .
 EXPOSE 3000
 ENV PORT 3000
 
-# The fix-permissions script is important when operating in environments that dynamically use a random UID at runtime, such as OpenShift.
-RUN fix-permissions ./
-
 CMD ["node", "src/index.ts"]
