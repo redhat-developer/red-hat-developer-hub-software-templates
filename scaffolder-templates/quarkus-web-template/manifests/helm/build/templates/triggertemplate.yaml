@@ -32,5 +32,12 @@ spec:
         timeout: 1h0m0s
         workspaces:
           - name: source-folder
-            persistentVolumeClaim:
-              claimName: source-folder
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+          - emptyDir: {}
+            name: maven-settings

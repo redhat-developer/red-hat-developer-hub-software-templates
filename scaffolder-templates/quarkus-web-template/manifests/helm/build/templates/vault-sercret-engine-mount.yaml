@@ -1,0 +1,11 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: SecretEngineMount
+metadata:
+  name: {{ .Values.app.name }}-kv
+  namespace: vault-admin
+spec:
+  authentication: 
+    path: kubernetes
+    role: policy-admin
+  type: kv
+  path: {{ .Values.git.org }}

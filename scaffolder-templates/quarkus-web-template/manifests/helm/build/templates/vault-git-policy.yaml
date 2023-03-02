@@ -1,0 +1,21 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: Policy
+metadata:
+  name: {{ .Values.app.name }}-read-token
+  namespace: vault-admin
+spec:
+  # Add fields here
+  authentication: 
+    path: kubernetes
+    role: policy-admin
+  policy: |
+    # create tokens
+    path "/github/token/{{ .Values.app.name }}" {
+      capabilities = ["read"]
+    }
+    path "/quay/creds/{{ .Values.app.name }}" {
+      capabilities = ["read"]
+    }
+    path "/quay/creds/{{ .Values.app.name }}-pusher" {
+      capabilities = ["read"]
+    }
