@@ -1,0 +1,51 @@
+schemaVersion: 2.1.0
+metadata:
+  generateName: ${{values.artifact_id}}
+components:
+  - name: development-tooling
+    container:
+      image: quay.io/devfile/universal-developer-image:ubi8-0e189d9
+      env:
+        - name: QUARKUS_HTTP_HOST
+          value: 0.0.0.0
+      memoryLimit: 5Gi
+      cpuLimit: 1500m
+      volumeMounts:
+        - name: m2
+          path: /home/user/.m2
+      endpoints:
+        - name: quarkus-development-server
+          targetPort: 8080
+          exposure: public
+          secure: false
+          protocol: http
+        - name: debug
+          targetPort: 5005
+          exposure: none
+          secure: false
+          protocol: tcp
+        - name: tests
+          targetPort: 8081
+          exposure: none
+          secure: false
+          protocol: tcp          
+  - name: m2
+    volume:
+      size: 1G
+commands:
+  - id: package
+    exec:
+      label: "1. Package the application"
+      component: development-tooling
+      commandLine: "./mvnw package"
+      group:
+        kind: build
+        isDefault: true
+  - id: start-dev
+    exec:
+      label: "2. Start Development mode (Hot reload + debug)"
+      component: development-tooling
+      commandLine: "./mvnw compile quarkus:dev"
+      group:
+        kind: run
+        isDefault: true
