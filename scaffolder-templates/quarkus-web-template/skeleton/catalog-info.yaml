@@ -20,5 +20,5 @@ metadata:
       icon: web
 spec:
   type: service
-  lifecycle: experimental
+  lifecycle: production
   owner: ${{values.owner | dump}}

@@ -1,2 +1,4 @@
-# software-templates
-Assemble Software Template (Backstage)
+# Software Templates
+
+
+Collection of Software Templates / Golden Path for Backstage.

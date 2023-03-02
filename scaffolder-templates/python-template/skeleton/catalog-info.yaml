@@ -6,9 +6,11 @@ metadata:
   description: ${{values.description | dump}}
   {%- endif %}
   annotations:
-    github.com/project-slug: ${{values.destination.owner + "/" + values.destination.repo}}
+    argocd/app-name: ${{values.component_id | dump}}
+    backstage.io/kubernetes-id: ${{values.component_id | dump}}
     backstage.io/techdocs-ref: dir:.
+    github.com/project-slug: ${{values.destination}}
 spec:
   type: website
-  lifecycle: experimental
+  lifecycle: production
   owner: ${{values.owner | dump}}
