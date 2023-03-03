@@ -7,6 +7,7 @@ COPY *.go ./
 
 RUN go build -o ./main
 
-EXPOSE 8080
+ENV PORT ${{ values.port }}
+EXPOSE ${{ values.port }}
 
 CMD [ "./main" , "-p=8080"]

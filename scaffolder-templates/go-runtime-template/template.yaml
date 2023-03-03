@@ -44,6 +44,7 @@ spec:
       required:
         - namespace
         - imageNamespace
+        - port
       properties:
         namespace:
           title: Namespace
@@ -53,6 +54,11 @@ spec:
           title: Image Namespace
           type: string
           description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }}
+        port:
+          title: Port
+          type: int
+          default: 8080
+          description: The port exposed for your application
     - title: Provide information about the CI method
       required:
         - ci
@@ -86,6 +92,7 @@ spec:
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
           image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
 
     - id: catalog-template
       name: Generating catalog-info.yaml
@@ -99,6 +106,21 @@ spec:
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
           image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
+    - id: manifests-template
+      name: Generating manifest component
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/manifests-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
 
     - id: publish
       name: Publishing to Source Code Repository

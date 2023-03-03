@@ -6,10 +6,10 @@ metadata:
   description: ${{values.description | dump}}
   {%- endif %}
   annotations:
-    argocd/app-name: ${{values.repo_name | dump}}
-    backstage.io/kubernetes-id: ${{values.repo_name | dump}}
+    argocd/app-name: ${{values.repo_name}}
+    backstage.io/kubernetes-id: ${{values.repo_name}}
     backstage.io/techdocs-ref: dir:.
-    github.com/project-slug: ${{values.github_org | dump}}/${{values.repo_name | dump}}
+    github.com/project-slug: ${{values.github_org}}/${{values.repo_name}}
 spec:
   type: website
   lifecycle: production

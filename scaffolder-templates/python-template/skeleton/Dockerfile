@@ -12,7 +12,8 @@ RUN pip install -r requirements.txt
 # Copy the content of the local src directory to the working directory
 COPY . .
 
-EXPOSE 8080
+ENV PORT ${{ values.port }}
+EXPOSE ${{ values.port }}
 
 # Specify the command to run on container start
 CMD [ "python", "./src/app.py" ]

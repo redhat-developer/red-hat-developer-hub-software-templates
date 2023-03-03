@@ -17,7 +17,7 @@ spec:
           image: quay.io/${{ values.image_namespace }}/${{ values.repo_name }}:latest
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: ${{ values.port }}
               protocol: TCP
           resources:
             limits:

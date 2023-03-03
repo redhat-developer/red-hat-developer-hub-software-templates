@@ -15,7 +15,7 @@ USER 1001
 COPY . .
 COPY --from=deps /opt/app-root/src .
 
-EXPOSE 3000
-ENV PORT 3000
+ENV PORT ${{ values.port }}
+EXPOSE ${{ values.port }}
 
 CMD ["node", "src/index.ts"]
