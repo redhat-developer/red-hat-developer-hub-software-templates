@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: go-runtime-template
   title: Go Runtime Template
-  description: Create a simple Go runtime
+  description: Create a simple Go runtime managed by ArgoCD
   tags:
     - recommended
     - go
