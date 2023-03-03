@@ -59,7 +59,7 @@ spec:
           description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }}
         port:
           title: Port
-          type: int
+          type: number
           default: 3000
           description: The port exposed for your application
     - title: Choose a CI method
