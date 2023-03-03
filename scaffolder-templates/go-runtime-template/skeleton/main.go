@@ -10,7 +10,7 @@ func main() {
 	port := os.Getenv("PORT")
 
 	if port == "" {
-		port = ${{ values.port | dump }}
+		port = "${{ values.port }}"
 	}
 
 	http.HandleFunc("/", HelloServer)
