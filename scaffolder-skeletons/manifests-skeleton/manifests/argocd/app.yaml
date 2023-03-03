@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ${{ values.component_id }}
+  name: ${{values.repo_name | dump}}
 spec:
   destination:
     namespace: ${{ values.namespace }}
@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     path: manifests/base
-    repoURL: https://github.com/${{ values.org }}/${{ values.component_id }}
+    repoURL: https://github.com/${{ values.github_org }}/${{ values.repo_name }}
     targetRevision: main
   syncPolicy:
     automated:

@@ -3,30 +3,27 @@ kind: Template
 metadata:
   name: python-template
   title: Python Golden Path Template
-  description: Create a starter Python application managed by ArgoCD with GitHub Actions
+  description: Create a starter Python application managed by ArgoCD
   tags:
     - recommended
     - python
-    - github-actions
-    - argocd
+    - flask
 spec:
-  owner: user:janus-authors
+  owner: janus-authors
   type: service
 
   parameters:
-    - title: Provide the GitHub location
+    - title: Provide information about the GitHub location
       required:
-        - org
-        - repo
+        - githubOrg
+        - repoName
       properties:
-        org:
-          title: AppCode
+        githubOrg:
+          title: GitHub Organization
           type: string
-          description: GitHub Organization
-        repo:
-          title: Repository
+        repoName:
+          title: Repository Name
           type: string
-          description: Repository name
     - title: Provide information about the new component
       required:
         - owner
@@ -34,81 +31,113 @@ spec:
         description:
           title: Description
           type: string
-          description: Help others understand what this component is for.
+          description: Help others understand what this component is for
         owner:
           title: Owner
           type: string
           description: Owner of the component
-          default: 'group: guest'
+          default: 'group: janus-authors'
           ui:field: OwnerPicker
           ui:options:
             allowedKinds:
               - Group
-    - title: Choose a CI method
+    - title: Provide information about the ArgoCD deployment
+      required:
+        - namespace
+        - imageNamespace
+        - port
+      properties:
+        namespace:
+          title: Namespace
+          type: string
+          description: The namespace for deploying resources
+        imageNamespace:
+          title: Image Namespace
+          type: string
+          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }}
+        port:
+          title: Port
+          type: number
+          default: 5000
+          description: The port exposed for your application
+    - title: Provide information about the CI method
       required:
         - ci
       properties:
         ci:
           title: Select a CI method
           type: string
-          default: GitHub Actions
+          default: ../../scaffolder-skeletons/github-actions-skeleton/
           enum:
-            - ./github-actions-skeleton
+            - ../../scaffolder-skeletons/github-actions-skeleton/
           enumNames:
             - GitHub Action
-    - title: Provide information for Deployment with ArgoCD
-      required:
-        - namespace
-        - imagenamespace
-      properties:
-        namespace:
-          title: Namespace
-          type: string
-          description: The namespace for deploying resources
-        imagenamespace:
-          title: Image Namespace
-          type: string
-          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }} 
   steps:
-    - id: template
-      name: Generating CI Component
+    - id: ci-template
+      name: Generating the CI component
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
-        copyWithoutRender:
+        copyWithoutTemplating:
           - .github/workflows/
 
     - id: template
-      name: Generating Component
+      name: Generating the source code component
       action: fetch:template
       input:
         url: ./skeleton
-        copyWithoutRender:
-          - .github/workflows/
         values:
-          component_id: ${{ parameters.repo }}
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
           description: ${{ parameters.description }}
-          destination: ${{ parameters.org }}/${{ parameters.repo }}
-          org: ${{ parameters.org }}
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          imagenamespace: ${{ parameters.imagenamespace }}
-    
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
+    - id: catalog-template
+      name: Generating catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
+    - id: manifests-template
+      name: Generating manifest component
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/manifests-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
     - id: publish
       name: Publishing to Source Code Repository
       action: publish:github
       input:
-        allowedHosts: ["github.com"]
+        allowedHosts: ['github.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.org }}&repo=${{ parameters.repo }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         defaultBranch: main
-    
+
     - id: register
       name: Registering the component
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
+        catalogInfoPath: '/catalog-info.yaml'
 
   output:
     links:

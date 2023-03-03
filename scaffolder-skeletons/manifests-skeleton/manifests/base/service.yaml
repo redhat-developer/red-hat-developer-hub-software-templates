@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ${{ values.repo_name }}
+spec:
+  ports:
+    - name: http-${{ values.port }}
+      port: ${{ values.port }}
+      protocol: TCP
+      targetPort: ${{ values.port }}
+  selector:
+    app: ${{ values.repo_name }}

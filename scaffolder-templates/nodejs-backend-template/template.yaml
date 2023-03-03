@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: nodejs-backend-template
-  title: Node.js Backend Template
-  description: Create a simple Node.js backend
+  title: Node.js Backend Golden Path Template
+  description: Create a starter Node.js backend application managed by ArgoCD
   tags:
     - recommended
     - nodejs
@@ -11,20 +11,20 @@ metadata:
     - typescript
     - express
 spec:
-  owner: janus-idp
+  owner: janus-authors
   type: service
 
   parameters:
-    - title: Provide the GitHub location
+    - title: Provide information about the GitHub location
       required:
-        - org
-        - repo
+        - githubOrg
+        - repoName
       properties:
-        org:
+        githubOrg:
           title: GitHub Organization
           type: string
-        repo:
-          title: Repository
+        repoName:
+          title: Repository Name
           type: string
     - title: Provide information about the new component
       required:
@@ -33,16 +33,35 @@ spec:
         description:
           title: Description
           type: string
-          description: Help others understand what this component is for.
+          description: Help others understand what this component is for
         owner:
           title: Owner
           type: string
           description: Owner of the component
-          default: 'group: janus-idp'
+          default: 'group: janus-authors'
           ui:field: OwnerPicker
           ui:options:
             allowedKinds:
               - Group
+    - title: Provide information about the ArgoCD deployment
+      required:
+        - namespace
+        - imageNamespace
+        - port
+      properties:
+        namespace:
+          title: Namespace
+          type: string
+          description: The namespace for deploying resources
+        imageNamespace:
+          title: Image Namespace
+          type: string
+          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }}
+        port:
+          title: Port
+          type: number
+          default: 3000
+          description: The port exposed for your application
     - title: Choose a CI method
       required:
         - ci
@@ -50,25 +69,61 @@ spec:
         ci:
           title: Select a CI method
           type: string
-          default: GitHub Action
+          default: ../../scaffolder-skeletons/github-actions-skeleton/
           enum:
-            - ./github-action-skeleton
+            - ../../scaffolder-skeletons/github-actions-skeleton/
           enumNames:
             - GitHub Action
   steps:
-    - id: template
-      name: Generating Component
+    - id: ci-template
+      name: Generating the CI component
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
         copyWithoutTemplating:
           - .github/workflows/
+
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
         values:
-          component_id: ${{ parameters.repo }}
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
           description: ${{ parameters.description }}
-          destination: ${{ parameters.org }}/${{ parameters.repo }}
-          org: ${{ parameters.org }}
-          owner: ${{ parameters.owner }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
+    - id: catalog-template
+      name: Generating catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
+    - id: manifests-template
+      name: Generating manifest component
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/manifests-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
 
     - id: publish
       name: Publishing to Source Code Repository
@@ -76,7 +131,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.org }}&repo=${{ parameters.repo }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
     - id: register

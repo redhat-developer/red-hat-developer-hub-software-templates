@@ -3,11 +3,18 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func main() {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "${{ values.port }}"
+	}
+
 	http.HandleFunc("/", HelloServer)
-	http.ListenAndServe("0.0.0.0:8080", nil)
+	http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), nil)
 }
 
 func HelloServer(w http.ResponseWriter, r *http.Request) {
