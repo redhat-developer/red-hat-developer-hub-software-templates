@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: nodejs-backend-template
   title: Node.js Backend Golden Path Template
-  description: Create a simple Node.js backend application managed by ArgoCD
+  description: Create a starter Node.js backend application managed by ArgoCD
   tags:
     - recommended
     - nodejs

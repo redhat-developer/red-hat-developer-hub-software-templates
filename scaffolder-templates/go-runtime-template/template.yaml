@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: go-runtime-template
   title: Go Runtime Golden Path Template
-  description: Create a simple Go runtime managed by ArgoCD
+  description: Create a starter Go runtime managed by ArgoCD
   tags:
     - recommended
     - go
