@@ -12,16 +12,16 @@ spec:
   type: service
 
   parameters:
-    - title: Provide information about GitHub location
+    - title: Provide information about the GitHub location
       required:
-        - org
-        - repo
+        - githubOrg
+        - repoName
       properties:
-        org:
+        githubOrg:
           title: GitHub Organization
           type: string
-        repo:
-          title: Repository
+        repoName:
+          title: Repository Name
           type: string
     - title: Provide information about the new component
       required:
@@ -40,7 +40,7 @@ spec:
           ui:options:
             allowedKinds:
               - Group
-    - title: Provide information about ArgoCD deployment
+    - title: Provide information about the ArgoCD deployment
       required:
         - namespace
         - imageNamespace

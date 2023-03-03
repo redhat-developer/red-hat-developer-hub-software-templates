@@ -15,7 +15,7 @@ spec:
   type: service
 
   parameters:
-    - title: Provide information about GitHub location
+    - title: Provide information about the GitHub location
       required:
         - org
         - repo
@@ -43,7 +43,7 @@ spec:
           ui:options:
             allowedKinds:
               - Group
-    - title: Provide information about ArgoCD deployment
+    - title: Provide information about the ArgoCD deployment
       required:
         - namespace
         - imageNamespace
