@@ -16,7 +16,7 @@ spec:
         - name: ${{ values.repo_name }}
           image: quay.io/${{ values.image_namespace }}/${{ values.repo_name }}:latest
           ports:
-            - name: http
+            - name: http-${{ values.port }}
               containerPort: ${{ values.port }}
               protocol: TCP
           resources:

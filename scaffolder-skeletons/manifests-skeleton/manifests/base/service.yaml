@@ -4,9 +4,9 @@ metadata:
   name: ${{ values.repo_name }}
 spec:
   ports:
-    - name: http-8080
-      port: 8080
+    - name: http-${{ values.port }}
+      port: ${{ values.port }}
       protocol: TCP
-      targetPort: 8080
+      targetPort: ${{ values.port }}
   selector:
     app: ${{ values.repo_name }}
