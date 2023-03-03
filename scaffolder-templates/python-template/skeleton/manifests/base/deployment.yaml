@@ -2,8 +2,6 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: ${{ values.component_id }}
-  labels:
-    backstage.io/kubernetes-id: ${{values.component_id | dump}}
 spec:
   replicas: 1
   selector:
@@ -13,11 +11,10 @@ spec:
     metadata:
       labels:
         app: ${{ values.component_id }}
-        backstage.io/kubernetes-id: ${{values.component_id | dump}}
     spec:
       containers:
         - name: ${{ values.component_id }}
-          image: quay.io/${{ values.imagenamespace }}/${{ values.component_id }}:latest
+          image: quay.io/${{ values.imageregistry }}/${{ values.component_id }}:latest
           ports:
             - name: http
               containerPort: 5000

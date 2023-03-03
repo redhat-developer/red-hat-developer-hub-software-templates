@@ -2,8 +2,6 @@ kind: Service
 apiVersion: v1
 metadata:
   name: ${{ values.component_id }}
-  labels:
-    backstage.io/kubernetes-id: ${{values.component_id | dump}}
 spec:
   ports:
     - name: http-5000

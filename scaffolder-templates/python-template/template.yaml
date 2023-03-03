@@ -3,15 +3,14 @@ kind: Template
 metadata:
   name: python-template
   title: Python Golden Path Template
-  description: Create a starter Python application managed by ArgoCD with the choice between Tekton and GitHub Actions
+  description: Create a starter Python application managed by ArgoCD with GitHub Actions
   tags:
     - recommended
     - python
     - github-actions
-    - tekton
     - argocd
 spec:
-  owner: janus-idp
+  owner: user:janus-authors
   type: service
 
   parameters:
@@ -53,13 +52,10 @@ spec:
           title: Select a CI method
           type: string
           default: GitHub Actions
-          description: This will create a simple pipeline based on the selected choice
           enum:
             - ./github-actions-skeleton
-            - ./tekton-skeleton
           enumNames:
             - GitHub Action
-            - Tekton
     - title: Provide information for Deployment with ArgoCD
       required:
         - namespace
@@ -72,7 +68,7 @@ spec:
         imagenamespace:
           title: Image Namespace
           type: string
-          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/<IMAGE_NAME>
+          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }} 
   steps:
     - id: template
       name: Generating CI Component
@@ -81,12 +77,6 @@ spec:
         url: ${{ parameters.ci }}
         copyWithoutRender:
           - .github/workflows/
-        values:
-          component_id: ${{ parameters.repo }}
-          org: ${{ parameters.org }}
-          namespace: ${{ parameters.namespace }}
-          defaultBranch: main
-          imagenamespace: ${{ parameters.imagenamespace }}
 
     - id: template
       name: Generating Component
