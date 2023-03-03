@@ -1,0 +1,18 @@
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: Policy
+metadata:
+  name: {{ .Values.app.name }}-kv
+  namespace: vault-admin
+spec:
+  authentication: 
+    path: kubernetes
+    role: policy-admin
+  policy: |
+    # read / write from the kv path
+    path "{{ .Values.git.org }}/{{ .Values.app.name }}-kv/*" {
+      capabilities = [ "create", "read", "update", "delete"]
+    }
+    # read the password policy
+    path "sys/policies/password/+/generate" {
+      capabilities = [ "read" ]
+    }

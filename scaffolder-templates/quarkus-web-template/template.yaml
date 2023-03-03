@@ -62,7 +62,6 @@ spec:
           default: image-registry.openshift-image-registry.svc:5000
         image_name:
           title: Image Name
-          default: my-quarkus-dev/my-quarkus-app
           type: string
           description: Build Image Name <NAMESPACE><COMPONENT_ID> to use internal registry
         image_tag:
@@ -132,6 +131,9 @@ spec:
           description: ${{ parameters.description }}
           destination: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops
           source_repository: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          repository_name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          git_owner: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
+          cluster: baseurl.cluster-example.com
           namespace: ${{ parameters.component_id }}-dev
           image_host: ${{ parameters.image_host }}
           image_name: ${{ parameters.image_name }}
