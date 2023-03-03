@@ -67,7 +67,7 @@ spec:
         ci:
           title: Select a CI method
           type: string
-          default: GitHub Action
+          default: ../../scaffolder-skeletons/github-actions-skeleton/
           enum:
             - ../../scaffolder-skeletons/github-actions-skeleton/
           enumNames:
