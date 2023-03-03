@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: go-runtime-template
-  title: Go Runtime Template
+  title: Go Runtime Golden Path Template
   description: Create a simple Go runtime managed by ArgoCD
   tags:
     - recommended
@@ -128,7 +128,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.org }}&repo=${{ parameters.repo }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
     - id: register
