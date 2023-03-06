@@ -1,0 +1,50 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: ${{values.repo_name}}-pipeline
+  namespace: ${{values.namespace}}
+  labels:
+    type: pipeline
+spec:
+  params:
+    - name: source-repo
+      description: source repo that contains the application code
+      type: string
+      default: https://github.com/${{values.github_org}}/${{values.repo_name}}
+    - name: source-branch
+      description: source branch to build from
+      default: ${{values.default_branch}}
+      type: string
+    - name: output-image
+      description: reference of the image that will get created
+      default: quay.io/${{values.image_namespace}}/${{values.repo_name}}
+      type: string
+  tasks:
+    - name: git-clone
+      params:
+        - name: url
+          value: $(params.source-repo)
+        - name: revision
+          value: $(params.source-branch)
+      taskRef:
+        kind: ClusterTask
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: source-folder
+    - name: ${{values.image_builder}}
+      params:
+        - name: VERSION
+          value: latest
+        - name: IMAGE
+          value: $(params.output-image)
+      runAfter:
+        - git-clone
+      taskRef:
+        kind: ClusterTask
+        name: ${{values.image_builder}}
+      workspaces:
+        - name: source
+          workspace: source-folder
+  workspaces:
+    - name: source-folder

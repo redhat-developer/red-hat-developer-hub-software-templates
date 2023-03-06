@@ -1,14 +1,15 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: go-runtime-template
-  title: Go Runtime Golden Path Template
-  description: Create a starter Go runtime managed by ArgoCD
+  name: python-backend-template
+  title: Python Backend Golden Path Template
+  description: Create a starter Python backend application managed by ArgoCD with a CI pipeline
   tags:
     - recommended
-    - go
+    - python
+    - flask
 spec:
-  owner: janus-idp
+  owner: janus-authors
   type: service
 
   parameters:
@@ -53,11 +54,11 @@ spec:
         imageNamespace:
           title: Image Namespace
           type: string
-          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }}
+          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/<REPO_NAME>
         port:
           title: Port
           type: number
-          default: 8080
+          default: 5000
           description: The port exposed for your application
     - title: Provide information about the CI method
       required:
@@ -66,11 +67,14 @@ spec:
         ci:
           title: Select a CI method
           type: string
+          description: This action will create a simple CI based on chosen method
           default: ../../scaffolder-skeletons/github-actions-skeleton/
           enum:
             - ../../scaffolder-skeletons/github-actions-skeleton/
+            - ../../scaffolder-skeletons/tekton-skeleton/
           enumNames:
             - GitHub Action
+            - Tekton
   steps:
     - id: ci-template
       name: Generating the CI component
@@ -79,6 +83,13 @@ spec:
         url: ${{ parameters.ci }}
         copyWithoutTemplating:
           - .github/workflows/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          default_branch: main
+          image_builder: s2i-python
 
     - id: template
       name: Generating the source code component
