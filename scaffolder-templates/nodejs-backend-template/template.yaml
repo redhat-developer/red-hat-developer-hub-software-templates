@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: nodejs-backend-template
   title: Node.js Backend Golden Path Template
-  description: Create a starter Node.js backend application managed by ArgoCD
+  description: Create a starter Node.js backend application managed by ArgoCD with a CI pipeline
   tags:
     - recommended
     - nodejs
@@ -56,7 +56,7 @@ spec:
         imageNamespace:
           title: Image Namespace
           type: string
-          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/${{ parameters.repo }}
+          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/<REPO_NAME>
         port:
           title: Port
           type: number
@@ -69,11 +69,14 @@ spec:
         ci:
           title: Select a CI method
           type: string
+          description: This action will create a simple CI based on chosen method
           default: ../../scaffolder-skeletons/github-actions-skeleton/
           enum:
             - ../../scaffolder-skeletons/github-actions-skeleton/
+            - ../../scaffolder-skeletons/tekton-skeleton/
           enumNames:
             - GitHub Action
+            - Tekton
   steps:
     - id: ci-template
       name: Generating the CI component
@@ -82,6 +85,13 @@ spec:
         url: ${{ parameters.ci }}
         copyWithoutTemplating:
           - .github/workflows/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          default_branch: main
+          image_builder: s2i-nodejs
 
     - id: template
       name: Generating the source code component
