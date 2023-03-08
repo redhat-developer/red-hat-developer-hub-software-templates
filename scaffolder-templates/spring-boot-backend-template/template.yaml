@@ -1,0 +1,180 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: spring-boot-backend-template
+  title: Spring Boot Backend Golden Path Template
+  description: Create a starter Spring Boot backend application managed by ArgoCD with a CI pipeline
+  tags:
+    - recommended
+    - spring-boot
+    - java
+    - maven
+spec:
+  owner: janus-authors
+  type: service
+
+  parameters:
+    - title: Provide information about the GitHub location
+      required:
+        - githubOrg
+        - repoName
+      properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+        repoName:
+          title: Repository Name
+          type: string
+    - title: Provide information about the new component
+      required:
+        - owner
+        - group_id
+        - artifact_id
+        - java_package_name
+      properties:
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+          default: 'group: janus-authors'
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+        group_id:
+          title: Group ID
+          type: string
+          default: io.janus
+          description: Maven Group ID eg (io.janus)
+        artifact_id:
+          title: Artifact ID
+          type: string
+          default: spring-boot-app
+          description: Maven Artifact ID
+        java_package_name:
+          title: Java Package Namespace
+          type: string
+          default: io/janus/spring-boot-app
+          description: Name for the Java Package (ensure to use the / character as this is used for folder structure) should match Group ID and Artifact ID
+    - title: Provide information about the ArgoCD deployment
+      required:
+        - namespace
+        - imageNamespace
+        - port
+      properties:
+        namespace:
+          title: Namespace
+          type: string
+          description: The namespace for deploying resources
+        imageNamespace:
+          title: Image Namespace
+          type: string
+          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/<REPO_NAME>
+        port:
+          title: Port
+          type: number
+          default: 5000
+          description: The port exposed for your application
+    - title: Provide information about the CI method
+      required:
+        - ci
+      properties:
+        ci:
+          title: Select a CI method
+          type: string
+          description: This action will create a simple CI based on chosen method
+          default: ../../scaffolder-skeletons/github-actions-skeleton/
+          enum:
+            - ../../scaffolder-skeletons/github-actions-skeleton/
+            - ../../scaffolder-skeletons/tekton-skeleton/
+          enumNames:
+            - GitHub Action
+            - Tekton
+  steps:
+    - id: ci-template
+      name: Generating the CI component
+      action: fetch:template
+      input:
+        url: ${{ parameters.ci }}
+        copyWithoutTemplating:
+          - .github/workflows/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          defaultBranch: main
+          image_builder: s2i-java
+
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+          group_id: ${{ parameters.group_id }}
+          artifact_id: ${{ parameters.artifact_id }}
+          java_package_name: ${{ parameters.java_package_name }}
+
+    - id: catalog-template
+      name: Generating catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
+    - id: manifests-template
+      name: Generating manifest component
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/manifests-skeleton/
+        values:
+          github_org: ${{ parameters.githubOrg }}
+          repo_name: ${{ parameters.repoName }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner}}
+          namespace: ${{ parameters.namespace }}
+          image_namespace: ${{ parameters.imageNamespace }}
+          port: ${{ parameters.port }}
+
+    - id: publish
+      name: Publishing to Source Code Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: ${{ parameters.description }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        defaultBranch: main
+
+    - id: register
+      name: Registering the component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open Component in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

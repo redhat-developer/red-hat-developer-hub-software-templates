@@ -10,3 +10,4 @@ spec:
     - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/nodejs-backend-template/template.yaml
     - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/python-backend-template/template.yaml
     - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/dotnet-frontend-template/template.yaml
+    - https://github.com/janus-idp/software-templates/blob/main/scaffolder-templates/spring-boot-backend-template/template.yaml
