@@ -17,7 +17,7 @@ spec:
       type: string
     - name: output-image
       description: reference of the image that will get created
-      default: quay.io/${{values.image_namespace}}/${{values.repo_name}}
+      default: ${{values.image_repository}}/${{values.image_namespace}}/${{values.repo_name}}
       type: string
   tasks:
     - name: git-clone
