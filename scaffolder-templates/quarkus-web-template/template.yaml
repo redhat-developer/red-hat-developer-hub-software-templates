@@ -63,6 +63,7 @@ spec:
         image_name:
           title: Image Name
           type: string
+          default: my-quarkus-app-dev/my-quarkus-app
           description: Build Image Name <NAMESPACE><COMPONENT_ID> to use internal registry
         image_tag:
           title: Image Tag
@@ -110,6 +111,7 @@ spec:
         description: This is ${{ parameters.component_id }}
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
+        protectDefaultBranch: false
         repoVisibility: public
 
     - id: register

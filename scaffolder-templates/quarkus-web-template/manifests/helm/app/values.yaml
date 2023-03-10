@@ -11,10 +11,10 @@ namespace:
 replicaCount: 1
 
 image:
-  repository: image-registry.openshift-image-registry.svc:5000/${{values.component_id}}-dev/${{values.component_id}}-image
+  repository: ${{values.image_host}}/${{values.image_name}}
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  tag: ${{values.image_tag}}
 
 imagePullSecrets: []
 nameOverride: ""
