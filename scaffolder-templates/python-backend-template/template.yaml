@@ -48,7 +48,7 @@ spec:
         ci:
           title: Select a CI method
           type: string
-          description: This action will create a simple CI based on chosen method
+          description: This action will create a CI pipeline for your application based on chosen method
           default: ../../scaffolder-skeletons/github-actions-skeleton/
           enum:
             - ../../scaffolder-skeletons/github-actions-skeleton/
