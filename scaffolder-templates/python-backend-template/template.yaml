@@ -41,6 +41,21 @@ spec:
           ui:options:
             allowedKinds:
               - Group
+    - title: Provide information about the CI method
+      required:
+        - ci
+      properties:
+        ci:
+          title: Select a CI method
+          type: string
+          description: This action will create a simple CI based on chosen method
+          default: ../../scaffolder-skeletons/github-actions-skeleton/
+          enum:
+            - ../../scaffolder-skeletons/github-actions-skeleton/
+            - ../../scaffolder-skeletons/tekton-skeleton/
+          enumNames:
+            - GitHub Action
+            - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
         - imageRepository
@@ -71,21 +86,6 @@ spec:
           type: number
           default: 5000
           description: The port exposed for your application
-    - title: Provide information about the CI method
-      required:
-        - ci
-      properties:
-        ci:
-          title: Select a CI method
-          type: string
-          description: This action will create a simple CI based on chosen method
-          default: ../../scaffolder-skeletons/github-actions-skeleton/
-          enum:
-            - ../../scaffolder-skeletons/github-actions-skeleton/
-            - ../../scaffolder-skeletons/tekton-skeleton/
-          enumNames:
-            - GitHub Action
-            - Tekton
   steps:
     - id: ci-template
       name: Generating the CI component

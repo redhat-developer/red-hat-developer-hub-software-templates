@@ -60,6 +60,21 @@ spec:
           type: string
           default: io/janus/spring-boot-app
           description: Name for the Java Package (ensure to use the / character as this is used for folder structure) should match Group ID and Artifact ID
+    - title: Provide information about the CI method
+      required:
+        - ci
+      properties:
+        ci:
+          title: Select a CI method
+          type: string
+          description: This action will create a simple CI based on chosen method
+          default: ../../scaffolder-skeletons/github-actions-skeleton/
+          enum:
+            - ../../scaffolder-skeletons/github-actions-skeleton/
+            - ../../scaffolder-skeletons/tekton-skeleton/
+          enumNames:
+            - GitHub Action
+            - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
         - imageRepository
@@ -90,21 +105,6 @@ spec:
           type: number
           default: 5000
           description: The port exposed for your application
-    - title: Provide information about the CI method
-      required:
-        - ci
-      properties:
-        ci:
-          title: Select a CI method
-          type: string
-          description: This action will create a simple CI based on chosen method
-          default: ../../scaffolder-skeletons/github-actions-skeleton/
-          enum:
-            - ../../scaffolder-skeletons/github-actions-skeleton/
-            - ../../scaffolder-skeletons/tekton-skeleton/
-          enumNames:
-            - GitHub Action
-            - Tekton
   steps:
     - id: ci-template
       name: Generating the CI component
