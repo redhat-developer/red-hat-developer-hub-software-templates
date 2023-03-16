@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: dotnet-frontend-template
-  title: .NET Frontend Golden Path Template
+  title: Create a .NET Frontend application with CI/CD
   description: Create a starter .NET frontend application managed by ArgoCD with a CI pipeline
   tags:
     - recommended

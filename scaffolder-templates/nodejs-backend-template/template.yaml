@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: nodejs-backend-template
-  title: Node.js Backend Golden Path Template
+  title: Create a Node.js Backend application with CI/CD
   description: Create a starter Node.js backend application managed by ArgoCD with a CI pipeline
   tags:
     - recommended

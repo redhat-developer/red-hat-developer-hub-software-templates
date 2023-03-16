@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: quarkus-gpt-template
-  title: Quarkus Golden Path Template
-  description: Create a starter Quarkus application managed by ArgoCD with a CI pipeline
+  name: quarkus-backend-template
+  title: Create a Quarkus Backend application with CI/CD
+  description: Create a starter Quarkus Backend application managed by ArgoCD with a CI pipeline
   tags:
     - recommended
     - quarkus

@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: python-backend-template
-  title: Python Backend Golden Path Template
+  title: Create a Python Backend application with CI/CD
   description: Create a starter Python backend application managed by ArgoCD with a CI pipeline
   tags:
     - recommended
