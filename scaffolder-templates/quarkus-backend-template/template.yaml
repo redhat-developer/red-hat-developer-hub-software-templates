@@ -77,18 +77,29 @@ spec:
             - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
+        - imageRepository
         - namespace
-        - imageNamespace
+        - imageUrl
         - port
       properties:
+        imageRepository:
+          title: Select a registry
+          type: string
+          default: quay.io
+          enum:
+            - image-registry.openshift-image-registry.svc:5000
+            - quay.io
+          enumNames:
+            - Internal OpenShift Registry
+            - Quay
+        imageUrl:
+          title: Image Namespace
+          type: string
+          description: Enter the Quay.io Image Namespace quay.io/<image_url>/<REPO_NAME>
         namespace:
           title: Namespace
           type: string
           description: The namespace for deploying resources
-        imageNamespace:
-          title: Image Namespace
-          type: string
-          description: Enter the Quay.io Image Namespace quay.io/<IMAGE_NAMESPACE>/<REPO_NAME>
         port:
           title: Port
           type: number
@@ -106,9 +117,10 @@ spec:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           defaultBranch: main
           image_builder: s2i-java
+          image_repository: ${{ parameters.imageRepository }}
 
     - id: template
       name: Generating the source code component
@@ -121,11 +133,12 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           port: ${{ parameters.port }}
           group_id: ${{ parameters.group_id }}
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
+          image_repository: ${{ parameters.imageRepository }}
 
     - id: catalog-template
       name: Generating catalog-info.yaml
@@ -138,8 +151,9 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           port: ${{ parameters.port }}
+          image_repository: ${{ parameters.imageRepository }}
 
     - id: manifests-template
       name: Generating manifest component
@@ -152,8 +166,9 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           port: ${{ parameters.port }}
+          image_repository: ${{ parameters.imageRepository }}
 
     - id: publish
       name: Publishing to Source Code Repository
