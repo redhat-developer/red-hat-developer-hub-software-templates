@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: dotnet-frontend-template
-  title: .NET Frontend Golden Path Template
+  title: Create a .NET Frontend application with CI/CD
   description: Create a starter .NET frontend application managed by ArgoCD with a CI pipeline
   tags:
     - recommended
@@ -40,36 +40,6 @@ spec:
           ui:options:
             allowedKinds:
               - Group
-    - title: Provide information about the ArgoCD deployment
-      required:
-        - imageRepository
-        - namespace
-        - imageNamespace
-        - port
-      properties:
-        imageRepository:
-          title: Select a registry
-          type: string
-          default: image-registry.openshift-image-registry.svc:5000
-          enum:
-            - image-registry.openshift-image-registry.svc:5000
-            - quay.io
-          enumNames:
-            - Internal OpenShift Registry
-            - Quay
-        namespace:
-          title: Namespace
-          type: string
-          description: The namespace for deploying resources
-        imageNamespace:
-          title: Image Namespace
-          type: string
-          description: Enter the Quay.io or OpenShift Image Namespace <REGISTRY>/<IMAGE_NAMESPACE>/<REPO_NAME>
-        port:
-          title: Port
-          type: number
-          default: 5000
-          description: The port exposed for your application
     - title: Choose a CI method
       required:
         - ci
@@ -77,7 +47,7 @@ spec:
         ci:
           title: Select a CI method
           type: string
-          description: This action will create a simple CI based on chosen method
+          description: This action will create a CI pipeline for your application based on chosen method
           default: ../../scaffolder-skeletons/github-actions-skeleton/
           enum:
             - ../../scaffolder-skeletons/github-actions-skeleton/
@@ -85,6 +55,36 @@ spec:
           enumNames:
             - GitHub Action
             - Tekton
+    - title: Provide information about the ArgoCD deployment
+      required:
+        - imageRepository
+        - namespace
+        - imageUrl
+        - port
+      properties:
+        imageRepository:
+          title: Select a registry
+          type: string
+          default: quay.io
+          enum:
+            - image-registry.openshift-image-registry.svc:5000
+            - quay.io
+          enumNames:
+            - Internal OpenShift Registry
+            - Quay
+        imageUrl:
+          title: Image Namespace
+          type: string
+          description: Enter the Quay.io or OpenShift Image Namespace <REGISTRY>/<image_url>/<REPO_NAME>
+        namespace:
+          title: Namespace
+          type: string
+          description: The namespace for deploying resources
+        port:
+          title: Port
+          type: number
+          default: 5000
+          description: The port exposed for your application
   steps:
     - id: ci-template
       name: Generating the CI component
@@ -97,7 +97,7 @@ spec:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           default_branch: main
           image_builder: s2i-dotnetcore
           image_repository: ${{ parameters.imageRepository }}
@@ -113,7 +113,7 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           port: ${{ parameters.port }}
           image_repository: ${{ parameters.imageRepository }}
 
@@ -128,7 +128,7 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           port: ${{ parameters.port }}
           image_repository: ${{ parameters.imageRepository }}
 
@@ -143,7 +143,7 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_namespace: ${{ parameters.imageNamespace }}
+          image_url: ${{ parameters.imageUrl }}
           port: ${{ parameters.port }}
           image_repository: ${{ parameters.imageRepository }}
 
