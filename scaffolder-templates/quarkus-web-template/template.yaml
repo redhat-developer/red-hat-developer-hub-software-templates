@@ -152,6 +152,7 @@ spec:
         title: gitops resources for ${{ parameters.component_id }}
         description: gitops resources for ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
+        repoVisibility: public
 
     - id: create-argocd-resources
       if: ${{ parameters.gitops }}
