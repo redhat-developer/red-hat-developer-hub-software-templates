@@ -8,6 +8,7 @@ metadata:
   annotations:
     github.com/project-slug: ${{values.destination }}
     backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: ${{values.component_id}}
   tags:
     - java
     - quarkus
