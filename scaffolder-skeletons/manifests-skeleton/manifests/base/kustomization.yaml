@@ -4,3 +4,5 @@ namespace: ${{ values.namespace }}
 resources: 
   - deployment.yaml
   - service.yaml
+  - namespace.yaml
+  
