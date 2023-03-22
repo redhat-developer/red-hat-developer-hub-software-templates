@@ -7,7 +7,7 @@ spec:
   params:
     - name: git-revision
       description: The git revision
-      default: ${{values.default_branch}}
+      default: main
     - name: git-repo-url
       description: The repo url
     - name: output-image

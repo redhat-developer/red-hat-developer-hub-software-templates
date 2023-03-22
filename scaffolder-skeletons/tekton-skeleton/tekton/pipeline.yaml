@@ -13,7 +13,7 @@ spec:
       default: https://github.com/${{values.github_org}}/${{values.repo_name}}
     - name: source-branch
       description: source branch to build from
-      default: ${{values.default_branch}}
+      default: main
       type: string
     - name: output-image
       description: reference of the image that will get created

@@ -14,7 +14,7 @@ spec:
     - name: source-repo
       value: 'https://github.com/${{values.github_org}}/${{values.repo_name}}.git'
     - name: source-branch
-      value: ${{values.default_branch}}
+      value: main
     - name: output-image
       value: ${{values.image_repository}}/${{values.image_url}}/${{values.repo_name}}
   pipelineRef:

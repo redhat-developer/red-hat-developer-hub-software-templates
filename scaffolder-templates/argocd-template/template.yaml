@@ -14,24 +14,20 @@ spec:
   parameters:
     - title: Provide information about the existing GitHub location
       required:
-        - githubOrg
-        - repoName
+        - github_org
+        - repo_name
       properties:
-        githubOrg:
+        github_org:
           title: GitHub Organization
           type: string
-        repoName:
+        repo_name:
           title: Repository Name
           type: string
     - title: Provide information about the new component
       required:
         - owner
+        - system
       properties:
-        description:
-          title: Description
-          type: string
-          default: Contains the ArgoCD manifests for <REPO_NAME>
-          description: Help others understand what this component is for
         owner:
           title: Owner
           type: string
@@ -41,14 +37,23 @@ spec:
           ui:options:
             allowedKinds:
               - Group
+        system:
+          title: System
+          type: string
+          description: System of the component
+          default: 'system: examples'
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              - System
     - title: Provide information about the ArgoCD deployment
       required:
-        - imageRepository
+        - image_repository
         - namespace
-        - imageUrl
+        - image_url
         - port
       properties:
-        imageRepository:
+        image_repository:
           title: Select a registry
           type: string
           default: quay.io
@@ -58,7 +63,7 @@ spec:
           enumNames:
             - Internal OpenShift Registry
             - Quay
-        imageUrl:
+        image_url:
           title: Image URL
           type: string
           description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
@@ -72,50 +77,39 @@ spec:
           type: number
           description: The port exposed for the application
   steps:
-    - id: template
-      name: Generating the source code component
-      action: fetch:template
-      input:
-        url: ./skeleton
-        values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
-          description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
-          namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
-          port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
-
     - id: catalog-template
       name: Generating catalog-info.yaml
       action: fetch:template
       input:
-        url: ./skeleton
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
-          description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
+          github_org: ${{ parameters.github_org }}
+          repo_name: ${{ parameters.repo_name }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          application_type: gitops
+          description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
+          image_url: ${{ parameters.image_url }}
+          image_repository: ${{ parameters.image_repository }}
           port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
 
     - id: manifests-template
       name: Generating manifests component
       action: fetch:template
       input:
-        url: ./skeleton
+        url: ../../scaffolder-skeletons/manifests-skeleton/
         values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
-          description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
+          github_org: ${{ parameters.github_org }}
+          repo_name: ${{ parameters.repo_name }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          application_type: gitops
+          description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
+          image_url: ${{ parameters.image_url }}
+          image_repository: ${{ parameters.image_repository }}
           port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
 
     - id: publish
       name: Publishing to Source Code Repository
@@ -123,7 +117,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
+        repoUrl: github.com?owner=${{ parameters.github_org }}&repo=${{ parameters.repo_name }}-gitops
         defaultBranch: main
 
     - id: register
