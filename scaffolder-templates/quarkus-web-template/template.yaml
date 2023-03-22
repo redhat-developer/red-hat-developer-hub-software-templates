@@ -101,6 +101,7 @@ spec:
           artifact_id: ${{ parameters.artifact_id }}
           java_package_name: ${{ parameters.java_package_name }}
           owner: ${{ parameters.owner }}
+          cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
           destination: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           port: 8080
 
@@ -135,7 +136,7 @@ spec:
           source_repository: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
           repository_name: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
           git_owner: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
-          cluster: baseurl.cluster-example.com
+          cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
           namespace: ${{ parameters.component_id }}-dev
           image_host: ${{ parameters.image_host }}
           image_name: ${{ parameters.image_name }}
@@ -152,6 +153,7 @@ spec:
         title: gitops resources for ${{ parameters.component_id }}
         description: gitops resources for ${{ parameters.component_id }}
         sourcePath: ./tenant-gitops
+        repoVisibility: public
 
     - id: create-argocd-resources
       if: ${{ parameters.gitops }}
