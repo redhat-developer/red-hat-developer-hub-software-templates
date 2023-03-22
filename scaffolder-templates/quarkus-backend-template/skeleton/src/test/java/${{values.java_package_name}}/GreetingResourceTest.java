@@ -1,4 +1,4 @@
-package ${{values.group_id}}.${{values.artifact_id}};
+package ${{ values.group_id }}.${{ values.artifact_id }};
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;

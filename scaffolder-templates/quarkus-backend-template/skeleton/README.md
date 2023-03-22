@@ -1,8 +1,8 @@
-# ${{values.repo_name}}
+# ${{ values.repo_name }}
 
-${{values.description}}
+${{ values.description }}
 
-More information on the chosen CI method can be found [here](https://github.com/${{values.github_org}}/${{values.repo_name}}).
+More information on the chosen CI method can be found [here](https://github.com/${{ values.github_org }}/${{ values.repo_name }}).
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
@@ -51,7 +51,7 @@ Or, if you don't have GraalVM installed, you can run the native executable build
 ./mvnw package -Pnative -Dquarkus.native.container-build=true
 ```
 
-You can then execute your native executable with: `./target/${{values.artifact_id}}-1.0.0-SNAPSHOT-runner`
+You can then execute your native executable with: `./target/${{ values.artifact_id }}-1.0.0-SNAPSHOT-runner`
 
 If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling.html>.
 

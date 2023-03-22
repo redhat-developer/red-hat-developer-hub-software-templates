@@ -1,24 +1,24 @@
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: ${{values.repo_name}}-pipeline-run-init
-  namespace: ${{values.namespace}}
+  name: ${{ values.repo_name }}-pipeline-run-init
+  namespace: ${{ values.namespace }}
   annotations:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
   labels:
-    tekton.dev/pipeline: ${{values.repo_name}}-pipeline
+    tekton.dev/pipeline: ${{ values.repo_name }}-pipeline
     type: pipeline
 spec:
   params:
     - name: source-repo
-      value: 'https://github.com/${{values.github_org}}/${{values.repo_name}}.git'
+      value: 'https://github.com/${{ values.github_org }}/${{ values.repo_name }}.git'
     - name: source-branch
       value: main
     - name: output-image
-      value: ${{values.image_repository}}/${{values.image_url}}/${{values.repo_name}}
+      value: ${{ values.image_repository }}/${{ values.image_url }}/${{ values.repo_name }}
   pipelineRef:
-    name: ${{values.repo_name}}-pipeline
+    name: ${{ values.repo_name }}-pipeline
   serviceAccountName: pipeline
   workspaces:
     - name: source-folder

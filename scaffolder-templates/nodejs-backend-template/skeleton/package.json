@@ -1,7 +1,7 @@
 {
-  "name": "${{values.repo_name}}",
+  "name": "${{ values.repo_name }}",
   "version": "1.0.0",
-  "description": "${{values.description}}",
+  "description": "${{ values.description }}",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --target=node18 --outfile=dist/index.js",
     "start": "node dist/index.js"

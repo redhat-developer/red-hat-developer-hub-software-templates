@@ -1,4 +1,4 @@
-package ${{values.group_id}}.${{values.artifact_id}};
+package ${{ values.group_id }}.${{ values.artifact_id }};
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

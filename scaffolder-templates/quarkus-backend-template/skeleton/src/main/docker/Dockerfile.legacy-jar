@@ -7,21 +7,21 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.legacy-jar -t quarkus/${{values.artifact_id}}-legacy-jar .
+# docker build -f src/main/docker/Dockerfile.legacy-jar -t quarkus/${{ values.artifact_id }}-legacy-jar .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p ${{values.port}}:${{values.port}} quarkus/${{values.artifact_id}}-legacy-jar
+# docker run -i --rm -p ${{ values.port }}:${{ values.port }} quarkus/${{ values.artifact_id }}-legacy-jar
 #
 # If you want to include the debug port into your docker image
-# you will have to expose the debug port (default 5005) like this :  EXPOSE ${{values.port}} 5050
+# you will have to expose the debug port (default 5005) like this :  EXPOSE ${{ values.port }} 5050
 #
 # Then run the container using :
 #
-# docker run -i --rm -p ${{values.port}}:${{values.port}} -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/${{values.artifact_id}}-legacy-jar
+# docker run -i --rm -p ${{ values.port }}:${{ values.port }} -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/${{ values.artifact_id }}-legacy-jar
 #
 ###
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3 
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3
 
 ARG JAVA_PACKAGE=java-11-openjdk-headless
 ARG RUN_JAVA_VERSION=1.3.8
@@ -45,7 +45,7 @@ ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jb
 COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/app.jar
 
-EXPOSE ${{values.port}}
+EXPOSE ${{ values.port }}
 USER 1001
 
 ENTRYPOINT [ "/deployments/run-java.sh" ]

@@ -1,4 +1,4 @@
-package ${{values.group_id}}.${{values.artifact_id}}
+package ${{ values.group_id }}.${{ values.artifact_id }}
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
