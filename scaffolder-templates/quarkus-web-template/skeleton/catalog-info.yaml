@@ -6,10 +6,10 @@ metadata:
   description: ${{values.description | dump}}
   {%- endif %}
   annotations:
-    argocd/app-name: ${{values.repo_name}}
+    argocd/app-name: ${{values.component_id}}-dev
+    backstage.io/kubernetes-id: ${{values.component_id}}
     github.com/project-slug: ${{values.destination }}
     backstage.io/techdocs-ref: dir:.
-    backstage.io/kubernetes-id: ${{values.component_id}}
   tags:
     - java
     - quarkus
