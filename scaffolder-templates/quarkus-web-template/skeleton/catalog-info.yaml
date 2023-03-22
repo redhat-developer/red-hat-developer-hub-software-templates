@@ -6,16 +6,18 @@ metadata:
   description: ${{values.description | dump}}
   {%- endif %}
   annotations:
+    argocd/app-name: ${{values.component_id}}-dev
+    backstage.io/kubernetes-id: ${{values.component_id}}
     github.com/project-slug: ${{values.destination }}
     backstage.io/techdocs-ref: dir:.
   tags:
     - java
     - quarkus
   links:
-    - url: https://devspaces.apps.example-cluster.com/#https://github.com/${{values.destination}}?che-editor=che-incubator/che-code/insiders&devfilePath=.devfile-vscode.yaml
+    - url: https://devspaces${{values.cluster}}/#https://github.com/${{values.destination}}?che-editor=che-incubator/che-code/insiders&devfilePath=.devfile-vscode.yaml
       title: CodeReady Workspaces (VS Code)
       icon: web
-    - url: https://devspaces.apps.example-cluster.com/#https://github.com/${{values.destination}}?che-editor=che-incubator/che-idea/next&devfilePath=.devfile-intellij.yaml
+    - url: https://devspaces${{values.cluster}}/#https://github.com/${{values.destination}}?che-editor=che-incubator/che-idea/next&devfilePath=.devfile-intellij.yaml
       title: CodeReady Workspaces (JetBrains IntelliJ)
       icon: web
 spec:

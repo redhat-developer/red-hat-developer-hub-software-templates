@@ -34,6 +34,7 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "quarkus-template.labels" -}}
+backstage.io/kubernetes-id: ${{values.component_id}}
 helm.sh/chart: {{ include "quarkus-template.chart" . }}
 {{ include "quarkus-template.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
