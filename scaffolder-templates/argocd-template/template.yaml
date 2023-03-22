@@ -1,20 +1,18 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: quarkus-backend-template
-  title: Create a Quarkus Backend application with CI/CD
-  description: Create a starter Quarkus Backend application managed by ArgoCD with a CI pipeline
+  name: argocd-template
+  title: Add ArgoCD to an existing project
+  description: Add ArgoCD to an existing project
   tags:
     - recommended
-    - quarkus
-    - java
-    - maven
+    - argocd
 spec:
   owner: janus-authors
   type: service
 
   parameters:
-    - title: Provide information about the GitHub location
+    - title: Provide information about the existing GitHub location
       required:
         - githubOrg
         - repoName
@@ -28,13 +26,11 @@ spec:
     - title: Provide information about the new component
       required:
         - owner
-        - group_id
-        - artifact_id
-        - java_package_name
       properties:
         description:
           title: Description
           type: string
+          default: Contains the ArgoCD manifests for <REPO_NAME>
           description: Help others understand what this component is for
         owner:
           title: Owner
@@ -45,36 +41,6 @@ spec:
           ui:options:
             allowedKinds:
               - Group
-        group_id:
-          title: Group ID
-          type: string
-          default: io.janus
-          description: Maven Group ID eg (io.janus)
-        artifact_id:
-          title: Artifact ID
-          type: string
-          default: quarkusapp
-          description: Maven Artifact ID
-        java_package_name:
-          title: Java Package Namespace
-          type: string
-          default: io/janus/quarkusapp
-          description: Name for the Java Package (ensure to use the / character as this is used for folder structure) should match Group ID and Artifact ID
-    - title: Provide information about the CI method
-      required:
-        - ci
-      properties:
-        ci:
-          title: Select a CI method
-          type: string
-          description: This action will create a CI pipeline for your application based on chosen method
-          default: ../../scaffolder-skeletons/github-actions-skeleton/
-          enum:
-            - ../../scaffolder-skeletons/github-actions-skeleton/
-            - ../../scaffolder-skeletons/tekton-skeleton/
-          enumNames:
-            - GitHub Action
-            - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
         - imageRepository
@@ -95,7 +61,7 @@ spec:
         imageUrl:
           title: Image URL
           type: string
-          description: Enter the Quay.io Image Namespace quay.io/<image_url>/<REPO_NAME>
+          description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
         namespace:
           title: Namespace
           type: string
@@ -104,31 +70,13 @@ spec:
         port:
           title: Port
           type: number
-          default: 8080
           description: The port exposed for the application
   steps:
-    - id: ci-template
-      name: Generating the CI component
-      action: fetch:template
-      input:
-        url: ${{ parameters.ci }}
-        copyWithoutTemplating:
-          - .github/workflows/
-        values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
-          namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
-          defaultBranch: main
-          image_builder: s2i-java
-          image_repository: ${{ parameters.imageRepository }}
-
     - id: template
       name: Generating the source code component
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: ./source-code
         values:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
@@ -137,9 +85,6 @@ spec:
           namespace: ${{ parameters.namespace }}
           image_url: ${{ parameters.imageUrl }}
           port: ${{ parameters.port }}
-          group_id: ${{ parameters.group_id }}
-          artifact_id: ${{ parameters.artifact_id }}
-          java_package_name: ${{ parameters.java_package_name }}
           image_repository: ${{ parameters.imageRepository }}
 
     - id: catalog-template
@@ -147,7 +92,6 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: ./source-code
         values:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
@@ -163,7 +107,6 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: ./manifests-code
         values:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
@@ -178,10 +121,9 @@ spec:
       name: Publishing to Source Code Repository
       action: publish:github
       input:
-        sourcePath: ./source-code
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
         defaultBranch: main
 
     - id: register

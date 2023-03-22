@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: ${{ values.repo_name }}
+        app.kubernetes.io/component: backstage
+        backstage.io/kubernetes-id: ${{ values.namespace }}
     spec:
       containers:
         - name: ${{ values.repo_name }}

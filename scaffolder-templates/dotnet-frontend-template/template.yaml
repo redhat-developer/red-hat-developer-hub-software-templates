@@ -73,18 +73,19 @@ spec:
             - Internal OpenShift Registry
             - Quay
         imageUrl:
-          title: Image Namespace
+          title: Image URL
           type: string
-          description: Enter the Quay.io or OpenShift Image Namespace <REGISTRY>/<image_url>/<REPO_NAME>
+          description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
         namespace:
           title: Namespace
           type: string
+          default: janus-idp
           description: The namespace for deploying resources
         port:
           title: Port
           type: number
           default: 5000
-          description: The port exposed for your application
+          description: The port exposed for the application
   steps:
     - id: ci-template
       name: Generating the CI component
@@ -107,6 +108,7 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
+        targetPath: ./source-code
         values:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
@@ -121,7 +123,8 @@ spec:
       name: Generating catalog-info.yaml
       action: fetch:template
       input:
-        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        url: ./skeleton
+        targetPath: ./source-code
         values:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
@@ -133,10 +136,11 @@ spec:
           image_repository: ${{ parameters.imageRepository }}
 
     - id: manifests-template
-      name: Generating manifest component
+      name: Generating manifests component
       action: fetch:template
       input:
-        url: ../../scaffolder-skeletons/manifests-skeleton/
+        url: ./skeleton
+        targetPath: ./manifests-code
         values:
           github_org: ${{ parameters.githubOrg }}
           repo_name: ${{ parameters.repoName }}
@@ -151,6 +155,7 @@ spec:
       name: Publishing to Source Code Repository
       action: publish:github
       input:
+        sourcePath: ./source-code
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}

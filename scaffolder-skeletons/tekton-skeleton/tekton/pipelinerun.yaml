@@ -16,7 +16,7 @@ spec:
     - name: source-branch
       value: ${{values.default_branch}}
     - name: output-image
-      value: ${{values.image_repository}}/${{values.image_namespace}}/${{values.repo_name}}
+      value: ${{values.image_repository}}/${{values.image_url}}/${{values.repo_name}}
   pipelineRef:
     name: ${{values.repo_name}}-pipeline
   serviceAccountName: pipeline
