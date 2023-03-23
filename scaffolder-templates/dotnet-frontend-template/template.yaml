@@ -219,7 +219,7 @@ spec:
       input:
         sourcePath: ./gitops
         allowedHosts: ['github.com']
-        description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
+        description: Contains the ArgoCD manifests for [${{ parameters.repo_name }}](${{ steps.publishSource.output.repoContentsUrl }})
         repoUrl: github.com?owner=${{ parameters.github_org }}&repo=${{ parameters.repo_name }}-gitops
         defaultBranch: main
 
@@ -228,14 +228,14 @@ spec:
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publishSource.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        catalogInfoPath: /catalog-info.yaml
 
     - id: registerGitops
       name: Registering the Gitops Component
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publishGitops.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        catalogInfoPath: /catalog-info.yaml
 
   output:
     links:
