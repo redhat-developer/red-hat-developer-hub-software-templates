@@ -252,9 +252,9 @@ spec:
       name: Publishing to Gitops Repository
       action: publish:github
       input:
-        sourcePath: ./source
+        sourcePath: ./gitops
         allowedHosts: ['github.com']
-        description: ${{ parameters.description }}
+        description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
         repoUrl: github.com?owner=${{ parameters.github_org }}&repo=${{ parameters.repo_name }}-gitops
         defaultBranch: main
 
