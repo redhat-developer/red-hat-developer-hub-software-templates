@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: ${{ values.repo_name }}-pipeline
+  name: ${{ values.repoName }}-pipeline
   namespace: ${{ values.namespace }}
   labels:
     type: pipeline
@@ -10,14 +10,14 @@ spec:
     - name: source-repo
       description: source repo that contains the application code
       type: string
-      default: https://github.com/${{ values.github_org }}/${{ values.repo_name }}
+      default: https://github.com/${{ values.githubOrg }}/${{ values.repoName }}
     - name: source-branch
       description: source branch to build from
       default: main
       type: string
     - name: output-image
       description: reference of the image that will get created
-      default: ${{ values.image_repository }}/${{ values.image_url }}/${{ values.repo_name }}
+      default: ${{ values.imageRepository }}/${{ values.imageUrl }}/${{ values.repoName }}
       type: string
   tasks:
     - name: git-clone
@@ -32,7 +32,7 @@ spec:
       workspaces:
         - name: output
           workspace: source-folder
-    - name: ${{ values.image_builder }}
+    - name: ${{ values.imageBuilder }}
       params:
         - name: VERSION
           value: latest
@@ -42,7 +42,7 @@ spec:
         - git-clone
       taskRef:
         kind: ClusterTask
-        name: ${{ values.image_builder }}
+        name: ${{ values.imageBuilder }}
       workspaces:
         - name: source
           workspace: source-folder

@@ -8,10 +8,10 @@
 		<version>2.7.9</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>${{ values.group_id }}</groupId>
-	<artifactId>${{ values.artifact_id }}</artifactId>
+	<groupId>${{ values.groupId }}</groupId>
+	<artifactId>${{ values.artifactId }}</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>${{ values.repo_name }}</name>
+	<name>${{ values.repoName }}</name>
 	<description>${{ values.description }}</description>
 	<properties>
 		<java.version>11</java.version>

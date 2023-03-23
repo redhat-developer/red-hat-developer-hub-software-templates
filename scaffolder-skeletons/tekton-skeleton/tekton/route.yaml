@@ -1,16 +1,16 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: webhook-${{ values.repo_name }}-el
+  name: webhook-${{ values.repoName }}-el
   namespace: ${{ values.namespace }}
   labels:
     app.kubernetes.io/managed-by: EventListener
     app.kubernetes.io/part-of: Triggers
-    eventlistener: ${{ values.repo_name }}-el
+    eventlistener: ${{ values.repoName }}-el
 spec:
   to:
     kind: Service
-    name: el-${{ values.repo_name }}-el
+    name: el-${{ values.repoName }}-el
     weight: 100
   port:
     targetPort: http-listener

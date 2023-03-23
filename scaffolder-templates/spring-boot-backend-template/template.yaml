@@ -16,23 +16,23 @@ spec:
   parameters:
     - title: Provide information about the GitHub location
       required:
-        - github_org
-        - repo_name
+        - githubOrg
+        - repoName
       properties:
-        github_org:
+        githubOrg:
           title: GitHub Organization
           type: string
-        repo_name:
+        repoName:
           title: Repository Name
           type: string
     - title: Provide information about the new component
       required:
         - owner
         - system
-        - application_type
-        - group_id
-        - artifact_id
-        - java_package_name
+        - applicationType
+        - groupId
+        - artifactId
+        - javaPackageName
       properties:
         owner:
           title: Owner
@@ -53,7 +53,7 @@ spec:
           ui:options:
             catalogFilter:
               - System
-        application_type:
+        applicationType:
           title: Application Type
           type: string
           description: The application type e.g. website, api, and gitops
@@ -65,17 +65,17 @@ spec:
           title: Description
           type: string
           description: Help others understand what this component is for
-        group_id:
+        groupId:
           title: Group ID
           type: string
           default: io.janus
           description: Maven Group ID eg (io.janus)
-        artifact_id:
+        artifactId:
           title: Artifact ID
           type: string
           default: spring-boot-app
           description: Maven Artifact ID
-        java_package_name:
+        javaPackageName:
           title: Java Package Namespace
           type: string
           default: io/janus/spring-boot-app
@@ -97,12 +97,12 @@ spec:
             - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
-        - image_repository
+        - imageRepository
         - namespace
-        - image_url
+        - imageUrl
         - port
       properties:
-        image_repository:
+        imageRepository:
           title: Select a registry
           type: string
           default: quay.io
@@ -112,7 +112,7 @@ spec:
           enumNames:
             - Internal OpenShift Registry
             - Quay
-        image_url:
+        imageUrl:
           title: Image URL
           type: string
           description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
@@ -135,20 +135,20 @@ spec:
         copyWithoutTemplating:
           - .github/workflows/
         values:
-          github_org: ${{ parameters.github_org }}
-          repo_name: ${{ parameters.repo_name }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          application_type: ${{ parameters.application_type }}
+          applicationType: ${{ parameters.applicationType }}
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.image_url }}
-          image_builder: s2i-java
-          image_repository: ${{ parameters.image_repository }}
+          imageUrl: ${{ parameters.imageUrl }}
+          imageBuilder: s2i-java
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          group_id: ${{ parameters.group_id }}
-          artifact_id: ${{ parameters.artifact_id }}
-          java_package_name: ${{ parameters.java_package_name }}
+          groupId: ${{ parameters.groupId }}
+          artifactId: ${{ parameters.artifactId }}
+          javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: template
       name: Generating the source code component
@@ -157,20 +157,20 @@ spec:
         url: ./skeleton
         targetPath: ./source
         values:
-          github_org: ${{ parameters.github_org }}
-          repo_name: ${{ parameters.repo_name }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          application_type: ${{ parameters.application_type }}
+          applicationType: ${{ parameters.applicationType }}
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.image_url }}
-          image_builder: s2i-java
-          image_repository: ${{ parameters.image_repository }}
+          imageUrl: ${{ parameters.imageUrl }}
+          imageBuilder: s2i-java
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          group_id: ${{ parameters.group_id }}
-          artifact_id: ${{ parameters.artifact_id }}
-          java_package_name: ${{ parameters.java_package_name }}
+          groupId: ${{ parameters.groupId }}
+          artifactId: ${{ parameters.artifactId }}
+          javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: source-catalog-template
       name: Generating Source Code catalog-info.yaml
@@ -179,20 +179,20 @@ spec:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         targetPath: ./source
         values:
-          github_org: ${{ parameters.github_org }}
-          repo_name: ${{ parameters.repo_name }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          application_type: ${{ parameters.application_type }}
+          applicationType: ${{ parameters.applicationType }}
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.image_url }}
-          image_builder: s2i-java
-          image_repository: ${{ parameters.image_repository }}
+          imageUrl: ${{ parameters.imageUrl }}
+          imageBuilder: s2i-java
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          group_id: ${{ parameters.group_id }}
-          artifact_id: ${{ parameters.artifact_id }}
-          java_package_name: ${{ parameters.java_package_name }}
+          groupId: ${{ parameters.groupId }}
+          artifactId: ${{ parameters.artifactId }}
+          javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: gitops-catalog-template
       name: Generating Gitops catalog-info.yaml
@@ -202,24 +202,24 @@ spec:
         targetPath: ./gitops
         values:
           # Gitops specific values
-          application_kind: Resource
-          depends_on: ${{ parameters.repo_name }}
+          applicationKind: Resource
+          dependsOn: ${{ parameters.repoName }}
 
           # Normal values
-          github_org: ${{ parameters.github_org }}
-          repo_name: ${{ parameters.repo_name }}-gitops
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}-gitops
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          application_type: gitops
-          description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
+          applicationType: gitops
+          description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.image_url }}
-          image_builder: s2i-java
-          image_repository: ${{ parameters.image_repository }}
+          imageUrl: ${{ parameters.imageUrl }}
+          imageBuilder: s2i-java
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          group_id: ${{ parameters.group_id }}
-          artifact_id: ${{ parameters.artifact_id }}
-          java_package_name: ${{ parameters.java_package_name }}
+          groupId: ${{ parameters.groupId }}
+          artifactId: ${{ parameters.artifactId }}
+          javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: manifests-template
       name: Generating manifests component
@@ -228,20 +228,20 @@ spec:
         url: ../../scaffolder-skeletons/manifests-skeleton/
         targetPath: ./gitops
         values:
-          github_org: ${{ parameters.github_org }}
-          repo_name: ${{ parameters.repo_name }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          application_type: ${{ parameters.application_type }}
+          applicationType: ${{ parameters.applicationType }}
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.image_url }}
-          image_builder: s2i-java
-          image_repository: ${{ parameters.image_repository }}
+          imageUrl: ${{ parameters.imageUrl }}
+          imageBuilder: s2i-java
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          group_id: ${{ parameters.group_id }}
-          artifact_id: ${{ parameters.artifact_id }}
-          java_package_name: ${{ parameters.java_package_name }}
+          groupId: ${{ parameters.groupId }}
+          artifactId: ${{ parameters.artifactId }}
+          javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: publishSource
       name: Publishing to Source Code Repository
@@ -250,7 +250,7 @@ spec:
         sourcePath: ./source
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.github_org }}&repo=${{ parameters.repo_name }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
     - id: publishGitops
@@ -259,8 +259,8 @@ spec:
       input:
         sourcePath: ./gitops
         allowedHosts: ['github.com']
-        description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
-        repoUrl: github.com?owner=${{ parameters.github_org }}&repo=${{ parameters.repo_name }}-gitops
+        description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
         defaultBranch: main
 
     - id: registerSource

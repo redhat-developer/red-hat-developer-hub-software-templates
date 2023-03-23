@@ -3,18 +3,18 @@
 #
 # Build the image with:
 #
-# docker build -t quarkus/${{ values.artifact_id }}-jvm .
+# docker build -t quarkus/${{ values.artifactId }}-jvm .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p ${{ values.port }}:${{ values.port }} quarkus/${{ values.artifact_id }}-jvm
+# docker run -i --rm -p ${{ values.port }}:${{ values.port }} quarkus/${{ values.artifactId }}-jvm
 #
 # If you want to include the debug port into your docker image
 # you will have to expose the debug port (default 5005) like this :  EXPOSE 8080 5050
 #
 # Then run the container using :
 #
-# docker run -i --rm -p ${{ values.port }}:${{ values.port }} -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/${{ values.artifact_id }}-jvm
+# docker run -i --rm -p ${{ values.port }}:${{ values.port }} -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/${{ values.artifactId }}-jvm
 #
 ###
 FROM registry.access.redhat.com/ubi8/openjdk-11:latest

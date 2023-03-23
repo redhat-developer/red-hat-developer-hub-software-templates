@@ -1,5 +1,5 @@
-# ${{ values.repo_name }}
+# ${{ values.repoName }}
 
 ${{ values.description }}
 
-More information on the chosen CI method can be found [here](https://github.com/${{ values.github_org }}/${{ values.repo_name }}).
+More information on the chosen CI method can be found [here](https://github.com/${{ values.githubOrg }}/${{ values.repoName }}).

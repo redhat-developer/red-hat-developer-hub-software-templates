@@ -1,3 +1,3 @@
-module github.com/${{ values.github_org }}/${{ values.repo_name }}
+module github.com/${{ values.githubOrg }}/${{ values.repoName }}
 
 go 1.16

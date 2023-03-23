@@ -1,3 +1,3 @@
-# ${{ values.repo_name }}-gitops
+# ${{ values.repoName }}-gitops
 
 ${{ values.description }}

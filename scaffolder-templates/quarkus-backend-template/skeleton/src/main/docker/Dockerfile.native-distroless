@@ -7,11 +7,11 @@
 #
 # Then, build the image with:
 #
-# docker build -f src/main/docker/Dockerfile.native-distroless -t quarkus/${{ values.artifact_id }} .
+# docker build -f src/main/docker/Dockerfile.native-distroless -t quarkus/${{ values.artifactId }} .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p ${{ values.port }}:${{ values.port }} quarkus/${{ values.artifact_id }}
+# docker run -i --rm -p ${{ values.port }}:${{ values.port }} quarkus/${{ values.artifactId }}
 #
 ###
 FROM quay.io/quarkus/quarkus-distroless-image:1.0

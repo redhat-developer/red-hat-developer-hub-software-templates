@@ -1,22 +1,22 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: ${{ values.repo_name }}
+  name: ${{ values.repoName }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ${{ values.repo_name }}
+      app: ${{ values.repoName }}
   template:
     metadata:
       labels:
-        app: ${{ values.repo_name }}
+        app: ${{ values.repoName }}
         app.kubernetes.io/component: backstage
         backstage.io/kubernetes-id: ${{ values.namespace }}
     spec:
       containers:
-        - name: ${{ values.repo_name }}
-          image: ${{ values.image_repository }}/${{ values.image_url }}/${{ values.repo_name }}:latest
+        - name: ${{ values.repoName }}
+          image: ${{ values.imageRepository }}/${{ values.imageUrl }}/${{ values.repoName }}:latest
           ports:
             - name: http-${{ values.port }}
               containerPort: ${{ values.port }}
