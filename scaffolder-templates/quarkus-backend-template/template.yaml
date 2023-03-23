@@ -38,7 +38,7 @@ spec:
           title: Owner
           type: string
           description: Owner of the component
-          default: 'group: janus-authors'
+          default: janus-authors
           ui:field: OwnerPicker
           ui:options:
             catalogFilter:
@@ -48,7 +48,7 @@ spec:
           title: System
           type: string
           description: System of the component
-          default: 'system: examples'
+          default: examples
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
@@ -202,11 +202,11 @@ spec:
         targetPath: ./gitops
         values:
           github_org: ${{ parameters.github_org }}
-          repo_name: ${{ parameters.repo_name }}
+          repo_name: ${{ parameters.repo_name }}-gitops
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           application_type: gitops
-          description: ${{ parameters.description }}
+          description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
           namespace: ${{ parameters.namespace }}
           image_url: ${{ parameters.image_url }}
           image_builder: s2i-java

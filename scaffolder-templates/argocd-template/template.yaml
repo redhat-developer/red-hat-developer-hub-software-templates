@@ -32,16 +32,17 @@ spec:
           title: Owner
           type: string
           description: Owner of the component
-          default: 'group: janus-authors'
+          default: janus-authors
           ui:field: OwnerPicker
           ui:options:
-            allowedKinds:
+            catalogFilter:
               - Group
+              - User
         system:
           title: System
           type: string
           description: System of the component
-          default: 'system: examples'
+          default: examples
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
