@@ -84,9 +84,13 @@ spec:
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
+          # Gitops specific values
           application_kind: Resource
+          depends_on: ${{ parameters.repo_name }}
+
+          # Normal values
           github_org: ${{ parameters.github_org }}
-          repo_name: ${{ parameters.repo_name }}
+          repo_name: ${{ parameters.repo_name }}-gitops
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           application_type: gitops

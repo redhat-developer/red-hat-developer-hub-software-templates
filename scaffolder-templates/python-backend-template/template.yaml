@@ -173,7 +173,11 @@ spec:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         targetPath: ./gitops
         values:
+          # Gitops specific values
           application_kind: Resource
+          depends_on: ${{ parameters.repo_name }}
+
+          # Normal values
           github_org: ${{ parameters.github_org }}
           repo_name: ${{ parameters.repo_name }}-gitops
           owner: ${{ parameters.owner }}

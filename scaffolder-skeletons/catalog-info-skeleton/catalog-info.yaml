@@ -19,3 +19,7 @@ spec:
   system: ${{ values.system }}
   lifecycle: production
   owner: ${{ values.owner }}
+  {%- if values.depends_on %}
+  dependsOn:
+    - component:${{ values.depends_on }}
+  {%- endif %}
