@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "quarkus-template.fullname" . }}
   labels:
+    {{- include "backstage.labels" . | nindent 4 }}
     {{- include "quarkus-template.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -18,6 +19,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
+        {{- include "backstage.labels" . | nindent 8 }}
         {{- include "quarkus-template.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
