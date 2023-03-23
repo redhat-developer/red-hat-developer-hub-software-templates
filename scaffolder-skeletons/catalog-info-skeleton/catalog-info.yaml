@@ -1,5 +1,9 @@
 apiVersion: backstage.io/v1alpha1
+{%- if values.application_kind %}
+kind: ${{ values.application_kind }}
+{%- else %}
 kind: Component
+{%- endif %}
 metadata:
   name: ${{ values.repo_name }}
   {%- if values.description %}

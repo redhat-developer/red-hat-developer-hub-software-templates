@@ -84,6 +84,7 @@ spec:
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
+          application_kind: Resource
           github_org: ${{ parameters.github_org }}
           repo_name: ${{ parameters.repo_name }}
           owner: ${{ parameters.owner }}

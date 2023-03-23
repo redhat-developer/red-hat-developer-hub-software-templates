@@ -173,6 +173,7 @@ spec:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         targetPath: ./gitops
         values:
+          application_kind: Resource
           github_org: ${{ parameters.github_org }}
           repo_name: ${{ parameters.repo_name }}-gitops
           owner: ${{ parameters.owner }}
@@ -220,7 +221,7 @@ spec:
       input:
         sourcePath: ./gitops
         allowedHosts: ['github.com']
-        description: Contains the ArgoCD manifests for [${{ parameters.repo_name }}](${{ steps.publishSource.output.repoContentsUrl }})
+        description: Contains the ArgoCD manifests for ${{ parameters.repo_name }}
         repoUrl: github.com?owner=${{ parameters.github_org }}&repo=${{ parameters.repo_name }}-gitops
         defaultBranch: main
 
