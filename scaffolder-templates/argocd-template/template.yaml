@@ -60,6 +60,7 @@ spec:
         - imageRepository
         - namespace
         - imageUrl
+        - hostUrl
       properties:
         imageRepository:
           title: Select a registry
@@ -80,6 +81,10 @@ spec:
           type: string
           default: janus-idp
           description: The namespace for deploying resources
+        hostUrl:
+          title: Host URL
+          type: string
+          description: The external facing host URL
   steps:
     - id: catalogTemplate
       name: Generating catalog-info.yaml
@@ -100,6 +105,7 @@ spec:
           description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
 
@@ -117,6 +123,7 @@ spec:
           description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
 

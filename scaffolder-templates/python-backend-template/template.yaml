@@ -95,7 +95,12 @@ spec:
       dependencies:
         useGitops:
           oneOf:
-            - properties:
+            - required:
+                - imageRepository
+                - namespace
+                - imageUrl
+                - hostUrl
+              properties:
                 useGitops:
                   const: true
                 imageRepository:
@@ -117,10 +122,10 @@ spec:
                   type: string
                   default: janus-idp
                   description: The namespace for deploying resources
-              required:
-                - imageRepository
-                - namespace
-                - imageUrl
+                hostUrl:
+                  title: Host URL
+                  type: string
+                  description: The external facing host URL
   steps:
     - id: ciTemplate
       name: Generating the CI component
@@ -138,6 +143,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-python
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -157,6 +163,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-python
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -176,6 +183,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-python
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -201,6 +209,7 @@ spec:
           description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-python
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -221,6 +230,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-python
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}

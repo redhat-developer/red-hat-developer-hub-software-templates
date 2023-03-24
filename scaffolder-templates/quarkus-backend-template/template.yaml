@@ -103,29 +103,48 @@ spec:
             - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
-        - imageRepository
-        - namespace
-        - imageUrl
+        - useGitops
       properties:
-        imageRepository:
-          title: Select a registry
-          type: string
-          default: quay.io
-          enum:
-            - image-registry.openshift-image-registry.svc:5000
-            - quay.io
-          enumNames:
-            - Internal OpenShift Registry
-            - Quay
-        imageUrl:
-          title: Image URL
-          type: string
-          description: Enter the Quay.io Image Namespace quay.io/<imageUrl>/<REPO_NAME>
-        namespace:
-          title: Namespace
-          type: string
-          default: janus-idp
-          description: The namespace for deploying resources
+        useGitops:
+          title: Include ArgoCD
+          type: boolean
+          default: true
+          ui:widget: radio
+          description: Should the component include a ArgoCD workflow
+      dependencies:
+        useGitops:
+          oneOf:
+            - required:
+                - imageRepository
+                - namespace
+                - imageUrl
+                - hostUrl
+              properties:
+                useGitops:
+                  const: true
+                imageRepository:
+                  title: Select a registry
+                  type: string
+                  default: quay.io
+                  enum:
+                    - image-registry.openshift-image-registry.svc:5000
+                    - quay.io
+                  enumNames:
+                    - Internal OpenShift Registry
+                    - Quay
+                imageUrl:
+                  title: Image URL
+                  type: string
+                  description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
+                namespace:
+                  title: Namespace
+                  type: string
+                  default: janus-idp
+                  description: The namespace for deploying resources
+                hostUrl:
+                  title: Host URL
+                  type: string
+                  description: The external facing host URL
   steps:
     - id: ciTemplate
       name: Generating the CI component
@@ -143,6 +162,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-java
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -165,6 +185,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-java
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -187,6 +208,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-java
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -215,6 +237,7 @@ spec:
           description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-java
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -238,6 +261,7 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-java
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
