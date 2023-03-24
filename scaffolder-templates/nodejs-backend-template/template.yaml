@@ -245,6 +245,18 @@ spec:
         repoContentsUrl: ${{ steps.publishGitops.output.repoContentsUrl }}
         catalogInfoPath: /catalog-info.yaml
 
+    - id: createArgocdResources
+      name: Create ArgoCD Resources
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.repoName }}
+        # Hardcoded value because this is kept as a secret on the server to allow forks to easily change the value
+        argoInstance: argocd.operate-first.cloud
+        namespace: ${{ parameters.namespace }}
+        repoUrl: ${{ steps.publishGitops.output.remoteUrl }}
+        labelValue: ${{ parameters.repoName }}
+        path: manifests/base
+
   output:
     links:
       - title: Source Code Repository
