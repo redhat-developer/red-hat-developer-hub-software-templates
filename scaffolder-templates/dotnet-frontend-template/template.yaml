@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: dotnet-frontend-template
   title: Create a .NET Frontend application with CI/CD
-  description: Create a starter .NET frontend application managed by ArgoCD with a CI pipeline
+  description: Create a starter .NET frontend application with a CI pipeline and optionally managed by ArgoCD
   tags:
     - recommended
     - dotnet
@@ -23,6 +23,10 @@ spec:
         repoName:
           title: Repository Name
           type: string
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for
     - title: Provide information about the new component
       required:
         - owner
@@ -62,10 +66,6 @@ spec:
           type: number
           default: 5000
           description: The port exposed for the application
-        description:
-          title: Description
-          type: string
-          description: Help others understand what this component is for
     - title: Choose a CI method
       required:
         - ci
@@ -83,19 +83,19 @@ spec:
             - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
-        - useArgocd
+        - useGitops
       properties:
-        useArgocd:
+        useGitops:
           title: Include ArgoCD
           type: boolean
           default: true
           ui:widget: radio
           description: Should the component include a ArgoCD workflow
       dependencies:
-        useArgocd:
+        useGitops:
           oneOf:
             - properties:
-                useArgocd:
+                useGitops:
                   const: true
                 imageRepository:
                   title: Select a registry
@@ -121,7 +121,7 @@ spec:
                 - namespace
                 - imageUrl
   steps:
-    - id: ci-template
+    - id: ciTemplate
       name: Generating the CI component
       action: fetch:template
       input:
@@ -160,7 +160,7 @@ spec:
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
 
-    - id: source-catalog-template
+    - id: sourceCatalogTemplate
       name: Generating Source Code catalog-info.yaml
       action: fetch:template
       input:
@@ -179,7 +179,8 @@ spec:
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
 
-    - id: gitops-catalog-template
+    - id: gitopsCatalogTemplate
+      if: ${{ parameters.useGitops }}
       name: Generating Gitops catalog-info.yaml
       action: fetch:template
       input:
@@ -203,7 +204,8 @@ spec:
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
 
-    - id: manifests-template
+    - id: manifestsTemplate
+      if: ${{ parameters.useGitops }}
       name: Generating manifests component
       action: fetch:template
       input:
@@ -233,6 +235,7 @@ spec:
         defaultBranch: main
 
     - id: publishGitops
+      if: ${{ parameters.useGitops }}
       name: Publishing to Gitops Repository
       action: publish:github
       input:
@@ -250,6 +253,7 @@ spec:
         catalogInfoPath: /catalog-info.yaml
 
     - id: registerGitops
+      if: ${{ parameters.useGitops }}
       name: Registering the Gitops Component
       action: catalog:register
       input:
@@ -257,6 +261,7 @@ spec:
         catalogInfoPath: /catalog-info.yaml
 
     - id: createArgocdResources
+      if: ${{ parameters.useGitops }}
       name: Create ArgoCD Resources
       action: argocd:create-resources
       input:
