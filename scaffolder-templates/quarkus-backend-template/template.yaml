@@ -136,6 +136,10 @@ spec:
       dependencies:
         useGitops:
           oneOf:
+            # We don't want to show any extra properties when ArgoCD isn't selected
+            - properties:
+                useGitops:
+                  const: false
             - required:
                 - hostUrl
               properties:
