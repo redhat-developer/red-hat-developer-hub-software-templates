@@ -30,6 +30,7 @@ spec:
         - owner
         - system
         - applicationType
+        - port
         - groupId
         - artifactId
         - javaPackageName
@@ -61,6 +62,11 @@ spec:
             - website
             - api
             - gitops
+        port:
+          title: Port
+          type: number
+          default: 8080
+          description: The port exposed for the application
         description:
           title: Description
           type: string
@@ -100,7 +106,6 @@ spec:
         - imageRepository
         - namespace
         - imageUrl
-        - port
       properties:
         imageRepository:
           title: Select a registry
@@ -121,11 +126,6 @@ spec:
           type: string
           default: janus-idp
           description: The namespace for deploying resources
-        port:
-          title: Port
-          type: number
-          default: 8080
-          description: The port exposed for the application
   steps:
     - id: ci-template
       name: Generating the CI component

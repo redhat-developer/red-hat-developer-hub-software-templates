@@ -23,6 +23,14 @@ spec:
         repoName:
           title: Repository Name
           type: string
+    - title: Provide information about the existing component
+      required:
+        - port
+      properties:
+        port:
+          title: Port
+          type: number
+          description: The port exposed for the application
     - title: Provide information about the new component
       required:
         - owner
@@ -49,34 +57,43 @@ spec:
               - System
     - title: Provide information about the ArgoCD deployment
       required:
-        - imageRepository
-        - namespace
-        - imageUrl
-        - port
+        - useArgocd
       properties:
-        imageRepository:
-          title: Select a registry
-          type: string
-          default: quay.io
-          enum:
-            - image-registry.openshift-image-registry.svc:5000
-            - quay.io
-          enumNames:
-            - Internal OpenShift Registry
-            - Quay
-        imageUrl:
-          title: Image URL
-          type: string
-          description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
-        namespace:
-          title: Namespace
-          type: string
-          default: janus-idp
-          description: The namespace for deploying resources
-        port:
-          title: Port
-          type: number
-          description: The port exposed for the application
+        useArgocd:
+          title: Include ArgoCD
+          type: boolean
+          default: true
+          ui:widget: radio
+          description: Should the component include a ArgoCD workflow
+      dependencies:
+        useArgocd:
+          oneOf:
+            - properties:
+                useArgocd:
+                  const: true
+                imageRepository:
+                  title: Select a registry
+                  type: string
+                  default: quay.io
+                  enum:
+                    - image-registry.openshift-image-registry.svc:5000
+                    - quay.io
+                  enumNames:
+                    - Internal OpenShift Registry
+                    - Quay
+                imageUrl:
+                  title: Image URL
+                  type: string
+                  description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
+                namespace:
+                  title: Namespace
+                  type: string
+                  default: janus-idp
+                  description: The namespace for deploying resources
+              required:
+                - imageRepository
+                - namespace
+                - imageUrl
   steps:
     - id: catalog-template
       name: Generating catalog-info.yaml
