@@ -155,6 +155,7 @@ spec:
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
+        targetPath: ./source
         copyWithoutTemplating:
           - .github/workflows/
         values:
