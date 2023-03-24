@@ -313,10 +313,12 @@ spec:
       - title: Source Code Repository
         url: ${{ steps.publishSource.output.remoteUrl }}
       - title: Gitops Repository
+        if: ${{ parameters.useGitops }}
         url: ${{ steps.publishGitops.output.remoteUrl }}
       - title: Open Source Code Component in catalog
         icon: catalog
         entityRef: ${{ steps.registerSource.output.entityRef }}
       - title: Open Gitops Component in catalog
+        if: ${{ parameters.useGitops }}
         icon: catalog
         entityRef: ${{ steps.registerGitops.output.entityRef }}
