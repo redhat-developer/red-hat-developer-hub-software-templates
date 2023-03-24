@@ -70,10 +70,6 @@ spec:
           default: latest
           type: string
           description: Build Image tag
-        gitops:
-          title: Include GitOps
-          type: boolean
-          description: Should the component include a GitOps workflow
     - title: Application repository Information
       required:
         - repoUrl
@@ -123,7 +119,6 @@ spec:
         catalogInfoPath: '/catalog-info.yaml'
 
     - id: template-gitops-deployment
-      if: ${{ parameters.gitops }}
       name: Generating Deployment Resources
       action: fetch:template
       input:
@@ -145,7 +140,6 @@ spec:
         targetPath: ./tenant-gitops
 
     - id: publish-gitops
-      if: ${{ parameters.gitops }}
       name: Publishing to Resource Repository
       action: publish:github
       input:
@@ -156,7 +150,6 @@ spec:
         repoVisibility: public
 
     - id: create-argocd-resources
-      if: ${{ parameters.gitops }}
       name: Create ArgoCD Resources
       action: argocd:create-resources
       input:
