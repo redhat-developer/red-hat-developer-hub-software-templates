@@ -3,7 +3,7 @@ kind: Template
 metadata:
   name: dotnet-frontend-template
   title: Create a .NET Frontend application with CI/CD
-  description: Create a starter .NET frontend application managed by ArgoCD with a CI pipeline
+  description: Create a starter .NET frontend application with a CI pipeline and optionally managed by ArgoCD
   tags:
     - recommended
     - dotnet
@@ -23,23 +23,49 @@ spec:
         repoName:
           title: Repository Name
           type: string
-    - title: Provide information about the new component
-      required:
-        - owner
-      properties:
         description:
           title: Description
           type: string
           description: Help others understand what this component is for
+    - title: Provide information about the new component
+      required:
+        - owner
+        - system
+        - applicationType
+        - port
+      properties:
         owner:
           title: Owner
           type: string
           description: Owner of the component
-          default: 'group: janus-authors'
+          default: janus-authors
           ui:field: OwnerPicker
           ui:options:
-            allowedKinds:
+            catalogFilter:
               - Group
+              - User
+        system:
+          title: System
+          type: string
+          description: System of the component
+          default: examples
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              - System
+        applicationType:
+          title: Application Type
+          type: string
+          description: The application type e.g. website, api, and gitops
+          enum:
+            - website
+            - api
+            - gitops
+        port:
+          title: Port
+          type: number
+          default: 5000
+          description: The port exposed for the application
     - title: Choose a CI method
       required:
         - ci
@@ -57,11 +83,17 @@ spec:
             - Tekton
     - title: Provide information about the ArgoCD deployment
       required:
+        - useGitops
         - imageRepository
         - namespace
         - imageUrl
-        - port
       properties:
+        useGitops:
+          title: Include ArgoCD
+          type: boolean
+          default: true
+          ui:widget: radio
+          description: Should the component include a ArgoCD workflow
         imageRepository:
           title: Select a registry
           type: string
@@ -73,100 +105,200 @@ spec:
             - Internal OpenShift Registry
             - Quay
         imageUrl:
-          title: Image Namespace
+          title: Image URL
           type: string
-          description: Enter the Quay.io or OpenShift Image Namespace <REGISTRY>/<image_url>/<REPO_NAME>
+          description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
         namespace:
           title: Namespace
           type: string
+          default: janus-idp
           description: The namespace for deploying resources
-        port:
-          title: Port
-          type: number
-          default: 5000
-          description: The port exposed for your application
+      dependencies:
+        useGitops:
+          oneOf:
+            # We don't want to show any extra properties when ArgoCD isn't selected
+            - properties:
+                useGitops:
+                  const: false
+            - required:
+                - hostUrl
+              properties:
+                useGitops:
+                  const: true
+                hostUrl:
+                  title: Host URL
+                  type: string
+                  description: The external facing host URL
   steps:
-    - id: ci-template
+    - id: ciTemplate
       name: Generating the CI component
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
+        targetPath: ./source
         copyWithoutTemplating:
           - .github/workflows/
         values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: ${{ parameters.applicationType }}
+          description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
-          default_branch: main
-          image_builder: s2i-dotnetcore
-          image_repository: ${{ parameters.imageRepository }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageBuilder: s2i-dotnetcore
+          imageRepository: ${{ parameters.imageRepository }}
+          port: ${{ parameters.port }}
 
     - id: template
       name: Generating the source code component
       action: fetch:template
       input:
         url: ./skeleton
+        targetPath: ./source
         values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: ${{ parameters.applicationType }}
           description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageBuilder: s2i-dotnetcore
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
 
-    - id: catalog-template
-      name: Generating catalog-info.yaml
+    - id: sourceCatalogTemplate
+      name: Generating Source Code catalog-info.yaml
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        targetPath: ./source
         values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: ${{ parameters.applicationType }}
           description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageBuilder: s2i-dotnetcore
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
 
-    - id: manifests-template
-      name: Generating manifest component
+    - id: gitopsCatalogTemplate
+      if: ${{ parameters.useGitops }}
+      name: Generating Gitops catalog-info.yaml
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        targetPath: ./gitops
+        values:
+          # Gitops specific values
+          applicationKind: Resource
+          dependsOn: ${{ parameters.repoName }}
+
+          # Normal values
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}-gitops
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: gitops
+          description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
+          namespace: ${{ parameters.namespace }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageBuilder: s2i-dotnetcore
+          imageRepository: ${{ parameters.imageRepository }}
+          port: ${{ parameters.port }}
+
+    - id: manifestsTemplate
+      if: ${{ parameters.useGitops }}
+      name: Generating manifests component
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/manifests-skeleton/
+        targetPath: ./gitops
         values:
-          github_org: ${{ parameters.githubOrg }}
-          repo_name: ${{ parameters.repoName }}
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: ${{ parameters.applicationType }}
           description: ${{ parameters.description }}
-          owner: ${{ parameters.owner}}
           namespace: ${{ parameters.namespace }}
-          image_url: ${{ parameters.imageUrl }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageBuilder: s2i-dotnetcore
+          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          image_repository: ${{ parameters.imageRepository }}
 
-    - id: publish
+    - id: publishSource
       name: Publishing to Source Code Repository
       action: publish:github
       input:
+        sourcePath: ./source
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
-    - id: register
-      name: Registering the component
+    - id: publishGitops
+      if: ${{ parameters.useGitops }}
+      name: Publishing to Gitops Repository
+      action: publish:github
+      input:
+        sourcePath: ./gitops
+        allowedHosts: ['github.com']
+        description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
+        defaultBranch: main
+
+    - id: registerSource
+      name: Registering the Source Code Component
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        repoContentsUrl: ${{ steps.publishSource.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+    - id: registerGitops
+      if: ${{ parameters.useGitops }}
+      name: Registering the Gitops Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publishGitops.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+    - id: createArgocdResources
+      if: ${{ parameters.useGitops }}
+      name: Create ArgoCD Resources
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.repoName }}
+        # Hardcoded value because this is kept as a secret on the server to allow forks to easily change the value
+        argoInstance: argocd.operate-first.cloud
+        namespace: ${{ parameters.namespace }}
+        repoUrl: ${{ steps.publishGitops.output.remoteUrl }}
+        labelValue: ${{ parameters.repoName }}
+        path: manifests/base
 
   output:
     links:
       - title: Source Code Repository
-        url: ${{ steps.publish.output.remoteUrl }}
-      - title: Open Component in catalog
+        url: ${{ steps.publishSource.output.remoteUrl }}
+      - title: Gitops Repository
+        if: ${{ parameters.useGitops }}
+        url: ${{ steps.publishGitops.output.remoteUrl }}
+      - title: Open Source Code Component in catalog
         icon: catalog
-        entityRef: ${{ steps.register.output.entityRef }}
+        entityRef: ${{ steps.registerSource.output.entityRef }}
+      - title: Open Gitops Component in catalog
+        if: ${{ parameters.useGitops }}
+        icon: catalog
+        entityRef: ${{ steps.registerGitops.output.entityRef }}

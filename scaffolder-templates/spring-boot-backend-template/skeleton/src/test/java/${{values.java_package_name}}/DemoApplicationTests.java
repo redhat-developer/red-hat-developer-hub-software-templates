@@ -1,4 +1,4 @@
-package ${{values.group_id}}.${{values.artifact_id}}
+package ${{ values.groupId }}.${{ values.artifactId }}
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

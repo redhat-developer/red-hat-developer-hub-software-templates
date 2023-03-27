@@ -3,18 +3,18 @@
 #
 # Build the image with:
 #
-# docker build -t quarkus/${{values.artifact_id}}-jvm .
+# docker build -t quarkus/${{ values.artifactId }}-jvm .
 #
 # Then run the container using:
 #
-# docker run -i --rm -p ${{values.port}}:${{values.port}} quarkus/${{values.artifact_id}}-jvm
+# docker run -i --rm -p ${{ values.port }}:${{ values.port }} quarkus/${{ values.artifactId }}-jvm
 #
 # If you want to include the debug port into your docker image
 # you will have to expose the debug port (default 5005) like this :  EXPOSE 8080 5050
 #
 # Then run the container using :
 #
-# docker run -i --rm -p ${{values.port}}:${{values.port}} -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/${{values.artifact_id}}-jvm
+# docker run -i --rm -p ${{ values.port }}:${{ values.port }} -p 5005:5005 -e JAVA_ENABLE_DEBUG="true" quarkus/${{ values.artifactId }}-jvm
 #
 ###
 FROM registry.access.redhat.com/ubi8/openjdk-11:latest
@@ -31,7 +31,7 @@ RUN ./mvnw dependency:go-offline
 COPY src src
 RUN ./mvnw package
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3 
+FROM registry.access.redhat.com/ubi8/ubi-minimal:8.3
 
 ARG JAVA_PACKAGE=java-11-openjdk-headless
 ARG RUN_JAVA_VERSION=1.3.8
@@ -51,14 +51,14 @@ RUN microdnf install curl ca-certificates ${JAVA_PACKAGE} \
     && echo "securerandom.source=file:/dev/urandom" >> /etc/alternatives/jre/lib/security/java.security
 
 # Configure the JAVA_OPTIONS, you can add -XshowSettings:vm to also display the heap size.
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=${{values.port}} -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Dquarkus.http.port=${{ values.port }} -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
 # We make four distinct layers so if there are application changes the library layers can be re-used
 COPY --from=0 --chown=1001 /build/target/quarkus-app/lib/ /deployments/lib/
 COPY --from=0 --chown=1001 /build/target/quarkus-app/*.jar /deployments/
 COPY --from=0 --chown=1001 /build/target/quarkus-app/app/ /deployments/app/
 COPY --from=0 --chown=1001 /build/target/quarkus-app/quarkus/ /deployments/quarkus/
 
-EXPOSE ${{values.port}}
+EXPOSE ${{ values.port }}
 USER 1001
 
 ENTRYPOINT [ "/deployments/run-java.sh" ]
