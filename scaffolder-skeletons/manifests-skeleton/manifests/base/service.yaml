@@ -2,6 +2,10 @@ kind: Service
 apiVersion: v1
 metadata:
   name: ${{ values.repoName }}
+  labels:
+    app: ${{ values.repoName }}
+    app.kubernetes.io/component: backstage
+    backstage.io/kubernetes-id: ${{ values.namespace }}
 spec:
   ports:
     - name: http-${{ values.port }}
