@@ -27,6 +27,7 @@ spec:
       required:
         - owner
         - system
+        - storageClassName
       properties:
         owner:
           title: Owner
@@ -47,6 +48,10 @@ spec:
           ui:options:
             catalogFilter:
               - System
+        storageClassName:
+          title: Storage Class Name
+          type: string
+          description: Storage Class Name of the OBC
   steps:
     - id: catalogTemplate
       name: Generating catalog-info.yaml

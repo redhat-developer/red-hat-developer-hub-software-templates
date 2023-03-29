@@ -1,7 +1,7 @@
 apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
-  name: backstage-showcase-bucket-claim
+  name: ${{ values.repoName }}-bucket-claim
 spec:
-  generateBucketName: backstage-showcase-bucket-claim-
-  storageClassName: openshift-storage.noobaa.io
+  generateBucketName: ${{ values.repoName }}-bucket-claim-
+  storageClassName: ${{ values.storageClassName }}
