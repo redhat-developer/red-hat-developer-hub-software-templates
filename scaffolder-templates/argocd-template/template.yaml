@@ -13,10 +13,11 @@ spec:
   type: service
 
   parameters:
-    - title: Provide information about the existing GitHub location
+    - title: Provide information about the existing component
       required:
         - githubOrg
         - repoName
+        - port
       properties:
         githubOrg:
           title: GitHub Organization
@@ -24,10 +25,6 @@ spec:
         repoName:
           title: Repository Name
           type: string
-    - title: Provide information about the existing component
-      required:
-        - port
-      properties:
         port:
           title: Port
           type: number
@@ -45,8 +42,9 @@ spec:
           ui:field: OwnerPicker
           ui:options:
             catalogFilter:
-              - Group
-              - User
+              kind:
+                - Group
+                - User
         system:
           title: System
           type: string
@@ -55,7 +53,8 @@ spec:
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
-              - System
+              kind:
+                - System
     - title: Provide information about the ArgoCD deployment
       required:
         - imageRepository
@@ -68,11 +67,11 @@ spec:
           type: string
           default: quay.io
           enum:
-            - image-registry.openshift-image-registry.svc:5000
             - quay.io
+            - image-registry.openshift-image-registry.svc:5000
           enumNames:
-            - Internal OpenShift Registry
             - Quay
+            - Internal OpenShift Registry
         imageUrl:
           title: Image URL
           type: string
@@ -88,7 +87,7 @@ spec:
           description: The external facing host URL
   steps:
     - id: catalogTemplate
-      name: Generating catalog-info.yaml
+      name: Generating the Catalog Info Component
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
@@ -111,7 +110,7 @@ spec:
           port: ${{ parameters.port }}
 
     - id: manifestsTemplate
-      name: Generating manifests component
+      name: Generating the Manifests Component
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/manifests-skeleton/
@@ -129,7 +128,7 @@ spec:
           port: ${{ parameters.port }}
 
     - id: publish
-      name: Publishing to Source Code Repository
+      name: Publishing to the Source Code Repository
       action: publish:github
       input:
         allowedHosts: ['github.com']
@@ -138,14 +137,14 @@ spec:
         defaultBranch: main
 
     - id: register
-      name: Registering the component
+      name: Registering the Catalog Info Component
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: /catalog-info.yaml
 
     - id: createArgocdResources
-      name: Create ArgoCD Resources
+      name: Create the ArgoCD Resources
       action: argocd:create-resources
       input:
         appName: ${{ parameters.repoName }}
@@ -158,8 +157,8 @@ spec:
 
   output:
     links:
-      - title: Source Code Repository
+      - title: Open the Source Code Repository
         url: ${{ steps.publish.output.remoteUrl }}
-      - title: Open Component in catalog
+      - title: Open the Catalog Info Component
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
