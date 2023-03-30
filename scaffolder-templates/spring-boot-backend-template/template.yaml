@@ -34,11 +34,7 @@ spec:
       required:
         - owner
         - system
-        - applicationType
         - port
-        - groupId
-        - artifactId
-        - javaPackageName
       properties:
         owner:
           title: Owner
@@ -48,8 +44,9 @@ spec:
           ui:field: OwnerPicker
           ui:options:
             catalogFilter:
-              - Group
-              - User
+              kind:
+                - Group
+                - User
         system:
           title: System
           type: string
@@ -58,20 +55,19 @@ spec:
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
-              - System
-        applicationType:
-          title: Application Type
-          type: string
-          description: The application type e.g. website, api, and gitops
-          enum:
-            - website
-            - api
-            - gitops
+              kind:
+                - System
         port:
           title: Port
           type: number
           default: 5000
           description: The port exposed for the application
+    - title: Provide information about the Java metadata
+      required:
+        - groupId
+        - artifactId
+        - javaPackageName
+      properties:
         groupId:
           title: Group ID
           type: string
@@ -147,7 +143,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: api
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
@@ -172,7 +168,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: api
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
@@ -195,7 +191,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: api
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}

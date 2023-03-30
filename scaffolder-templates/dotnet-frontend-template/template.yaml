@@ -32,7 +32,6 @@ spec:
       required:
         - owner
         - system
-        - applicationType
         - port
       properties:
         owner:
@@ -43,8 +42,9 @@ spec:
           ui:field: OwnerPicker
           ui:options:
             catalogFilter:
-              - Group
-              - User
+              kind:
+                - Group
+                - User
         system:
           title: System
           type: string
@@ -53,15 +53,8 @@ spec:
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
-              - System
-        applicationType:
-          title: Application Type
-          type: string
-          description: The application type e.g. website, api, and gitops
-          enum:
-            - website
-            - api
-            - gitops
+              kind:
+                - System
         port:
           title: Port
           type: number
@@ -127,7 +120,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: website
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
@@ -149,7 +142,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: website
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
@@ -169,7 +162,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: website
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
