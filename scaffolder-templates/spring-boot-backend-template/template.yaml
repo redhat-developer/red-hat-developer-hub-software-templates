@@ -11,13 +11,17 @@ metadata:
     - maven
 spec:
   owner: janus-authors
+  system: janus-idp
   type: service
 
   parameters:
-    - title: Provide information about the GitHub location
+    - title: Provide information about the new component
       required:
         - githubOrg
         - repoName
+        - owner
+        - system
+        - port
       properties:
         githubOrg:
           title: GitHub Organization
@@ -29,16 +33,6 @@ spec:
           title: Description
           type: string
           description: Help others understand what this component is for
-    - title: Provide information about the new component
-      required:
-        - owner
-        - system
-        - applicationType
-        - port
-        - groupId
-        - artifactId
-        - javaPackageName
-      properties:
         owner:
           title: Owner
           type: string
@@ -47,8 +41,9 @@ spec:
           ui:field: OwnerPicker
           ui:options:
             catalogFilter:
-              - Group
-              - User
+              kind:
+                - Group
+                - User
         system:
           title: System
           type: string
@@ -57,20 +52,19 @@ spec:
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
-              - System
-        applicationType:
-          title: Application Type
-          type: string
-          description: The application type e.g. website, api, and gitops
-          enum:
-            - website
-            - api
-            - gitops
+              kind:
+                - System
         port:
           title: Port
           type: number
           default: 5000
-          description: The port exposed for the application
+          description: Override the port exposed for the application
+    - title: Provide information about the Java metadata
+      required:
+        - groupId
+        - artifactId
+        - javaPackageName
+      properties:
         groupId:
           title: Group ID
           type: string
@@ -101,57 +95,65 @@ spec:
           enumNames:
             - GitHub Action
             - Tekton
-    - title: Provide information about the ArgoCD deployment
-      required:
-        - useGitops
-        - imageRepository
-        - namespace
-        - imageUrl
-      properties:
-        useGitops:
-          title: Include ArgoCD
-          type: boolean
-          default: true
-          ui:widget: radio
-          description: Should the component include a ArgoCD workflow
-        imageRepository:
-          title: Select a registry
-          type: string
-          default: quay.io
-          enum:
-            - image-registry.openshift-image-registry.svc:5000
-            - quay.io
-          enumNames:
-            - Internal OpenShift Registry
-            - Quay
-        imageUrl:
-          title: Image URL
-          type: string
-          description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
-        namespace:
-          title: Namespace
-          type: string
-          default: janus-idp
-          description: The namespace for deploying resources
       dependencies:
-        useGitops:
+        ci:
           oneOf:
-            # We don't want to show any extra properties when ArgoCD isn't selected
             - properties:
-                useGitops:
-                  const: false
+                # Show no extra properties when GitHub Actions is selected
+                ci:
+                  const: ../../scaffolder-skeletons/github-actions-skeleton/
             - required:
-                - hostUrl
+                - imageRepository
+                - namespace
+                - imageUrl
               properties:
-                useGitops:
-                  const: true
-                hostUrl:
-                  title: Host URL
+                ci:
+                  const: ../../scaffolder-skeletons/tekton-skeleton/
+                imageRepository:
+                  title: Select a registry
                   type: string
-                  description: The external facing host URL
+                  default: quay.io
+                  enum:
+                    - quay.io
+                    - image-registry.openshift-image-registry.svc:5000
+                  enumNames:
+                    - Quay
+                    - Internal OpenShift Registry
+                imageUrl:
+                  title: Image URL
+                  type: string
+                  description: The Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
+                namespace:
+                  title: Namespace
+                  type: string
+                  default: janus-idp
+                  description: The namespace for deploying resources
   steps:
+    - id: sourceCodeTemplate
+      name: Generating the Source Code Component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: ./source
+        values:
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: api
+          description: ${{ parameters.description }}
+          namespace: ${{ parameters.namespace }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageBuilder: s2i-java
+          imageRepository: ${{ parameters.imageRepository }}
+          port: ${{ parameters.port }}
+          groupId: ${{ parameters.groupId }}
+          artifactId: ${{ parameters.artifactId }}
+          javaPackageName: ${{ parameters.javaPackageName }}
+
     - id: ciTemplate
-      name: Generating the CI component
+      name: Generating the CI Component
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
@@ -163,7 +165,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: api
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
@@ -175,31 +177,8 @@ spec:
           artifactId: ${{ parameters.artifactId }}
           javaPackageName: ${{ parameters.javaPackageName }}
 
-    - id: template
-      name: Generating the source code component
-      action: fetch:template
-      input:
-        url: ./skeleton
-        targetPath: ./source
-        values:
-          githubOrg: ${{ parameters.githubOrg }}
-          repoName: ${{ parameters.repoName }}
-          owner: ${{ parameters.owner }}
-          system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
-          description: ${{ parameters.description }}
-          namespace: ${{ parameters.namespace }}
-          imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
-          imageBuilder: s2i-java
-          imageRepository: ${{ parameters.imageRepository }}
-          port: ${{ parameters.port }}
-          groupId: ${{ parameters.groupId }}
-          artifactId: ${{ parameters.artifactId }}
-          javaPackageName: ${{ parameters.javaPackageName }}
-
-    - id: sourceCatalogTemplate
-      name: Generating Source Code catalog-info.yaml
+    - id: catalogTemplate
+      name: Generating the Catalog Info Component
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
@@ -209,7 +188,7 @@ spec:
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
+          applicationType: api
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
@@ -221,61 +200,8 @@ spec:
           artifactId: ${{ parameters.artifactId }}
           javaPackageName: ${{ parameters.javaPackageName }}
 
-    - id: gitopsCatalogTemplate
-      if: ${{ parameters.useGitops }}
-      name: Generating Gitops catalog-info.yaml
-      action: fetch:template
-      input:
-        url: ../../scaffolder-skeletons/catalog-info-skeleton/
-        targetPath: ./gitops
-        values:
-          # Gitops specific values
-          applicationKind: Resource
-          dependsOn: ${{ parameters.repoName }}
-
-          # Normal values
-          githubOrg: ${{ parameters.githubOrg }}
-          repoName: ${{ parameters.repoName }}-gitops
-          owner: ${{ parameters.owner }}
-          system: ${{ parameters.system }}
-          applicationType: gitops
-          description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
-          namespace: ${{ parameters.namespace }}
-          imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
-          imageBuilder: s2i-java
-          imageRepository: ${{ parameters.imageRepository }}
-          port: ${{ parameters.port }}
-          groupId: ${{ parameters.groupId }}
-          artifactId: ${{ parameters.artifactId }}
-          javaPackageName: ${{ parameters.javaPackageName }}
-
-    - id: manifestsTemplate
-      if: ${{ parameters.useGitops }}
-      name: Generating manifests component
-      action: fetch:template
-      input:
-        url: ../../scaffolder-skeletons/manifests-skeleton/
-        targetPath: ./gitops
-        values:
-          githubOrg: ${{ parameters.githubOrg }}
-          repoName: ${{ parameters.repoName }}
-          owner: ${{ parameters.owner }}
-          system: ${{ parameters.system }}
-          applicationType: ${{ parameters.applicationType }}
-          description: ${{ parameters.description }}
-          namespace: ${{ parameters.namespace }}
-          imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
-          imageBuilder: s2i-java
-          imageRepository: ${{ parameters.imageRepository }}
-          port: ${{ parameters.port }}
-          groupId: ${{ parameters.groupId }}
-          artifactId: ${{ parameters.artifactId }}
-          javaPackageName: ${{ parameters.javaPackageName }}
-
-    - id: publishSource
-      name: Publishing to Source Code Repository
+    - id: publish
+      name: Publishing to the Source Code Repository
       action: publish:github
       input:
         sourcePath: ./source
@@ -284,56 +210,17 @@ spec:
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
-    - id: publishGitops
-      if: ${{ parameters.useGitops }}
-      name: Publishing to Gitops Repository
-      action: publish:github
-      input:
-        sourcePath: ./gitops
-        allowedHosts: ['github.com']
-        description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
-        defaultBranch: main
-
-    - id: registerSource
-      name: Registering the Source Code Component
+    - id: register
+      name: Registering the Catalog Info Component
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publishSource.output.repoContentsUrl }}
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: /catalog-info.yaml
-
-    - id: registerGitops
-      if: ${{ parameters.useGitops }}
-      name: Registering the Gitops Component
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publishGitops.output.repoContentsUrl }}
-        catalogInfoPath: /catalog-info.yaml
-
-    - id: createArgocdResources
-      if: ${{ parameters.useGitops }}
-      name: Create ArgoCD Resources
-      action: argocd:create-resources
-      input:
-        appName: ${{ parameters.repoName }}
-        # Hardcoded value because this is kept as a secret on the server to allow forks to easily change the value
-        argoInstance: argocd.operate-first.cloud
-        namespace: ${{ parameters.namespace }}
-        repoUrl: ${{ steps.publishGitops.output.remoteUrl }}
-        labelValue: ${{ parameters.repoName }}
-        path: manifests/base
 
   output:
     links:
-      - title: Source Code Repository
-        url: ${{ steps.publishSource.output.remoteUrl }}
-      - title: Gitops Repository
-        if: ${{ parameters.useGitops }}
-        url: ${{ steps.publishGitops.output.remoteUrl }}
-      - title: Open Source Code Component in catalog
+      - title: Open Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open Component in Catalog
         icon: catalog
-        entityRef: ${{ steps.registerSource.output.entityRef }}
-      - title: Open Gitops Component in catalog
-        if: ${{ parameters.useGitops }}
-        icon: catalog
-        entityRef: ${{ steps.registerGitops.output.entityRef }}
+        entityRef: ${{ steps.register.output.entityRef }}
