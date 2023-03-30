@@ -133,7 +133,7 @@ spec:
                   description: The namespace for deploying resources
   steps:
     - id: sourceCodeTemplate
-      name: Generating the source code component
+      name: Generating the Source Code Component
       action: fetch:template
       input:
         url: ./skeleton
@@ -156,7 +156,7 @@ spec:
           javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: ciTemplate
-      name: Generating the CI component
+      name: Generating the CI Component
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
@@ -181,7 +181,7 @@ spec:
           javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: catalogTemplate
-      name: Generating Source Code catalog-info.yaml
+      name: Generating the Catalog Info Component
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
@@ -204,7 +204,7 @@ spec:
           javaPackageName: ${{ parameters.javaPackageName }}
 
     - id: publish
-      name: Publishing to Source Code Repository
+      name: Publishing to the Source Code Repository
       action: publish:github
       input:
         sourcePath: ./source
@@ -214,7 +214,7 @@ spec:
         defaultBranch: main
 
     - id: register
-      name: Registering the Source Code Component
+      name: Registering the Catalog Info Component
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
