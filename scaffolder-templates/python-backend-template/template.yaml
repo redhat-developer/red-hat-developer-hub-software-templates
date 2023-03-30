@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: python-backend-template
-  title: Create a Python Backend application with CI/CD
-  description: Create a starter Python backend application with a CI pipeline and optionally managed by ArgoCD
+  title: Create a Python Backend application with a CI pipeline
+  description: Create a starter Python backend application with a CI pipeline
   tags:
     - recommended
     - python

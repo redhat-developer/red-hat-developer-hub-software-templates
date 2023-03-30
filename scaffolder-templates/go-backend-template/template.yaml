@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: go-backend-template
-  title: Go Backend Golden Path Template
-  description: Create a starter Go backend application with a CI pipeline and optionally managed by ArgoCD
+  title: Create a Go Backend application with a CI pipeline
+  description: Create a starter Go backend application with a CI pipeline
   tags:
     - recommended
     - go

@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: quarkus-backend-template
-  title: Create a Quarkus Backend application with CI/CD
-  description: Create a starter Quarkus Backend application with a CI pipeline and optionally managed by ArgoCD
+  title: Create a Quarkus Backend application with a CI pipeline
+  description: Create a starter Quarkus Backend application with a CI pipeline
   tags:
     - quarkus
     - java
