@@ -16,10 +16,13 @@ spec:
   type: service
 
   parameters:
-    - title: Provide information about the GitHub location
+    - title: Provide information about the new component
       required:
         - githubOrg
         - repoName
+        - owner
+        - system
+        - port
       properties:
         githubOrg:
           title: GitHub Organization
@@ -31,12 +34,6 @@ spec:
           title: Description
           type: string
           description: Help others understand what this component is for
-    - title: Provide information about the new component
-      required:
-        - owner
-        - system
-        - port
-      properties:
         owner:
           title: Owner
           type: string
@@ -62,7 +59,7 @@ spec:
           title: Port
           type: number
           default: 3000
-          description: The port exposed for the application
+          description: Override the port exposed for the application
     - title: Provide information about the CI method
       required:
         - ci
@@ -105,7 +102,7 @@ spec:
                 imageUrl:
                   title: Image URL
                   type: string
-                  description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
+                  description: The Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
                 namespace:
                   title: Namespace
                   type: string
