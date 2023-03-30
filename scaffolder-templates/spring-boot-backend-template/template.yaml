@@ -102,54 +102,39 @@ spec:
           enumNames:
             - GitHub Action
             - Tekton
-    - title: Provide information about the ArgoCD deployment
-      required:
-        - useGitops
-        - imageRepository
-        - namespace
-        - imageUrl
-      properties:
-        useGitops:
-          title: Include ArgoCD
-          type: boolean
-          default: true
-          ui:widget: radio
-          description: Should the component include a ArgoCD workflow
-        imageRepository:
-          title: Select a registry
-          type: string
-          default: quay.io
-          enum:
-            - image-registry.openshift-image-registry.svc:5000
-            - quay.io
-          enumNames:
-            - Internal OpenShift Registry
-            - Quay
-        imageUrl:
-          title: Image URL
-          type: string
-          description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
-        namespace:
-          title: Namespace
-          type: string
-          default: janus-idp
-          description: The namespace for deploying resources
       dependencies:
-        useGitops:
+        ci:
           oneOf:
-            # We don't want to show any extra properties when ArgoCD isn't selected
             - properties:
-                useGitops:
-                  const: false
+                # Show no extra properties when GitHub Actions is selected
+                ci:
+                  const: ../../scaffolder-skeletons/github-actions-skeleton/
             - required:
-                - hostUrl
+                - imageRepository
+                - namespace
+                - imageUrl
               properties:
-                useGitops:
-                  const: true
-                hostUrl:
-                  title: Host URL
+                ci:
+                  const: ../../scaffolder-skeletons/tekton-skeleton/
+                imageRepository:
+                  title: Select a registry
                   type: string
-                  description: The external facing host URL
+                  default: quay.io
+                  enum:
+                    - quay.io
+                    - image-registry.openshift-image-registry.svc:5000
+                  enumNames:
+                    - Quay
+                    - Internal OpenShift Registry
+                imageUrl:
+                  title: Image URL
+                  type: string
+                  description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
+                namespace:
+                  title: Namespace
+                  type: string
+                  default: janus-idp
+                  description: The namespace for deploying resources
   steps:
     - id: sourceCodeTemplate
       name: Generating the source code component
