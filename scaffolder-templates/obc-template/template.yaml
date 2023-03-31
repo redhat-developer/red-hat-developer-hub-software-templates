@@ -5,7 +5,6 @@ metadata:
   title: Add OBC to an existing project
   description: Add OBC to an existing project
   tags:
-    - recommended
     - obc
 spec:
   owner: janus-authors
@@ -13,7 +12,7 @@ spec:
   type: service
 
   parameters:
-    - title: Provide information about the existing GitHub location
+    - title: Provide information about the existing component
       required:
         - githubOrg
         - repoName
@@ -38,8 +37,9 @@ spec:
           ui:field: OwnerPicker
           ui:options:
             catalogFilter:
-              - Group
-              - User
+              kind:
+                - Group
+                - User
         system:
           title: System
           type: string
@@ -48,14 +48,15 @@ spec:
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
-              - System
+              kind:
+                - System
         storageClassName:
           title: Storage Class Name
           type: string
           description: Storage Class Name of the OBC
   steps:
     - id: catalogTemplate
-      name: Generating catalog-info.yaml
+      name: Generating the Catalog Info Component
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
@@ -72,7 +73,7 @@ spec:
           description: Contains the OBC manifests for ${{ parameters.repoName }}
 
     - id: manifestsTemplate
-      name: Generating manifests component
+      name: Generating the Manifests Component
       action: fetch:template
       input:
         url: ./template
@@ -85,7 +86,7 @@ spec:
           description: Contains the OBC manifests for ${{ parameters.repoName }}
 
     - id: publish
-      name: Publishing to Source Code Repository
+      name: Publishing to the Source Code Repository
       action: publish:github
       input:
         allowedHosts: ['github.com']
@@ -94,7 +95,7 @@ spec:
         defaultBranch: main
 
     - id: register
-      name: Registering the component
+      name: Registering the Catalog Info Component
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
@@ -102,8 +103,8 @@ spec:
 
   output:
     links:
-      - title: Source Code Repository
+      - title: Open the Source Code Repository
         url: ${{ steps.publish.output.remoteUrl }}
-      - title: Open Component in catalog
+      - title: Open the Catalog Info Component
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}

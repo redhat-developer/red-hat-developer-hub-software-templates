@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: dotnet-frontend-template
-  title: Create a .NET Frontend application with CI/CD
-  description: Create a starter .NET frontend application with a CI pipeline and optionally managed by ArgoCD
+  title: Create a .NET Frontend application with a CI pipeline
+  description: Create a starter .NET frontend application with a CI pipeline
   tags:
     - recommended
     - dotnet
@@ -187,8 +187,8 @@ spec:
 
   output:
     links:
-      - title: Open Source Code Repository
+      - title: Open the Source Code Repository
         url: ${{ steps.publish.output.remoteUrl }}
-      - title: Open Component in Catalog
+      - title: Open the Catalog Info Component
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
