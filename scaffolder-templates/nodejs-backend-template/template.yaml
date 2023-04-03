@@ -128,6 +128,7 @@ spec:
           imageBuilder: s2i-nodejs
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          ci: ${{ parameters.ci }}
 
     - id: ciTemplate
       name: Generating the CI Component
@@ -150,6 +151,7 @@ spec:
           imageBuilder: s2i-nodejs
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          ci: ${{ parameters.ci }}
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -170,6 +172,7 @@ spec:
           imageBuilder: s2i-nodejs
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          ci: ${{ parameters.ci }}
 
     - id: publish
       name: Publishing to the Source Code Repository
