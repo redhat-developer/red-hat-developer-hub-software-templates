@@ -28,3 +28,4 @@ spec:
   dependsOn:
     - component:${{ values.dependsOn }}
   {%- endif %}
+  org: test

@@ -114,7 +114,6 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: ./source
         values:
           githubOrg: ${{ parameters.githubOrg }}
           repoName: ${{ parameters.repoName }}
@@ -124,7 +123,6 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-nodejs
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -135,7 +133,6 @@ spec:
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
-        targetPath: ./source
         copyWithoutTemplating:
           - .github/workflows/
         values:
@@ -147,7 +144,6 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-nodejs
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -158,7 +154,6 @@ spec:
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
-        targetPath: ./source
         values:
           githubOrg: ${{ parameters.githubOrg }}
           repoName: ${{ parameters.repoName }}
@@ -168,7 +163,6 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-nodejs
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
@@ -178,7 +172,6 @@ spec:
       name: Publishing to the Source Code Repository
       action: publish:github
       input:
-        sourcePath: ./source
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
