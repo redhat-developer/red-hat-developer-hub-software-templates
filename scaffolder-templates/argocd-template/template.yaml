@@ -18,6 +18,7 @@ spec:
         - githubOrg
         - repoName
         - port
+        - componentName
       properties:
         githubOrg:
           title: GitHub Organization
@@ -25,6 +26,15 @@ spec:
         repoName:
           title: Repository Name
           type: string
+        componentName:
+          title: Component Name
+          type: string
+          description: Attach the manifests to an existing component
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Component
         port:
           title: Port
           type: number
@@ -37,7 +47,6 @@ spec:
         owner:
           title: Owner
           type: string
-          description: Owner of the component
           default: janus-authors
           ui:field: OwnerPicker
           ui:options:
@@ -48,8 +57,7 @@ spec:
         system:
           title: System
           type: string
-          description: System of the component
-          default: examples
+          default: janus-idp
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
@@ -94,7 +102,7 @@ spec:
         values:
           # Gitops specific values
           applicationKind: Resource
-          dependsOn: ${{ parameters.repoName }}
+          dependsOn: ${{ parameters.componentName }}
 
           # Normal values
           githubOrg: ${{ parameters.githubOrg }}
@@ -132,7 +140,7 @@ spec:
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        description: ${{ parameters.description }}
+        description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
         defaultBranch: main
 

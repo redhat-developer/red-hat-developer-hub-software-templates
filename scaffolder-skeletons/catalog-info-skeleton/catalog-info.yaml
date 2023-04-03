@@ -28,4 +28,7 @@ spec:
   dependsOn:
     - component:${{ values.dependsOn }}
   {%- endif %}
-  org: test
+  {%- if values.partOf %}
+  partOf:
+    - component:${{ values.partOf }}
+  {%- endif %}

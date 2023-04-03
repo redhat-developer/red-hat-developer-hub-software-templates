@@ -13,12 +13,11 @@ spec:
   type: service
 
   parameters:
-    - title: Provide information about the new component
+    - title: Provide information about the existing component
       required:
         - githubOrg
         - repoName
-        - owner
-        - system
+        - componentName
       properties:
         githubOrg:
           title: GitHub Organization
@@ -26,10 +25,23 @@ spec:
         repoName:
           title: Repository Name
           type: string
+        componentName:
+          title: Component Name
+          type: string
+          description: Attach the techdocs to an existing component
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Component
+    - title: Provide information about the new component
+      required:
+        - owner
+        - system
+      properties:
         owner:
           title: Owner
           type: string
-          description: Owner of the component
           default: janus-authors
           ui:field: OwnerPicker
           ui:options:
@@ -40,8 +52,7 @@ spec:
         system:
           title: System
           type: string
-          description: System of the component
-          default: examples
+          default: janus-idp
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
@@ -54,9 +65,11 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
+        copyWithoutTemplating:
+          - .github/workflows/
         values:
           githubOrg: ${{ parameters.githubOrg }}
-          repoName: ${{ parameters.repoName }}
+          repoName: ${{ parameters.repoName }}-techdocs
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           applicationType: documentation
@@ -68,8 +81,11 @@ spec:
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
+          # Gitops specific values
+          partOf: ${{ parameters.componentName }}
+
           githubOrg: ${{ parameters.githubOrg }}
-          repoName: ${{ parameters.repoName }}
+          repoName: ${{ parameters.repoName }}-techdocs
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           applicationType: documentation
@@ -80,8 +96,8 @@ spec:
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        description: Contains the techdocs for ${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-techdocs
         defaultBranch: main
 
     - id: register

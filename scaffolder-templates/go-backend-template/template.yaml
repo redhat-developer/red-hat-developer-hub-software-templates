@@ -34,7 +34,6 @@ spec:
         owner:
           title: Owner
           type: string
-          description: Owner of the component
           default: janus-authors
           ui:field: OwnerPicker
           ui:options:
@@ -45,8 +44,7 @@ spec:
         system:
           title: System
           type: string
-          description: System of the component
-          default: examples
+          default: janus-idp
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
