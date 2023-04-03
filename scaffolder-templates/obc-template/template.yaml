@@ -33,7 +33,7 @@ spec:
           title: Owner
           type: string
           default: janus-authors
-          ui:field: OwnerPicker
+          ui:field: EntityPicker
           ui:options:
             catalogFilter:
               kind:
