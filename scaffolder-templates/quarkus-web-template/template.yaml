@@ -29,7 +29,7 @@ spec:
         group_id:
           title: Group Id
           type: string
-          default: redhat.assemble
+          default: redhat.janus
           description: Maven Group Id
         artifact_id:
           title: Artifact Id
@@ -38,7 +38,7 @@ spec:
           description: Maven Artifact Id
         java_package_name:
           title: Java Package Name
-          default: org.redhat.assemble
+          default: org.redhat.janus
           type: string
           description: Name for the java package. eg (com.redhat.blah)
         description:
@@ -155,7 +155,7 @@ spec:
       input:
         appName: ${{ parameters.component_id }}-bootstrap
         argoInstance: main
-        namespace: assemble-argocd
+        namespace: janus-argocd
         repoUrl: https://github.com/${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}-gitops.git
         path: 'argocd/'
 
