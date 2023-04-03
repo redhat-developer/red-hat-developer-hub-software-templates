@@ -36,7 +36,7 @@ spec:
           title: Owner
           type: string
           default: janus-authors
-          ui:field: OwnerPicker
+          ui:field: EntityPicker
           ui:options:
             catalogFilter:
               kind:
@@ -45,7 +45,7 @@ spec:
         system:
           title: System
           type: string
-          default: janus-idp
+          default: system:janus-idp
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
@@ -102,7 +102,7 @@ spec:
                 namespace:
                   title: Namespace
                   type: string
-                  default: janus-idp
+                  default: system:janus-idp
                   description: The namespace for deploying resources
   steps:
     - id: sourceCodeTemplate

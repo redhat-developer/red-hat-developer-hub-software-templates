@@ -42,8 +42,8 @@ spec:
         owner:
           title: Owner
           type: string
-          default: janus-authors
-          ui:field: OwnerPicker
+          default: group:janus-authors
+          ui:field: EntityPicker
           ui:options:
             catalogFilter:
               kind:
@@ -52,7 +52,7 @@ spec:
         system:
           title: System
           type: string
-          default: janus-idp
+          default: system:janus-idp
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
