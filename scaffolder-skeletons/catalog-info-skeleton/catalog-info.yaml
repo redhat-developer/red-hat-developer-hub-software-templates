@@ -26,9 +26,9 @@ spec:
   owner: ${{ values.owner }}
   {%- if values.dependsOn %}
   dependsOn:
-    - component:${{ values.dependsOn }}
+    - ${{ values.dependsOn }}
   {%- endif %}
   {%- if values.partOf %}
   partOf:
-    - component:${{ values.partOf }}
+    - ${{ values.partOf }}
   {%- endif %}
