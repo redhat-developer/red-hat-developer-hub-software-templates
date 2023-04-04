@@ -101,7 +101,7 @@ spec:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
           # Gitops specific values
-          applicationKind: Resource
+          entityKind: Resource
           dependsOn: ${{ parameters.componentName }}
 
           # Normal values

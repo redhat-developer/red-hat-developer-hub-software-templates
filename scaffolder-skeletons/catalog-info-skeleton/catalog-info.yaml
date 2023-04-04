@@ -1,6 +1,6 @@
 apiVersion: backstage.io/v1alpha1
-{%- if values.applicationKind %}
-kind: ${{ values.applicationKind }}
+{%- if values.entityKind %}
+kind: ${{ values.entityKind }}
 {%- else %}
 kind: Component
 {%- endif %}

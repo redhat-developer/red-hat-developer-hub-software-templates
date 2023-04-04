@@ -60,7 +60,7 @@ spec:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
           # Gitops specific values
-          applicationKind: Resource
+          entityKind: Resource
 
           # Normal values
           githubOrg: ${{ parameters.githubOrg }}
