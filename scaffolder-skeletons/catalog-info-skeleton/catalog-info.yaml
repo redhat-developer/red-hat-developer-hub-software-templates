@@ -1,6 +1,6 @@
 apiVersion: backstage.io/v1alpha1
-{%- if values.applicationKind %}
-kind: ${{ values.applicationKind }}
+{%- if values.entityKind %}
+kind: ${{ values.entityKind }}
 {%- else %}
 kind: Component
 {%- endif %}
@@ -10,7 +10,12 @@ metadata:
   description: ${{ values.description }}
   {%- endif %}
   annotations:
+    {%- if values.hostUrl %}
     argocd/app-name: ${{ values.repoName }}
+    {%- endif %}
+    {%- if values.ci == "../../scaffolder-skeletons/tekton-skeleton/" %}
+    tektonci/build-namespace: ${{ values.namespace }}
+    {%- endif %}
     backstage.io/kubernetes-id: ${{ values.repoName }}
     backstage.io/techdocs-ref: dir:.
     github.com/project-slug: ${{ values.githubOrg }}/${{ values.repoName }}
@@ -21,5 +26,9 @@ spec:
   owner: ${{ values.owner }}
   {%- if values.dependsOn %}
   dependsOn:
-    - component:${{ values.dependsOn }}
+    - ${{ values.dependsOn }}
+  {%- endif %}
+  {%- if values.partOf %}
+  partOf:
+    - ${{ values.partOf }}
   {%- endif %}

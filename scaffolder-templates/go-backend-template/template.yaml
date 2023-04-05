@@ -34,9 +34,7 @@ spec:
         owner:
           title: Owner
           type: string
-          description: Owner of the component
-          default: janus-authors
-          ui:field: OwnerPicker
+          ui:field: EntityPicker
           ui:options:
             catalogFilter:
               kind:
@@ -45,8 +43,6 @@ spec:
         system:
           title: System
           type: string
-          description: System of the component
-          default: examples
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
@@ -103,7 +99,6 @@ spec:
                 namespace:
                   title: Namespace
                   type: string
-                  default: janus-idp
                   description: The namespace for deploying resources
   steps:
     - id: sourceCodeTemplate
@@ -111,7 +106,6 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: ./source
         values:
           githubOrg: ${{ parameters.githubOrg }}
           repoName: ${{ parameters.repoName }}
@@ -121,17 +115,16 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-go
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          ci: ${{ parameters.ci }}
 
     - id: ciTemplate
       name: Generating the CI Component
       action: fetch:template
       input:
         url: ${{ parameters.ci }}
-        targetPath: ./source
         copyWithoutTemplating:
           - .github/workflows/
         values:
@@ -143,17 +136,16 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-go
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          ci: ${{ parameters.ci }}
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
       action: fetch:template
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
-        targetPath: ./source
         values:
           githubOrg: ${{ parameters.githubOrg }}
           repoName: ${{ parameters.repoName }}
@@ -163,16 +155,15 @@ spec:
           description: ${{ parameters.description }}
           namespace: ${{ parameters.namespace }}
           imageUrl: ${{ parameters.imageUrl }}
-          hostUrl: ${{ parameters.hostUrl }}
           imageBuilder: s2i-go
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          ci: ${{ parameters.ci }}
 
     - id: publish
       name: Publishing to the Source Code Repository
       action: publish:github
       input:
-        sourcePath: ./source
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
