@@ -17,7 +17,7 @@ spec:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
       metadata:
-        name: {{ .Values.app.name }}-pipeline-$(uid)
+        name: $(uid)
       spec:
         params:
           - name: source-repo
