@@ -1,11 +1,12 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: obc-template
-  title: Add OBC to an existing project
-  description: Add OBC to an existing project
+  name: documentation-template
+  title: Create a techdocs sample
+  description: Create a techdocs sample
   tags:
-    - obc
+    - documentation
+    - techdocs
 spec:
   owner: janus-authors
   system: janus-idp
@@ -16,6 +17,7 @@ spec:
       required:
         - githubOrg
         - repoName
+        - componentName
       properties:
         githubOrg:
           title: GitHub Organization
@@ -23,11 +25,19 @@ spec:
         repoName:
           title: Repository Name
           type: string
+        componentName:
+          title: Component Name
+          type: string
+          description: Attach the techdocs to an existing component
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Component
     - title: Provide information about the new component
       required:
         - owner
         - system
-        - storageClassName
       properties:
         owner:
           title: Owner
@@ -46,11 +56,23 @@ spec:
             catalogFilter:
               kind:
                 - System
-        storageClassName:
-          title: Storage Class Name
-          type: string
-          description: Storage Class Name of the OBC
+
   steps:
+    - id: sourceCodeTemplate
+      name: Generating the Source Code Component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        copyWithoutTemplating:
+          - .github/workflows/
+        values:
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}-techdocs
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: documentation
+          description: Contains the techdocs for ${{ parameters.repoName }}
+
     - id: catalogTemplate
       name: Generating the Catalog Info Component
       action: fetch:template
@@ -58,36 +80,22 @@ spec:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
           # Gitops specific values
-          entityKind: Resource
+          partOf: ${{ parameters.componentName }}
 
-          # Normal values
           githubOrg: ${{ parameters.githubOrg }}
-          repoName: ${{ parameters.repoName }}-gitops
+          repoName: ${{ parameters.repoName }}-techdocs
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
-          applicationType: gitops
-          description: Contains the OBC manifests for ${{ parameters.repoName }}
-
-    - id: manifestsTemplate
-      name: Generating the Manifests Component
-      action: fetch:template
-      input:
-        url: ./template
-        values:
-          githubOrg: ${{ parameters.githubOrg }}
-          repoName: ${{ parameters.repoName }}-gitops
-          owner: ${{ parameters.owner }}
-          system: ${{ parameters.system }}
-          applicationType: gitops
-          description: Contains the OBC manifests for ${{ parameters.repoName }}
+          applicationType: documentation
+          description: Contains the techdocs for ${{ parameters.repoName }}
 
     - id: publish
       name: Publishing to the Source Code Repository
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
+        description: Contains the techdocs for ${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-techdocs
         defaultBranch: main
 
     - id: register
