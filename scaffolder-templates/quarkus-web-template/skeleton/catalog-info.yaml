@@ -24,3 +24,17 @@ spec:
   type: service
   lifecycle: production
   owner: ${{values.owner | dump}}
+  providesApis:
+    - ${{values.component_id | dump}}-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: ${{values.component_id | dump}}-api
+  description: ${{values.description | dump}}
+spec:
+  type: openapi
+  lifecycle: production
+  owner: ${{values.owner | dump}}
+  definition:
+    $text: ./openapi.yaml
