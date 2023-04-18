@@ -25,13 +25,15 @@ spec:
   lifecycle: production
   owner: ${{values.owner | dump}}
   providesApis:
-    - ${{values.component_id | dump}}-api
+    - ${{values.component_id | dump}}
 ---
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: ${{values.component_id | dump}}-api
+  name: ${{values.component_id | dump}}
+  {%- if values.description %}
   description: ${{values.description | dump}}
+  {%- endif %}
 spec:
   type: openapi
   lifecycle: production
