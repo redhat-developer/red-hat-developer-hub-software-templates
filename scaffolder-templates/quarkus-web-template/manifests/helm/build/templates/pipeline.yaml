@@ -5,6 +5,7 @@ metadata:
   name: {{ .Values.app.name }}-pipeline
   labels:
     type: pipeline
+    backstage.io/kubernetes-id: {{ .Values.app.name }}
 spec:
   params:
     - name: source-repo

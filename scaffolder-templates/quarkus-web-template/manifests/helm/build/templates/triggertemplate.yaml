@@ -18,6 +18,8 @@ spec:
       kind: PipelineRun
       metadata:
         name: $(uid)
+        labels:
+          backstage.io/kubernetes-id: {{ .Values.app.name }}
       spec:
         params:
           - name: source-repo
