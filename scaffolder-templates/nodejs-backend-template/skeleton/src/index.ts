@@ -11,5 +11,7 @@ router.get('/', function (req, res) {
 
 app.use('/', router)
 
-app.listen(process.env.PORT || ${{ values.port }})
-console.log('Running at port ${{ values.port }}')
+const listenPort = process.env.PORT || ${{ values.port }};
+
+app.listen(listenPort)
+console.log(`Running at port ${listenPort}`)
