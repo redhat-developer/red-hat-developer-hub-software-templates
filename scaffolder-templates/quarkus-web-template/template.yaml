@@ -60,11 +60,6 @@ spec:
           type: string
           description: Host for storing image (defaults to openshift internal)
           default: image-registry.openshift-image-registry.svc:5000
-        image_name:
-          title: Image Name
-          type: string
-          default: my-quarkus-app-dev/my-quarkus-app
-          description: Build Image Name <NAMESPACE><COMPONENT_ID> to use internal registry
         image_tag:
           title: Image Tag
           default: latest
@@ -135,7 +130,7 @@ spec:
           cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
           namespace: ${{ parameters.component_id }}-dev
           image_host: ${{ parameters.image_host }}
-          image_name: ${{ parameters.image_name }}
+          image_name: ${{ parameters.component_id }}-dev/${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
           port: 8080
         targetPath: ./tenant-gitops

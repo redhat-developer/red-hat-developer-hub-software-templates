@@ -11,7 +11,6 @@ namespace:
 replicaCount: 1
 
 image:
-  repository: ${{values.image_host}}/${{values.image_name}}
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ${{values.image_tag}}

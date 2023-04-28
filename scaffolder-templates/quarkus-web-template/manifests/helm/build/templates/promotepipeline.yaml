@@ -1,0 +1,33 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: promote-pipeline
+  labels:
+    type: pipeline
+    backstage.io/kubernetes-id: {{ .Values.app.name }}
+spec:
+  params:
+    - name: source-image
+      description: source image to promote
+      type: string
+      default: {{ include "image.url" . }}
+    - name: destination-image
+      description: destination image to promote to
+      type: string
+  tasks:
+    - name: skopeo-copy
+      params:
+        - name: srcImageURL
+          value: $(params.source-image)
+        - name: destImageURL
+          value: $(params.destination-image)
+      taskRef:
+        kind: Task
+        name: skopeo-copy
+      workspaces:
+        - name: output
+          workspace: source-folder
+  workspaces:
+    - name: source-folder
+    - name: maven-settings

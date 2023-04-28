@@ -12,9 +12,13 @@ spec:
     repoURL: ${{ values.destination }}
     targetRevision: HEAD
     path: ./helm/app
+    helm:
+      parameters:
+      - name: image.repository
+        value: ${{ values.component_id }}-dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: ${{ values.namespace }}
+    namespace: ${{ values.component_id }}-dev
   syncPolicy:
     automated: 
       prune: true
