@@ -26,8 +26,7 @@ spec:
         kind: Task
         name: skopeo-copy
       workspaces:
-        - name: output
-          workspace: source-folder
+        - name: images
+          workspace: images-url
   workspaces:
-    - name: source-folder
-    - name: maven-settings
+    - name: images-url
