@@ -130,7 +130,7 @@ spec:
           cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
           namespace: ${{ parameters.component_id }}-dev
           image_host: ${{ parameters.image_host }}
-          image_name: {{ parameters.component_id }}
+          image_name: ${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
           port: 8080
         targetPath: ./tenant-gitops

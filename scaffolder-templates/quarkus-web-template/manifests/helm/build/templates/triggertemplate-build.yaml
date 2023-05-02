@@ -12,7 +12,7 @@ spec:
       description: The repo url
     - name: output-image
       description: reference of the image that will get created
-      default: {{ include "image.url" . }}
+      default: {{ include "image.dev-url" . }}
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
