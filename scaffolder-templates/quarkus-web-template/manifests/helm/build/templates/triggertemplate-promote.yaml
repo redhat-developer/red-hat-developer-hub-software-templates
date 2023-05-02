@@ -7,8 +7,10 @@ spec:
   params:
     - name: source-image
       description: The source image to promote
+      default: {{ include "image.dev-url" . }}
     - name: destination-image
       description: The destination to copy the image to
+      default: {{ include "image.preprod-url" . }}
     - name: image-tag
       description: The tag on the new image i.e the git tag
   resourcetemplates:
@@ -24,7 +26,7 @@ spec:
             value: $(tt.params.source-image)
           - name: destination-image
             value: $(tt.params.destination-image)
-          - name: image-tag
+          - name: destination-image-tag
             value: $(tt.params.image-tag)
         pipelineRef:
           name: {{ .Values.app.name }}-promote
