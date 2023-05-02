@@ -11,7 +11,7 @@ spec:
         - ref: commit-binding
       interceptors:
         - cel:
-            filter: "empty(body.commits) == false && body.created == false"
+            filter: "has(body.commits) && body.created == false"
       template:
         ref: {{ .Values.app.name }}-run-build
     - name: tag-trig
