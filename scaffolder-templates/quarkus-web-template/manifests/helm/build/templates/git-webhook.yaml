@@ -1,7 +1,7 @@
 apiVersion: redhatcop.redhat.io/v1alpha1
 kind: GitWebhook
 metadata:
-  name: {{ .Values.app.name }}-push
+  name: {{ .Values.app.name }}
 spec:
   gitHub:
     gitServerCredentials:
