@@ -11,10 +11,11 @@ spec:
     - name: source-image
       description: source image to promote
       type: string
-      default: {{ include "image.url" . }}
+      default: {{ include "image.dev-url" . }}
     - name: destination-image
       description: destination image to promote to
       type: string
+      default: {{ include "image.preprod-url" . }}
     - name: image-tag
       type: string
       default: latest

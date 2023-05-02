@@ -6,35 +6,23 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-    - name: push-trig
+    - name: commit-trig
       bindings:
-        - kind: ClusterTriggerBinding
-          ref: github-push
+        - name: git-repo-url
+          ref: "body.repository.url"
+        - name: git-revision
+          ref: "body.head_commit.id"
       interceptors:
-        - params:
-            - name: eventTypes
-              value: ["push"]
-          ref:
-            name: github
-        - params:
-            - name: git-revision
-              value: >-
-                (body.ref.contains('{{ .Values.git.branch }}'))
-            - name: overlays
-              value: null
-          ref:
-            name: cel
+        - cel:
+            filter: "body.repository.ref_type == 'branch' && body.head_commit != null"
       template:
         ref: {{ .Values.app.name }}-run-build
-    - name: create-trig
+    - name: tag-trig
       bindings:
-        - kind: ClusterTriggerBinding
-          ref: github-create
+        - name: image-tag
+          ref: "body.ref"
       interceptors:
-        - params:
-            - name: eventTypes
-              value: ["create"]
-          ref:
-            name: github
+        - cel:
+            filter: "body.repository.ref_type == 'tag'"
       template:
         ref: {{ .Values.app.name }}-run-promote
