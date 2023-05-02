@@ -15,7 +15,7 @@ spec:
     helm:
       parameters:
       - name: image.repository
-        value: ${{ values.component_id }}-preprod
+        value: ${{values.image_host}}/${{ values.component_id }}-preprod
   destination:
     server: https://kubernetes.default.svc
     namespace: ${{ values.component_id }}-preprod

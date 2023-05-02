@@ -2,7 +2,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: {{ .Values.app.name }}-run-pipeline
+  name: {{ .Values.app.name }}-run-build
 spec:
   params:
     - name: git-revision
@@ -29,7 +29,7 @@ spec:
           - name: output-image
             value: $(tt.params.output-image)
         pipelineRef:
-          name: {{ .Values.app.name }}-pipeline
+          name: {{ .Values.app.name }}-build
         serviceAccountName: pipeline
         timeout: 1h0m0s
         workspaces:

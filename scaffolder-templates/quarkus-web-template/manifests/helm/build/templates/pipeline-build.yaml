@@ -2,7 +2,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: {{ .Values.app.name }}-pipeline
+  name: {{ .Values.app.name }}-build
   labels:
     type: pipeline
     backstage.io/kubernetes-id: {{ .Values.app.name }}

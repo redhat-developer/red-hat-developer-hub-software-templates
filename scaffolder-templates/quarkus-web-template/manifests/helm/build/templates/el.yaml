@@ -6,7 +6,8 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-    - bindings:
+    - name: push-trig
+      bindings:
         - kind: ClusterTriggerBinding
           ref: github-push
       interceptors:
@@ -24,4 +25,16 @@ spec:
           ref:
             name: cel
       template:
-        ref: {{ .Values.app.name }}-run-pipeline
+        ref: {{ .Values.app.name }}-run-build
+    - name: create-trig
+      bindings:
+        - kind: ClusterTriggerBinding
+          ref: github-create
+      interceptors:
+        - params:
+            - name: eventTypes
+              value: ["create"]
+          ref:
+            name: github
+      template:
+        ref: {{ .Values.app.name }}-run-promote

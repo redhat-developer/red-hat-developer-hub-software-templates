@@ -1,0 +1,35 @@
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: {{ .Values.app.name }}-run-promote
+spec:
+  params:
+    - name: source-image
+      description: The source image to promote
+    - name: destination-image
+      description: The destination to copy the image to
+    - name: image-tag
+      description: The tag on the new image i.e the git tag
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: $(uid)
+        labels:
+          backstage.io/kubernetes-id: {{ .Values.app.name }}
+      spec:
+        params:
+          - name: source-image
+            value: $(tt.params.source-image)
+          - name: destination-image
+            value: $(tt.params.destination-image)
+          - name: image-tag
+            value: $(tt.params.image-tag)
+        pipelineRef:
+          name: {{ .Values.app.name }}-promote
+        serviceAccountName: pipeline
+        timeout: 1h0m0s
+        workspaces:
+          - name: images-url
+            emptyDir: {}

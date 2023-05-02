@@ -15,7 +15,7 @@ spec:
     helm:
       parameters:
       - name: image.repository
-        value: ${{ values.component_id }}-dev
+        value: ${{values.image_host}}/${{ values.component_id }}-dev
   destination:
     server: https://kubernetes.default.svc
     namespace: ${{ values.component_id }}-dev

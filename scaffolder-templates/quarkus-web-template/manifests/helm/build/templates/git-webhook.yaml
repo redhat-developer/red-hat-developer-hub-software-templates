@@ -1,7 +1,7 @@
 apiVersion: redhatcop.redhat.io/v1alpha1
 kind: GitWebhook
 metadata:
-  name: {{ .Values.app.name }}
+  name: {{ .Values.app.name }}-push
 spec:
   gitHub:
     gitServerCredentials:
@@ -14,6 +14,7 @@ spec:
   webhookSecret:
     name: {{ .Values.app.name }}-webhook
   events:
-    - push  
+    - push
+    - create
   content: json
   active: true  
