@@ -1,0 +1,8 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: tag-binding
+spec:
+  params:
+    - name: image-tag
+      value: $(body.ref)

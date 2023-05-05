@@ -2,9 +2,10 @@
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: {{ .Values.app.name }}-pipeline
+  name: {{ .Values.app.name }}-build
   labels:
     type: pipeline
+    backstage.io/kubernetes-id: {{ .Values.app.name }}
 spec:
   params:
     - name: source-repo
@@ -17,7 +18,7 @@ spec:
       type: string
     - name: output-image
       description: reference of the image that will get created
-      default: {{ include "image.url" . }}
+      default: {{ include "image.dev-url" . }}
       type: string
   tasks:
     - name: git-clone

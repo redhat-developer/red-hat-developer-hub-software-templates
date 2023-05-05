@@ -6,22 +6,19 @@ metadata:
 spec:
   serviceAccountName: pipeline
   triggers:
-    - bindings:
-        - kind: ClusterTriggerBinding
-          ref: github-push
+    - name: commit-trig
+      bindings:
+        - ref: commit-binding
       interceptors:
-        - params:
-            - name: eventTypes
-              value: ["push"]
-          ref:
-            name: github
-        - params:
-            - name: git-revision
-              value: >-
-                (body.ref.contains('{{ .Values.git.branch }}'))
-            - name: overlays
-              value: null
-          ref:
-            name: cel
+        - cel:
+            filter: "has(body.commits) && body.created == false"
       template:
-        ref: {{ .Values.app.name }}-run-pipeline
+        ref: {{ .Values.app.name }}-run-build
+    - name: tag-trig
+      bindings:
+        - ref: tag-binding
+      interceptors:
+        - cel:
+            filter: "body.ref_type == 'tag'"
+      template:
+        ref: {{ .Values.app.name }}-run-promote

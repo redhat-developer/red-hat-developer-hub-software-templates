@@ -1,6 +1,6 @@
 app:
   name: ${{values.component_id}}
-  namespace: ${{ values.namespace }}
+  namespace: ${{values.component_id}}-dev
   cluster: ${{ values.cluster }}
 
 git:
