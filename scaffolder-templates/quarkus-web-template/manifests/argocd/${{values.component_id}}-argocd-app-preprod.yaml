@@ -16,6 +16,8 @@ spec:
       parameters:
       - name: namespace.name
         value: ${{ values.component_id }}-preprod
+      - name: environment
+        value: preprod
   destination:
     server: https://kubernetes.default.svc
     namespace: ${{ values.component_id }}-preprod
