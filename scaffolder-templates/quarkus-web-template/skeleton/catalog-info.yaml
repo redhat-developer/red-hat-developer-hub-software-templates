@@ -17,10 +17,10 @@ metadata:
     - quarkus
   links:
     - url: https://devspaces${{values.cluster}}/#https://github.com/${{values.destination}}?che-editor=che-incubator/che-code/insiders&devfilePath=.devfile-vscode.yaml
-      title: CodeReady Workspaces (VS Code)
+      title: OpenShift Dev Spaces (VS Code)
       icon: web
     - url: https://devspaces${{values.cluster}}/#https://github.com/${{values.destination}}?che-editor=che-incubator/che-idea/latest&devfilePath=.devfile-intellij.yaml
-      title: CodeReady Workspaces (JetBrains IntelliJ)
+      title: OpenShift Dev Spaces (JetBrains IntelliJ)
       icon: web
 spec:
   type: service
