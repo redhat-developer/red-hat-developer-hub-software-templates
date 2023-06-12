@@ -66,4 +66,12 @@ Create the name of the service account to use
 {{- end }}
 {{- end }}
 
-{{- define "quarkus-template.registry" -}}image-registry.openshift-image-registry.svc:5000/{{ .Release.Namespace }}/{{- end -}}
+{{- define "quarkus-template.image" -}}
+{{- with .Values.image }}
+{{- if eq .registry "Quay" }}
+{{- printf "%s/%s/%s:%s" .host .organization .name .tag -}}
+{{- else }}
+{{- printf "%s/%s/%s:%s" .host .namespace .name .tag -}}
+{{- end }}
+{{- end }}
+{{- end }}

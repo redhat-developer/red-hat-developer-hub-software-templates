@@ -10,8 +10,9 @@ metadata:
     backstage.io/kubernetes-id: ${{values.component_id}}
     backstage.io/kubernetes-namespace: ${{values.namespace}}
     janus-idp.io/tekton-enabled : 'true'
-    github.com/project-slug: ${{values.destination }}
+    github.com/project-slug: ${{values.destination}}
     backstage.io/techdocs-ref: dir:.
+    quay.io/repository-slug: ${{values.quay_destination}}
   tags:
     - java
     - quarkus
