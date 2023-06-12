@@ -126,6 +126,7 @@ spec:
           owner: ${{ parameters.owner }}
           cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
           destination: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          quay_destination: ${{ parameters.image_organization }}/${{ parameters.component_id }}
           port: 8080
 
     - id: publish
@@ -164,7 +165,6 @@ spec:
           image_host: ${{ parameters.image_host }}
           image_organization: ${{ parameters.image_organization }}
           image_name: ${{ parameters.component_id }}
-          quay_destination: ${{ parameters.image_organization }}/${{ parameters.component_id }}
           image_tag: ${{ parameters.image_tag }}
           port: 8080
         targetPath: ./tenant-gitops
