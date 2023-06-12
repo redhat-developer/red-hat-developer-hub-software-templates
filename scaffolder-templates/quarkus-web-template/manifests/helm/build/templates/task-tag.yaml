@@ -1,0 +1,46 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: tag-and-push-to-quay
+spec:
+  params:
+    - name: sourceImage
+      type: string
+      description: The source image to be tagged
+    - name: tag
+      type: string
+      description: The tag to be applied to the target image
+  steps:
+    - name: copy-docker-config
+      image: alpine
+      script: |
+        #!/bin/sh
+        cp /tekton/home/.docker/config.json /tekton/creds-secrets/docker-config
+    - name: tag-and-push-image
+      image: quay.io/containers/podman:v3.2.0
+      env:
+        - name: REGISTRY_AUTH_FILE
+          value: /tekton/creds-secrets/docker-config/config.json
+      script: |
+        #!/usr/bin/env bash
+        set -e
+        podman pull quay.io/$(params.sourceImage):latest
+        podman tag quay.io/$(params.sourceImage):latest quay.io/$(params.sourceImage):$(params.tag)
+        podman push quay.io/$(params.sourceImage):$(params.tag)
+  workspaces:
+    - name: docker-config
+      mountPath: /tekton/home/.docker
+  volumes:
+    - name: varlibcontainers
+      emptyDir: {}
+    - name: run
+      emptyDir: {}
+    - name: tmp
+      emptyDir: {}
+  volumeMounts:
+    - name: varlibcontainers
+      mountPath: /var/lib/containers
+    - name: run
+      mountPath: /run
+    - name: tmp
+      mountPath: /tmp

@@ -35,3 +35,8 @@ spec:
         workspaces:
           - name: images-url
             emptyDir: {}
+{{- if eq .Values.image.registry "Quay" }}
+          - name: docker-config
+            secret:
+              secretName: {{ .Values.app.name }}-registry-creds
+{{- end }}
