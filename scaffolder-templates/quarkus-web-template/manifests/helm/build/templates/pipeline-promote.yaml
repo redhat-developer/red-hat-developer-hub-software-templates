@@ -26,16 +26,20 @@ spec:
 {{- if eq .Values.image.registry "Quay" }}
     - name: tag-and-push-to-quay
       params:
-        - name: sourceImage
-          value: '$(params.source-image)'
-        - name: tag
-          value: '$(params.destination-image-tag)'
+        - name: srcImageURL
+          value: 'docker://$(params.source-image):$(params.source-image-tag)'
+        - name: destImageURL
+          value: 'docker://$(params.source-image):$(params.destination-image-tag)'
+        - name: srcTLSverify
+          value: 'false'
+        - name: destTLSverify
+          value: 'false'
       taskRef:
         kind: Task
-        name: tag-and-push-to-quay
+        name: skopeo-copy
       workspaces:
-        - name: docker-config
-          workspace: docker-config
+        - name: images-url
+          workspace: images-url
 {{- else }}
     - name: copy-image-tag
       params:
@@ -71,6 +75,6 @@ spec:
       workspaces:
         - name: images-url
           workspace: images-url
+{{- end }}
   workspaces:
     - name: images-url
-{{- end }}

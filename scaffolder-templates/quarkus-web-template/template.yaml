@@ -57,6 +57,7 @@ spec:
         - image_registry
       properties:
         image_registry:
+          title: Image Registry
           type: string
           enum:
             - Openshift

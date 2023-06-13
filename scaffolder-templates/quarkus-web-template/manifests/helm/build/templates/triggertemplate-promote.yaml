@@ -30,13 +30,8 @@ spec:
             value: $(tt.params.image-tag)
         pipelineRef:
           name: {{ .Values.app.name }}-promote
-        serviceAccountName: pipeline
+        serviceAccountName: promote
         timeout: 1h0m0s
         workspaces:
           - name: images-url
             emptyDir: {}
-{{- if eq .Values.image.registry "Quay" }}
-          - name: docker-config
-            secret:
-              secretName: {{ .Values.app.name }}-registry-creds
-{{- end }}
