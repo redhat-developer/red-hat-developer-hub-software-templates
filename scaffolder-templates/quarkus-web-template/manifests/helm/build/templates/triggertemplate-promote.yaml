@@ -30,7 +30,7 @@ spec:
             value: $(tt.params.image-tag)
         pipelineRef:
           name: {{ .Values.app.name }}-promote
-        serviceAccountName: promote
+        serviceAccountName: image-pusher
         timeout: 1h0m0s
         workspaces:
           - name: images-url

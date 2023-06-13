@@ -6,7 +6,7 @@ metadata:
   namespace: "{{ .Values.namespace.name }}"
 subjects:
   - kind: ServiceAccount
-    name: pipeline
+    name: image-pusher
     namespace: ${{values.component_id}}-dev
 roleRef:
   apiGroup: rbac.authorization.k8s.io
