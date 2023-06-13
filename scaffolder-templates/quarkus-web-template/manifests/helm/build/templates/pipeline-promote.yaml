@@ -24,7 +24,7 @@ spec:
       default: latest
   tasks:
 {{- if eq .Values.image.registry "Quay" }}
-    - name: tag-and-push-to-quay
+    - name: quay-tag-latest
       params:
         - name: srcImageURL
           value: 'docker://$(params.source-image):$(params.source-image-tag)'
@@ -37,6 +37,24 @@ spec:
       taskRef:
         kind: Task
         name: skopeo-copy
+      workspaces:
+        - name: images-url
+          workspace: images-url
+    - name: quay-tag-promote
+      params:
+        - name: srcImageURL
+          value: 'docker://$(params.source-image):$(params.destination-image-tag)'
+        - name: destImageURL
+          value: 'docker://$(params.source-image):preprod'
+        - name: srcTLSverify
+          value: 'false'
+        - name: destTLSverify
+          value: 'false'
+      taskRef:
+        kind: Task
+        name: skopeo-copy
+      runAfter:
+        - quay-tag-latest
       workspaces:
         - name: images-url
           workspace: images-url

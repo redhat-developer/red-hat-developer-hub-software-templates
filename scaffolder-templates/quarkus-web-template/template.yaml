@@ -74,11 +74,6 @@ spec:
                   type: string
                   description: Host for storing image
                   default: image-registry.openshift-image-registry.svc:5000
-                image_tag:
-                  title: Image Tag
-                  default: latest
-                  type: string
-                  description: Build Image tag
             - properties:
                 image_registry:
                   enum:
@@ -92,11 +87,6 @@ spec:
                   title: Organization
                   type: string
                   description: Name of the Quay Organization
-                image_tag:
-                  title: Image Tag
-                  default: latest
-                  type: string
-                  description: Build Image tag
     - title: Application repository Information
       required:
         - repoUrl
@@ -166,7 +156,6 @@ spec:
           image_host: ${{ parameters.image_host }}
           image_organization: ${{ parameters.image_organization }}
           image_name: ${{ parameters.component_id }}
-          image_tag: ${{ parameters.image_tag }}
           port: 8080
         targetPath: ./tenant-gitops
 
