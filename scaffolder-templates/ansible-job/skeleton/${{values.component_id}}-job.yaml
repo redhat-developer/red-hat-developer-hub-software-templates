@@ -1,0 +1,8 @@
+---
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: ${{ values.component_id }}-job
+spec:
+  connection_secret: awxaccess
+  job_template_name: ${{ values.jobTemplate }}
