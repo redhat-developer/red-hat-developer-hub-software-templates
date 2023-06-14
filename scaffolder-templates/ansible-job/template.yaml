@@ -42,6 +42,7 @@ spec:
         - name
         - jobTemplate
         - description
+        - namespace
       properties:
         name:
           title: Name of the Ansible Job
@@ -55,6 +56,16 @@ spec:
           title: Description
           type: string
           description: Provide a description of the Job to be launched
+        namespace:
+          title: Namespace
+          type: string
+          description: Specify the namespace to launch the job
+          default: aap
+        connection_secret:
+          title: Connection Secret
+          type: string
+          description: Specify the connection secret to use for the job
+          default: aapaccess
   steps:
     - id: template
       name: Generating the source code component
@@ -66,6 +77,8 @@ spec:
           component_id: ${{ parameters.name }}
           jobTemplate: ${{ parameters.jobTemplate }}
           name: ${{ parameters.name }}
+          namespace: ${{ parameters.namespace }}
+          connection_secret: ${{ parameters.connection_secret }}
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
