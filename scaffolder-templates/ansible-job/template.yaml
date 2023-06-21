@@ -1,0 +1,118 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: ansible-job
+  title: Ansible Job
+  description: Launch an Ansible Job within Ansible Automation Platform
+  tags:
+    - recommended
+    - aap
+spec:
+  owner: janus-authors
+  system: janus-idp
+  type: service
+  parameters:
+    - title: Provide information about the GitHub location
+      required:
+        - githubOrg
+        - repoName
+        - owner
+        - system
+      properties:
+        githubOrg:
+          title: GitHub Organization
+          type: string
+        owner:
+          title: Owner
+          type: string
+          description: Owner of the component
+        repoName:
+          title: Repository Name
+          type: string
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - System
+    - title: Ansible Job Definition
+      required:
+        - name
+        - jobTemplate
+        - description
+        - namespace
+      properties:
+        name:
+          title: Name of the Ansible Job
+          type: string
+          description: A unique name for the Ansible Job
+        jobTemplate:
+          title: Name of the Job Template to launch
+          type: string
+          description: Specify a job template to launch
+        description:
+          title: Description
+          type: string
+          description: Provide a description of the Job to be launched
+        namespace:
+          title: Namespace
+          type: string
+          description: Specify the namespace to launch the job
+          default: aap
+        connection_secret:
+          title: Connection Secret
+          type: string
+          description: Specify the connection secret to use for the job
+          default: aapaccess
+  steps:
+    - id: template
+      name: Generating the source code component
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: argo/ansibleJobs/
+        values:
+          component_id: ${{ parameters.name }}
+          jobTemplate: ${{ parameters.jobTemplate }}
+          name: ${{ parameters.name }}
+          namespace: ${{ parameters.namespace }}
+          connection_secret: ${{ parameters.connection_secret }}
+
+    - id: catalogTemplate
+      name: Generating the Catalog Info Component
+      action: fetch:template
+      input:
+        url: ../../scaffolder-skeletons/catalog-info-skeleton/
+        values:
+          githubOrg: ${{ parameters.githubOrg }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          applicationType: api
+          description: ${{ parameters.description }}
+
+    - id: publish
+      name: Publishing to Source Code Repository
+      action: publish:github:pull-request
+      input:
+        allowedHosts: ['github.com']
+        title: ${{ parameters.name }}-job
+        description: ${{ parameters.name }}-job
+        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        branchName: ${{ parameters.name }}-job
+
+    - id: register
+      name: Registering the Catalog Info Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - title: Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open the Catalog Info Component
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

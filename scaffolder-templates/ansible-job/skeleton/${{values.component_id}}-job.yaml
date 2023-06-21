@@ -1,0 +1,9 @@
+---
+apiVersion: tower.ansible.com/v1alpha1
+kind: AnsibleJob
+metadata:
+  name: ${{ values.component_id }}-job
+  namespace: ${{ values.namespace }}
+spec:
+  connection_secret: ${{ values.connection_secret }}
+  job_template_name: ${{ values.jobTemplate }}
