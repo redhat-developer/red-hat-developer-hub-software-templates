@@ -11,11 +11,13 @@ COPY . .
 COPY --from=deps /opt/app-root/src/node_modules ./node_modules
 
 USER root
-RUN fix-permissions .
 RUN npm run build
 
 # Stage 3 - Production image, copy all the files and start NodeJS
 FROM registry.access.redhat.com/ubi9/nodejs-18-minimal:latest AS runner
+
+COPY --from=deps --chown=1001:1001 /opt/app-root/src .
+COPY --from=builder --chown=1001:1001 /opt/app-root/src/dist ./dist
 
 ENV NODE_ENV production
 
@@ -24,9 +26,6 @@ USER 1001
 
 # Install production dependencies
 RUN npm ci
-
-COPY --from=builder /opt/app-root/src/dist ./dist
-COPY --from=deps /opt/app-root/src .
 
 ENV PORT ${{ values.port }}
 EXPOSE ${{ values.port }}
