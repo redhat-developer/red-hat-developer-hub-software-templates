@@ -53,7 +53,7 @@ spec:
         port:
           title: Port
           type: number
-          default: 5000
+          default: 8080
           description: Override the port exposed for the application
     - title: Provide information about the Java metadata
       required:
