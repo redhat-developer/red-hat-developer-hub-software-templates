@@ -66,6 +66,14 @@ spec:
           type: string
           description: Specify the connection secret to use for the job
           default: aapaccess
+        extra_vars:
+          title: Extra Vars
+          type: string
+          description: Specify any extra vars to pass to the job
+          default: {}
+          ui:widget: textarea
+          ui:options:
+            rows: 15
   steps:
     - id: template
       name: Generating the source code component
@@ -79,6 +87,7 @@ spec:
           name: ${{ parameters.name }}
           namespace: ${{ parameters.namespace }}
           connection_secret: ${{ parameters.connection_secret }}
+          extra_vars: ${{ parameters.extra_vars }}
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
