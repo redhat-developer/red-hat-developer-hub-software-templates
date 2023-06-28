@@ -74,6 +74,11 @@ spec:
           type: string
           description: Specify the Ansible Project to use for the job
           default: aap
+        credential:
+          title: Credential
+          type: string
+          description: Specify the credential to use for the job
+          default: aap
         connection_secret:
           title: Connection Secret
           type: string
@@ -103,6 +108,7 @@ spec:
           name: ${{ parameters.name }}
           namespace: ${{ parameters.namespace }}
           inventory: ${{ parameters.inventory }}
+          credential: ${{ parameters.credential }}
           project: ${{ parameters.project }}
           playbook: ${{ parameters.playbook }}
           connection_secret: ${{ parameters.connection_secret }}

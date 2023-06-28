@@ -11,5 +11,6 @@ spec:
   job_template_ask_vars: ${{ values.ask_vars_on_launch }}
   job_template_playbook: ${{ values.playbook }}
   job_template_inventory: ${{ values.inventory }}
+  job_template_credentials: ${{ values.credential }}
   job_template_extra_vars:
     ${{ values.extra_vars }}
