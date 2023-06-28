@@ -10,3 +10,5 @@ spec:
   job_template_project: ${{ values.project }}
   job_template_playbook: ${{ values.playbook }}
   job_template_inventory: ${{ values.inventory }}
+  job_template_extra_vars:
+    ${{ values.extra_vars }}
