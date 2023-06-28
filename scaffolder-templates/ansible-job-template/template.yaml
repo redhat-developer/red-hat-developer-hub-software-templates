@@ -45,6 +45,7 @@ spec:
         - inventory
         - project
         - playbook
+        - ask_vars_on_launch
       properties:
         name:
           title: Name of the Ansible Job Template
@@ -85,6 +86,11 @@ spec:
           ui:widget: textarea
           ui:options:
             rows: 15
+        ask_vars_on_launch:
+          title: Ask Vars on Launch
+          type: boolean
+          description: Specify whether to ask for extra vars on launch
+          default: false
   steps:
     - id: template
       name: Generating the source code component
@@ -101,6 +107,7 @@ spec:
           playbook: ${{ parameters.playbook }}
           connection_secret: ${{ parameters.connection_secret }}
           extra_vars: ${{ parameters.extra_vars }}
+          ask_vars_on_launch: ${{ parameters.ask_vars_on_launch }}
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
