@@ -8,7 +8,7 @@ spec:
   tower_auth_secret: ${{ values.connection_secret }}
   job_template_name: ${{ values.name }}
   job_template_project: ${{ values.project }}
-  job_template_ask_vars: ${{ values.ask_vars_on_launch }}
+  ask_variables_on_launch: ${{ values.ask_vars_on_launch }}
   job_template_playbook: ${{ values.playbook }}
   job_template_inventory: ${{ values.inventory }}
   job_template_credentials: ${{ values.credential }}
