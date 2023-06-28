@@ -70,7 +70,7 @@ spec:
           title: Extra Vars
           type: string
           description: Specify any extra vars to pass to the job
-          default: []
+          default: {}
           ui:widget: textarea
           ui:options:
             rows: 15
