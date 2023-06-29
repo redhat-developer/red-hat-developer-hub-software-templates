@@ -24,7 +24,7 @@ body:
   - type: textarea
     id: context
     attributes:
-      label: "✌️ Context"
+      label: "Context"
       description: "Please explain why this template should be implemented and how it would be used."
       placeholder: "Providing additional context"
   - type: textarea
