@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: tag-binding-nonprod
+spec:
+  params:
+    - name: source-tag
+      value: $(body.extensions.source)
+    - name: destination-tag
+      value: $(body.ref)
+    - name: namespace
+      value: prod

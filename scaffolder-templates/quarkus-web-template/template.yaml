@@ -157,6 +157,7 @@ spec:
           image_organization: ${{ parameters.image_organization }}
           image_name: ${{ parameters.component_id }}
           port: 8080
+          deployment_name: quarkus-template
         targetPath: ./tenant-gitops
 
     - id: publish-gitops

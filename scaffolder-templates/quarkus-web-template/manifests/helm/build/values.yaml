@@ -11,6 +11,6 @@ git:
 
 image:
   registry: ${{values.image_registry}}
-  organization: ${{values.image_organization}}
   host: ${{ values.image_host }}
+  organization: ${{values.image_organization}}
   name: ${{ values.image_name }}
