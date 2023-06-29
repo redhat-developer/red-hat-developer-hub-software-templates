@@ -132,10 +132,10 @@ spec:
       action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
-        title: ${{ parameters.name }}-job
-        description: ${{ parameters.name }}-job
+        title: ${{ parameters.name }}-job-tmp
+        description: ${{ parameters.name }}-job-tmp
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
-        branchName: ${{ parameters.name }}-job
+        branchName: ${{ parameters.name }}-job-tmp
 
     - id: register
       name: Registering the Catalog Info Component
