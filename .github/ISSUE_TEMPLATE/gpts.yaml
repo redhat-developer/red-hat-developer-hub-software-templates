@@ -18,21 +18,21 @@ body:
     validations:
       required: true
     attributes:
-      label: "Description"
-      description: "Provide a general description of the template and how it should work"
-      placeholder: "The ___ Template is..."
+      label: "Template Description"
+      description: "Provide a clear and concise description of the template."
+      placeholder: "The ___ template is..."
+  - type: textarea
+    id: context
+    attributes:
+      label: "✌️ Context"
+      description: "Please explain why this template should be implemented and how it would be used."
+      placeholder: "Providing additional context"
   - type: textarea
     id: acceptance-criteria
     attributes:
       label: "Acceptance Criteria"
       description: "What does this template need to include?"
       placeholder: "This template needs ..."
-  - type: textarea
-    id: context
-    attributes:
-      label: "✌️ Context"
-      description: "A clear and concise description about the Plugin."
-      placeholder: "Providing additional context"
   - type: checkboxes
     id: no-duplicate-issues
     attributes:
@@ -45,7 +45,7 @@ body:
     attributes:
       label: "🏢 Have you read the Code of Conduct?"
       options:
-        - label: "I have read the [Contributing Guidelines](https://github.com/backstage/backstage/blob/master/CODE_OF_CONDUCT.md)"
+        - label: "I have read the [Code of Conduct](https://github.com/janus-idp/.github/blob/main/CODE_OF_CONDUCT.md)"
           required: true
   - type: dropdown
     id: willing-to-submit-pr
