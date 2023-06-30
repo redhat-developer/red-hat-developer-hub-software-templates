@@ -34,7 +34,7 @@ spec:
           - name: source-image-tag
             value: $(tt.params.source-tag)
           - name: destination-image-tag
-            value: $(tt.params.desination-tag)
+            value: $(tt.params.destination-tag)
           - name: namespace
             value: $(tt.params.namespace)
         pipelineRef:

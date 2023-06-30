@@ -1,7 +1,7 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: tag-binding-nonprod
+  name: tag-binding-preprod
 spec:
   params:
     - name: source-tag
@@ -9,4 +9,4 @@ spec:
     - name: destination-tag
       value: $(body.ref)
     - name: namespace
-      value: nonprod
+      value: {{ .Values.app.name }}-preprod
