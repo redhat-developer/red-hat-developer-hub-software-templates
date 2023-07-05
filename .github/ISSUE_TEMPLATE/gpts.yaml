@@ -1,0 +1,58 @@
+name: Golden Path Template (GPT)
+description: "Submit a proposal for a new Golden Path Template"
+## Goal
+## What problem does this solve?
+## Use cases
+## Acceptance criteria
+## Issues in Epic
+
+title: "GPT: "
+labels: [template]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We value your time and efforts to submit this Golden Path Templates request form. 🙏
+  - type: textarea
+    id: description
+    validations:
+      required: true
+    attributes:
+      label: "Template Description"
+      description: "Provide a clear and concise description of the template."
+      placeholder: "The ___ template is..."
+  - type: textarea
+    id: context
+    attributes:
+      label: "Context"
+      description: "Please explain why this template should be implemented and how it would be used."
+      placeholder: "Providing additional context"
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: "Acceptance Criteria"
+      description: "What does this template need to include?"
+      placeholder: "This template needs ..."
+  - type: checkboxes
+    id: no-duplicate-issues
+    attributes:
+      label: "👀 Have you spent some time to check if this template request has been raised before?"
+      options:
+        - label: "I checked and didn't find any similar issues"
+          required: true
+  - type: checkboxes
+    id: read-code-of-conduct
+    attributes:
+      label: "🏢 Have you read the Code of Conduct?"
+      options:
+        - label: "I have read the [Code of Conduct](https://github.com/janus-idp/.github/blob/main/CODE_OF_CONDUCT.md)"
+          required: true
+  - type: dropdown
+    id: willing-to-submit-pr
+    attributes:
+      label: Are you willing to submit PR?
+      description: This is absolutely not required, but we are happy to guide you in the contribution process.
+      options:
+        - Yes I am willing to submit a PR!
+        - No, but I'm happy to collaborate on a PR with someone else
+        - No, I don't have time to work on this right now
