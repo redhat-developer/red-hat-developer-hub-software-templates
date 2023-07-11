@@ -18,7 +18,11 @@ metadata:
     {%- endif %}
     backstage.io/kubernetes-id: ${{ values.repoName }}
     backstage.io/techdocs-ref: dir:.
-    github.com/project-slug: ${{ values.githubOrg }}/${{ values.repoName }}
+    {%- if values.sourceControl == "gitlab.com" %}
+    gitlab.com/project-slug: ${{ values.orgName }}/${{ values.repoName }}
+    {%- elif values.sourceControl == "github.com" %}
+    github.com/project-slug: ${{ values.orgName }}/${{ values.repoName }}
+    {%- endif %}
 spec:
   type: ${{ values.applicationType }}
   system: ${{ values.system }}

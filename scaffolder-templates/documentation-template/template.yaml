@@ -15,12 +15,12 @@ spec:
   parameters:
     - title: Provide information about the existing component
       required:
-        - githubOrg
+        - orgName
         - repoName
         - componentName
       properties:
-        githubOrg:
-          title: GitHub Organization
+        orgName:
+          title: Organization Name
           type: string
         repoName:
           title: Repository Name
@@ -66,12 +66,13 @@ spec:
         copyWithoutTemplating:
           - .github/workflows/
         values:
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}-techdocs
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           applicationType: documentation
           description: Contains the techdocs for ${{ parameters.repoName }}
+          sourceControl: github.com
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -82,12 +83,13 @@ spec:
           # Gitops specific values
           partOf: ${{ parameters.componentName }}
 
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}-techdocs
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           applicationType: documentation
           description: Contains the techdocs for ${{ parameters.repoName }}
+          sourceControl: github.com
 
     - id: publish
       name: Publishing to the Source Code Repository
@@ -95,7 +97,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: Contains the techdocs for ${{ parameters.repoName }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-techdocs
+        repoUrl: github.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}-techdocs
         defaultBranch: main
 
     - id: register
