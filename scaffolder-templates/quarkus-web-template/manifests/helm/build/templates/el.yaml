@@ -14,11 +14,22 @@ spec:
             filter: "has(body.commits) && body.created == false"
       template:
         ref: {{ .Values.app.name }}-run-build
-    - name: tag-trig
-      bindings:
-        - ref: tag-binding
+    - name: tag-trig-preprod
       interceptors:
         - cel:
-            filter: "body.ref_type == 'tag'"
+            filter: "body.ref_type == 'tag' && body.ref.startsWith('v')"
+      bindings:
+        - ref: tag-binding-preprod
+      template:
+        ref: {{ .Values.app.name }}-run-promote
+    - name: tag-trig-prod
+      bindings:
+        - ref: tag-binding-prod
+      interceptors:
+        - cel:
+            filter: "body.ref_type == 'tag' && body.ref.startsWith('r')"
+            overlays:
+              - key: source
+                expression: body.ref.replace("r","v")
       template:
         ref: {{ .Values.app.name }}-run-promote

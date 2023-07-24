@@ -10,6 +10,7 @@ git:
   name: ${{ values.repository_name }}
 
 image:
+  registry: ${{values.image_registry}}
   host: ${{ values.image_host }}
+  organization: ${{values.image_organization}}
   name: ${{ values.image_name }}
-  tag: ${{ values.image_tag }}

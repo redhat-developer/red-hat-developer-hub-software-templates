@@ -8,9 +8,10 @@ metadata:
   annotations:
     argocd/app-name: ${{values.component_id}}-dev
     backstage.io/kubernetes-id: ${{values.component_id}}
-    backstage.io/kubernetes-namespace: ${{values.namespace}}
+    backstage.io/kubernetes-namespace: ${{values.component_id}}-dev
     janus-idp.io/tekton-enabled : 'true'
-    github.com/project-slug: ${{values.destination }}
+    github.com/project-slug: ${{values.destination}}
+    quay.io/repository-slug: ${{values.quay_destination | dump}}
     backstage.io/techdocs-ref: dir:.
   tags:
     - java

@@ -11,8 +11,13 @@ spec:
     - name: destination-image
       description: The destination to copy the image to
       default: {{ include "image.preprod-url" . }}
-    - name: image-tag
-      description: The tag on the new image i.e the git tag
+    - name: source-tag
+      description: The image tag to promote
+    - name: destination-tag
+      description: The git tag representing the new version or release
+    - name: namespace
+      description: The target namespace being deployed to
+
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -26,11 +31,15 @@ spec:
             value: $(tt.params.source-image)
           - name: destination-image
             value: $(tt.params.destination-image)
+          - name: source-image-tag
+            value: $(tt.params.source-tag)
           - name: destination-image-tag
-            value: $(tt.params.image-tag)
+            value: $(tt.params.destination-tag)
+          - name: namespace
+            value: $(tt.params.namespace)
         pipelineRef:
           name: {{ .Values.app.name }}-promote
-        serviceAccountName: pipeline
+        serviceAccountName: image-pusher
         timeout: 1h0m0s
         workspaces:
           - name: images-url

@@ -18,6 +18,8 @@ spec:
         value: ${{ values.component_id }}-preprod
       - name: environment
         value: preprod
+      - name: image.tag
+        value: preprod
   destination:
     server: https://kubernetes.default.svc
     namespace: ${{ values.component_id }}-preprod
