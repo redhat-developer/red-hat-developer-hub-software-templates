@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: ansible-job
-  title: Ansible Job
-  description: Launch an Ansible Job within Ansible Automation Platform
+  name: ansible-job-template
+  title: Ansible Job Template
+  description: Define an Ansible Job Template within Ansible Automation Platform
   tags:
     - recommended
     - aap
@@ -40,26 +40,44 @@ spec:
     - title: Ansible Job Definition
       required:
         - name
-        - jobTemplate
         - description
         - namespace
+        - inventory
+        - project
+        - playbook
+        - ask_vars_on_launch
       properties:
         name:
-          title: Name of the Ansible Job
+          title: Name of the Ansible Job Template
           type: string
-          description: A unique name for the Ansible Job
-        jobTemplate:
-          title: Name of the Job Template to launch
+          description: A unique name for the Ansible Job Template
+        playbook:
+          title: Ansible Playbook
           type: string
-          description: Specify a job template to launch
+          description: Specify an Ansible Playbook to run
         description:
           title: Description
           type: string
-          description: Provide a description of the Job to be launched
+          description: Provide a description of the Job Template to be defined
         namespace:
           title: Namespace
           type: string
           description: Specify the namespace to launch the job
+          default: aap
+        inventory:
+          title: Inventory
+          type: string
+          description: Specify the inventory to use for the job
+          default: aap
+        project:
+          title: Project
+          type: string
+          description: Specify the Ansible Project to use for the job
+          default: aap
+        credential:
+          title: Credential
+          type: string
+          description: Specify the credential to use for the job
           default: aap
         connection_secret:
           title: Connection Secret
@@ -69,25 +87,33 @@ spec:
         extra_vars:
           title: Extra Vars
           type: string
-          description: Specify any extra vars to pass to the job
-          default: {}
+          description: Specify any extra vars to use for the job template
           ui:widget: textarea
           ui:options:
             rows: 15
+        ask_vars_on_launch:
+          title: Ask Vars on Launch
+          type: boolean
+          description: Specify whether to ask for extra vars on launch
+          default: false
   steps:
     - id: template
       name: Generating the source code component
       action: fetch:template
       input:
         url: ./skeleton
-        targetPath: argo/ansibleJobs/
+        targetPath: argo/ansibleJobTemplates/
         values:
           component_id: ${{ parameters.name }}
-          jobTemplate: ${{ parameters.jobTemplate }}
           name: ${{ parameters.name }}
           namespace: ${{ parameters.namespace }}
+          inventory: ${{ parameters.inventory }}
+          credential: ${{ parameters.credential }}
+          project: ${{ parameters.project }}
+          playbook: ${{ parameters.playbook }}
           connection_secret: ${{ parameters.connection_secret }}
           extra_vars: ${{ parameters.extra_vars }}
+          ask_vars_on_launch: ${{ parameters.ask_vars_on_launch }}
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -106,10 +132,10 @@ spec:
       action: publish:github:pull-request
       input:
         allowedHosts: ['github.com']
-        title: ${{ parameters.name }}-job
-        description: ${{ parameters.name }}-job
+        title: ${{ parameters.name }}-job-tmp
+        description: ${{ parameters.name }}-job-tmp
         repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
-        branchName: ${{ parameters.name }}-job
+        branchName: ${{ parameters.name }}-job-tmp
 
     - id: register
       name: Registering the Catalog Info Component
