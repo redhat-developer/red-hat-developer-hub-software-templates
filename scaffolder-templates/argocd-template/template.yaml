@@ -15,13 +15,13 @@ spec:
   parameters:
     - title: Provide information about the existing component
       required:
-        - githubOrg
+        - orgName
         - repoName
         - port
         - componentName
       properties:
-        githubOrg:
-          title: GitHub Organization
+        orgName:
+          title: Organization Name
           type: string
         repoName:
           title: Repository Name
@@ -103,7 +103,7 @@ spec:
           dependsOn: ${{ parameters.componentName }}
 
           # Normal values
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}-gitops
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
@@ -114,6 +114,7 @@ spec:
           hostUrl: ${{ parameters.hostUrl }}
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          sourceControl: github.com
 
     - id: manifestsTemplate
       name: Generating the Manifests Component
@@ -121,7 +122,7 @@ spec:
       input:
         url: ../../scaffolder-skeletons/manifests-skeleton/
         values:
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
@@ -132,6 +133,7 @@ spec:
           hostUrl: ${{ parameters.hostUrl }}
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
+          sourceControl: github.com
 
     - id: publish
       name: Publishing to the Source Code Repository
@@ -139,7 +141,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}-gitops
+        repoUrl: github.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}-gitops
         defaultBranch: main
 
     - id: register

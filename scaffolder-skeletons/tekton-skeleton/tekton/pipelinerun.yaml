@@ -12,7 +12,7 @@ metadata:
 spec:
   params:
     - name: source-repo
-      value: 'https://github.com/${{ values.githubOrg }}/${{ values.repoName }}.git'
+      value: 'https://${{ values.sourceControl }}/${{ values.orgName }}/${{ values.repoName }}.git'
     - name: source-branch
       value: main
     - name: output-image

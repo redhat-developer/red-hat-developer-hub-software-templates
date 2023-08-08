@@ -18,14 +18,14 @@ spec:
   parameters:
     - title: Provide information about the new component
       required:
-        - githubOrg
+        - orgName
         - repoName
         - owner
         - system
         - port
       properties:
-        githubOrg:
-          title: GitHub Organization
+        orgName:
+          title: Organization Name
           type: string
         repoName:
           title: Repository Name
@@ -110,7 +110,7 @@ spec:
       input:
         url: ./skeleton
         values:
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
@@ -122,6 +122,7 @@ spec:
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
           ci: ${{ parameters.ci }}
+          sourceControl: github.com
 
     - id: ciTemplate
       name: Generating the CI Component
@@ -131,7 +132,7 @@ spec:
         copyWithoutTemplating:
           - .github/workflows/
         values:
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
@@ -143,6 +144,7 @@ spec:
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
           ci: ${{ parameters.ci }}
+          sourceControl: github.com
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -150,7 +152,7 @@ spec:
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
@@ -162,6 +164,7 @@ spec:
           imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
           ci: ${{ parameters.ci }}
+          sourceControl: github.com
 
     - id: publish
       name: Publishing to the Source Code Repository
@@ -169,7 +172,7 @@ spec:
       input:
         allowedHosts: ['github.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
     - id: register
