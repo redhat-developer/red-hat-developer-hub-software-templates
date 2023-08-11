@@ -11,10 +11,11 @@ replicaCount: 1
 
 image:
   pullPolicy: IfNotPresent
-  name: ${{values.image_name}}
+  registry: ${{values.image_registry}}
   host: ${{values.image_host}}
+  organization: ${{values.image_organization}}
+  name: ${{values.image_name}}
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ${{values.image_tag}}
 
 imagePullSecrets: []
 nameOverride: ""

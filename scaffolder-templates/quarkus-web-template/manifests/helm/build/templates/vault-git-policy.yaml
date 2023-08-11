@@ -13,9 +13,6 @@ spec:
     path "/github/token/{{ .Values.app.name }}" {
       capabilities = ["read"]
     }
-    path "/quay/creds/{{ .Values.app.name }}" {
-      capabilities = ["read"]
-    }
-    path "/quay/creds/{{ .Values.app.name }}-pusher" {
+    path "/kv/janus-dev/registry" {
       capabilities = ["read"]
     }

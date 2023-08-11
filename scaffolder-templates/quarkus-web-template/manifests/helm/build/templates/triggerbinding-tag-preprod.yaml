@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerBinding
+metadata:
+  name: tag-binding-preprod
+spec:
+  params:
+    - name: source-tag
+      value: latest
+    - name: destination-tag
+      value: $(body.ref)
+    - name: namespace
+      value: {{ .Values.app.name }}-preprod

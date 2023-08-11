@@ -14,13 +14,13 @@ spec:
   parameters:
     - title: Provide information about the GitHub location
       required:
-        - githubOrg
+        - orgName
         - repoName
         - owner
         - system
       properties:
-        githubOrg:
-          title: GitHub Organization
+        orgName:
+          title: Organization Name
           type: string
         owner:
           title: Owner
@@ -66,6 +66,14 @@ spec:
           type: string
           description: Specify the connection secret to use for the job
           default: aapaccess
+        extra_vars:
+          title: Extra Vars
+          type: string
+          description: Specify any extra vars to pass to the job
+          default: {}
+          ui:widget: textarea
+          ui:options:
+            rows: 15
   steps:
     - id: template
       name: Generating the source code component
@@ -79,6 +87,7 @@ spec:
           name: ${{ parameters.name }}
           namespace: ${{ parameters.namespace }}
           connection_secret: ${{ parameters.connection_secret }}
+          extra_vars: ${{ parameters.extra_vars }}
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -86,11 +95,12 @@ spec:
       input:
         url: ../../scaffolder-skeletons/catalog-info-skeleton/
         values:
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           applicationType: api
           description: ${{ parameters.description }}
+          sourceControl: github.com
 
     - id: publish
       name: Publishing to Source Code Repository
@@ -99,7 +109,7 @@ spec:
         allowedHosts: ['github.com']
         title: ${{ parameters.name }}-job
         description: ${{ parameters.name }}-job
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}
         branchName: ${{ parameters.name }}-job
 
     - id: register

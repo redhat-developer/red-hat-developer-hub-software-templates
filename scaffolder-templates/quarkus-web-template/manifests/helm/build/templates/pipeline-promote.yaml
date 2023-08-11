@@ -22,7 +22,38 @@ spec:
     - name: destination-image-tag
       type: string
       default: latest
+    - name: namespace
+      type: string
   tasks:
+{{- if eq .Values.image.registry "Quay" }}
+    - name: quay-tag-promote
+      params:
+        - name: srcImageURL
+          value: 'docker://$(params.source-image):$(params.source-image-tag)'
+        - name: destImageURL
+          value: 'docker://$(params.source-image):$(params.destination-image-tag)'
+        - name: srcTLSverify
+          value: 'false'
+        - name: destTLSverify
+          value: 'false'
+      taskRef:
+        kind: Task
+        name: skopeo-copy
+      workspaces:
+        - name: images-url
+          workspace: images-url
+    - name: patch-deployment
+      params:
+        - name: namespace
+          value: '$(params.namespace)'
+        - name: IMAGE
+          value: '{{ .Values.image.host }}/{{ .Values.image.organization }}/{{ .Values.image.name }}:$(params.destination-image-tag)'
+      taskRef:
+        kind: Task
+        name: update-deployment
+      runAfter:
+        - quay-tag-promote
+{{- else }}
     - name: copy-image-tag
       params:
         - name: srcImageURL
@@ -57,5 +88,6 @@ spec:
       workspaces:
         - name: images-url
           workspace: images-url
+{{- end }}
   workspaces:
     - name: images-url

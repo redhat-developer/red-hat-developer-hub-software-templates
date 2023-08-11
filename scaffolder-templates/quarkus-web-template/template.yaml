@@ -12,7 +12,6 @@ metadata:
 spec:
   owner: service@example.com
   type: service
-
   parameters:
     - title: Provide Information for Application
       required:
@@ -53,18 +52,41 @@ spec:
           ui:options:
             allowedKinds:
               - Group
-    - title: Provide Build Information
+    - title: Provide Image Registry Information
+      required:
+        - image_registry
       properties:
-        image_host:
-          title: Image Host
+        image_registry:
+          title: Image Registry
           type: string
-          description: Host for storing image (defaults to openshift internal)
-          default: image-registry.openshift-image-registry.svc:5000
-        image_tag:
-          title: Image Tag
-          default: latest
-          type: string
-          description: Build Image tag
+          enum:
+            - Openshift
+            - Quay
+      dependencies:
+        image_registry:
+          oneOf:
+            - properties:
+                image_registry:
+                  enum:
+                    - Openshift
+                image_host:
+                  title: Image Host
+                  type: string
+                  description: Host for storing image
+                  default: image-registry.openshift-image-registry.svc:5000
+            - properties:
+                image_registry:
+                  enum:
+                    - Quay
+                image_host:
+                  title: Image Host
+                  type: string
+                  description: Host for storing image
+                  default: quay.io
+                image_organization:
+                  title: Organization
+                  type: string
+                  description: Name of the Quay Organization
     - title: Application repository Information
       required:
         - repoUrl
@@ -95,6 +117,7 @@ spec:
           owner: ${{ parameters.owner }}
           cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
           destination: ${{ (parameters.repoUrl | parseRepoUrl).owner }}/${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          quay_destination: ${{ parameters.image_organization }}/${{ parameters.component_id }}
           port: 8080
 
     - id: publish
@@ -129,10 +152,12 @@ spec:
           git_owner: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
           cluster: .apps.cluster-xxxxx.xxxxx.sandbox123.opentlc.com
           namespace: ${{ parameters.component_id }}-dev
+          image_registry: ${{ parameters.image_registry }}
           image_host: ${{ parameters.image_host }}
+          image_organization: ${{ parameters.image_organization }}
           image_name: ${{ parameters.component_id }}
-          image_tag: ${{ parameters.image_tag }}
           port: 8080
+          deployment_name: quarkus-template
         targetPath: ./tenant-gitops
 
     - id: publish-gitops
