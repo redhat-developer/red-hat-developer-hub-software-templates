@@ -10,7 +10,7 @@ spec:
     - name: source-repo
       description: source repo that contains the application code
       type: string
-      default: https://github.com/${{ values.orgName }}/${{ values.repoName }}
+      default: https://${{ values.sourceControl }}/${{ values.orgName }}/${{ values.repoName }}
     - name: source-branch
       description: source branch to build from
       default: main

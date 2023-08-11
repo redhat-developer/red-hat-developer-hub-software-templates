@@ -56,6 +56,9 @@ spec:
       workspaces:
         - name: source
           workspace: source-folder
+        - name: dockerconfig
+          workspace: docker-config
   workspaces:
     - name: source-folder
     - name: maven-settings
+    - name: docker-config

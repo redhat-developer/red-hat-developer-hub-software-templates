@@ -43,3 +43,6 @@ spec:
                     storage: 1Gi
           - emptyDir: {}
             name: maven-settings
+          - name: docker-config
+            secret:
+              secretName: {{ .Values.app.name }}-registry-creds

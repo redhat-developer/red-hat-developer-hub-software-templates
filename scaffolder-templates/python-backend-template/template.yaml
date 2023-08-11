@@ -2,12 +2,13 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: python-backend-template
-  title: Create a Python Backend application with a CI pipeline
-  description: Create a starter Python backend application with a CI pipeline
+  title: Create a Python application in GitLab with a CI pipeline
+  description: Create a starter Python backend application in GitLab with a CI pipeline
   tags:
     - recommended
     - python
     - flask
+    - gitlab
 spec:
   owner: janus-authors
   system: janus-idp
@@ -69,7 +70,7 @@ spec:
           applicationType: api
           description: ${{ parameters.description }}
           port: ${{ parameters.port }}
-          sourceControl: github.com
+          sourceControl: gitlab.com
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -84,7 +85,7 @@ spec:
           applicationType: api
           description: ${{ parameters.description }}
           port: ${{ parameters.port }}
-          sourceControl: github.com
+          sourceControl: gitlab.com
 
     - id: publish
       name: Publishing to the Source Code Repository
