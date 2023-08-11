@@ -1,8 +1,8 @@
 apiVersion: backstage.io/v1alpha1
 kind: Location
 metadata:
-  name: entities
-  description: A collection of all the catalog entities
+  name: ${{ values.repoName }}-entities
+  description: A collection of all the ${{ values.repoName }} entities
 spec:
   targets:
     - ./systems.yaml

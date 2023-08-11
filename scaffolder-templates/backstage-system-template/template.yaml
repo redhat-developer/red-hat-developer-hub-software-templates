@@ -15,13 +15,13 @@ spec:
   parameters:
     - title: Provide information about the new component
       required:
-        - githubOrg
+        - orgName
         - repoName
         - owner
         - systemName
         - systemTitle
       properties:
-        githubOrg:
+        orgName:
           title: GitHub Organization
           type: string
         repoName:
@@ -49,7 +49,7 @@ spec:
       input:
         url: ./skeleton
         values:
-          githubOrg: ${{ parameters.githubOrg }}
+          orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           systemName: ${{ parameters.systemName }}
@@ -60,7 +60,7 @@ spec:
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        repoUrl: github.com?owner=${{ parameters.githubOrg }}&repo=${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
     - id: register
