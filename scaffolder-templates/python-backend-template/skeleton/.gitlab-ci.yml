@@ -31,7 +31,7 @@ release-image:
       done
     - |
       for t in $IMAGE_TAGS; do
-        docker push $CI_PROJECT_NAME:$t $REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME
+        docker push $REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$t
       done
   only:
     - main
