@@ -27,7 +27,7 @@ release-image:
     - docker build -t $CI_PROJECT_NAME .
     - |
       for t in $IMAGE_TAGS; do
-        docker tag $CI_PROJECT_NAME $CI_PROJECT_NAME:$t
+        docker tag $CI_PROJECT_NAME $REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$t
       done
     - |
       for t in $IMAGE_TAGS; do
