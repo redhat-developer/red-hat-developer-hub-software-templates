@@ -1,0 +1,37 @@
+image: docker:git
+services:
+  - name: docker:dind
+
+stages:
+  - build
+  - release
+
+variables:
+  DOCKER_HOST: tcp://docker:2376/
+  DOCKER_TLS_CERTDIR: '/certs'
+  IMAGE_TAGS: latest $CI_COMMIT_SHA
+
+build:
+  stage: build
+  script:
+    - docker build -t $CI_PROJECT_NAME .
+    - |
+      for t in $IMAGE_TAGS; do
+        docker tag $CI_PROJECT_NAME $REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$t
+      done
+
+release-image:
+  stage: release
+  script:
+    - docker login -u $REGISTRY_USERNAME -p $REGISTRY_PASSWORD $REGISTRY
+    - docker build -t $CI_PROJECT_NAME .
+    - |
+      for t in $IMAGE_TAGS; do
+        docker tag $CI_PROJECT_NAME $REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$t
+      done
+    - |
+      for t in $IMAGE_TAGS; do
+        docker push $REGISTRY/$REGISTRY_NAMESPACE/$CI_PROJECT_NAME:$t
+      done
+  only:
+    - main

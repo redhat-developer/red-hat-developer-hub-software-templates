@@ -2,12 +2,13 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: python-backend-template
-  title: Create a Python Backend application with a CI pipeline
-  description: Create a starter Python backend application with a CI pipeline
+  title: Create a Python application in GitLab with a CI pipeline
+  description: Create a starter Python backend application in GitLab with a CI pipeline
   tags:
     - recommended
     - python
     - flask
+    - gitlab
 spec:
   owner: janus-authors
   system: janus-idp
@@ -54,53 +55,7 @@ spec:
           type: number
           default: 5000
           description: Override the port exposed for the application
-    - title: Provide information about the CI method
-      required:
-        - ci
-      properties:
-        ci:
-          title: Select a CI method
-          type: string
-          description: This action will create a CI pipeline for your application based on chosen method
-          default: ../../scaffolder-skeletons/github-actions-skeleton/
-          enum:
-            - ../../scaffolder-skeletons/github-actions-skeleton/
-            - ../../scaffolder-skeletons/tekton-skeleton/
-          enumNames:
-            - GitHub Action
-            - Tekton
-      dependencies:
-        ci:
-          oneOf:
-            - properties:
-                # Show no extra properties when GitHub Actions is selected
-                ci:
-                  const: ../../scaffolder-skeletons/github-actions-skeleton/
-            - required:
-                - imageRepository
-                - namespace
-                - imageUrl
-              properties:
-                ci:
-                  const: ../../scaffolder-skeletons/tekton-skeleton/
-                imageRepository:
-                  title: Select a registry
-                  type: string
-                  default: quay.io
-                  enum:
-                    - quay.io
-                    - image-registry.openshift-image-registry.svc:5000
-                  enumNames:
-                    - Quay
-                    - Internal OpenShift Registry
-                imageUrl:
-                  title: Image URL
-                  type: string
-                  description: The Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
-                namespace:
-                  title: Namespace
-                  type: string
-                  description: The namespace for deploying resources
+
   steps:
     - id: sourceCodeTemplate
       name: Generating the Source Code Component
@@ -114,35 +69,8 @@ spec:
           system: ${{ parameters.system }}
           applicationType: api
           description: ${{ parameters.description }}
-          namespace: ${{ parameters.namespace }}
-          imageUrl: ${{ parameters.imageUrl }}
-          imageBuilder: s2i-python
-          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          ci: ${{ parameters.ci }}
-          sourceControl: github.com
-
-    - id: ciTemplate
-      name: Generating the CI Component
-      action: fetch:template
-      input:
-        url: ${{ parameters.ci }}
-        copyWithoutTemplating:
-          - .github/workflows/
-        values:
-          orgName: ${{ parameters.orgName }}
-          repoName: ${{ parameters.repoName }}
-          owner: ${{ parameters.owner }}
-          system: ${{ parameters.system }}
-          applicationType: api
-          description: ${{ parameters.description }}
-          namespace: ${{ parameters.namespace }}
-          imageUrl: ${{ parameters.imageUrl }}
-          imageBuilder: s2i-python
-          imageRepository: ${{ parameters.imageRepository }}
-          port: ${{ parameters.port }}
-          ci: ${{ parameters.ci }}
-          sourceControl: github.com
+          sourceControl: gitlab.com
 
     - id: catalogTemplate
       name: Generating the Catalog Info Component
@@ -156,21 +84,16 @@ spec:
           system: ${{ parameters.system }}
           applicationType: api
           description: ${{ parameters.description }}
-          namespace: ${{ parameters.namespace }}
-          imageUrl: ${{ parameters.imageUrl }}
-          imageBuilder: s2i-python
-          imageRepository: ${{ parameters.imageRepository }}
           port: ${{ parameters.port }}
-          ci: ${{ parameters.ci }}
-          sourceControl: github.com
+          sourceControl: gitlab.com
 
     - id: publish
       name: Publishing to the Source Code Repository
-      action: publish:github
+      action: publish:gitlab
       input:
-        allowedHosts: ['github.com']
+        allowedHosts: ['gitlab.com']
         description: ${{ parameters.description }}
-        repoUrl: github.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}
+        repoUrl: gitlab.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}
         defaultBranch: main
 
     - id: register
