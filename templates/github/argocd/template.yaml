@@ -1,0 +1,172 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: argocd-template
+  title: Add ArgoCD to an existing project
+  description: Add ArgoCD to an existing project
+  tags:
+    - recommended
+    - argocd
+spec:
+  owner: janus-authors
+  system: janus-idp
+  type: service
+
+  parameters:
+    - title: Provide information about the existing component
+      required:
+        - orgName
+        - repoName
+        - port
+        - componentName
+      properties:
+        orgName:
+          title: Organization Name
+          type: string
+        repoName:
+          title: Repository Name
+          type: string
+        componentName:
+          title: Component Name
+          type: string
+          description: Attach the manifests to an existing component
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Component
+        port:
+          title: Port
+          type: number
+          description: The port exposed for the application
+    - title: Provide information about the new component
+      required:
+        - owner
+        - system
+      properties:
+        owner:
+          title: Owner
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Group
+                - User
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - System
+    - title: Provide information about the ArgoCD deployment
+      required:
+        - imageRepository
+        - namespace
+        - imageUrl
+        - hostUrl
+      properties:
+        imageRepository:
+          title: Select a registry
+          type: string
+          default: quay.io
+          enum:
+            - quay.io
+            - image-registry.openshift-image-registry.svc:5000
+          enumNames:
+            - Quay
+            - Internal OpenShift Registry
+        imageUrl:
+          title: Image URL
+          type: string
+          description: Enter the Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
+        namespace:
+          title: Namespace
+          type: string
+          default: system:janus-idp
+          description: The namespace for deploying resources
+        hostUrl:
+          title: Host URL
+          type: string
+          description: The external facing host URL
+  steps:
+    - id: catalogTemplate
+      name: Generating the Catalog Info Component
+      action: fetch:template
+      input:
+        url: ../../../skeletons/catalog-info/
+        values:
+          # Gitops specific values
+          entityKind: Resource
+          dependsOn: ${{ parameters.componentName }}
+
+          # Normal values
+          orgName: ${{ parameters.orgName }}
+          repoName: ${{ parameters.repoName }}-gitops
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: gitops
+          description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
+          namespace: ${{ parameters.namespace }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageRepository: ${{ parameters.imageRepository }}
+          port: ${{ parameters.port }}
+          sourceControl: github.com
+
+    - id: manifestsTemplate
+      name: Generating the Manifests Component
+      action: fetch:template
+      input:
+        url: ../../../skeletons/manifests/
+        values:
+          orgName: ${{ parameters.orgName }}
+          repoName: ${{ parameters.repoName }}
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: gitops
+          description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
+          namespace: ${{ parameters.namespace }}
+          imageUrl: ${{ parameters.imageUrl }}
+          hostUrl: ${{ parameters.hostUrl }}
+          imageRepository: ${{ parameters.imageRepository }}
+          port: ${{ parameters.port }}
+          sourceControl: github.com
+
+    - id: publish
+      name: Publishing to the Source Code Repository
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: Contains the ArgoCD manifests for ${{ parameters.repoName }}
+        repoUrl: github.com?owner=${{ parameters.orgName }}&repo=${{ parameters.repoName }}-gitops
+        defaultBranch: main
+
+    - id: register
+      name: Registering the Catalog Info Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+    - id: createArgocdResources
+      name: Create the ArgoCD Resources
+      action: argocd:create-resources
+      input:
+        appName: ${{ parameters.repoName }}
+        # Hardcoded value because this is kept as a secret on the server to allow forks to easily change the value
+        argoInstance: argocd.operate-first.cloud
+        namespace: ${{ parameters.namespace }}
+        repoUrl: ${{ steps.publish.output.remoteUrl }}
+        labelValue: ${{ parameters.repoName }}
+        path: manifests/base
+
+  output:
+    links:
+      - title: Open the Source Code Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open the Catalog Info Component
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
