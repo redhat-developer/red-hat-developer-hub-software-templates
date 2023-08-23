@@ -12,6 +12,9 @@ kind: Component
 {%- endif %}
 metadata:
   name: ${{ name }}
+  {%- if values.title %}
+  title: ${{ values.title }}
+  {%- endif %}
   {%- if values.description %}
   description: ${{ values.description }}
   {%- endif %}
@@ -28,6 +31,9 @@ metadata:
     gitlab.com/project-slug: ${{ values.orgName }}/${{ values.repoName }}
     {%- elif values.sourceControl == "github.com" %}
     github.com/project-slug: ${{ values.orgName }}/${{ values.repoName }}
+    {%- endif %}
+    {%- elif values.sourceControl == "dev.azure.com" %}
+    dev.azure.com/project-repo: ${{ values.orgName }}/${{ values.repoName }}
     {%- endif %}
 spec:
   type: ${{ values.applicationType }}
