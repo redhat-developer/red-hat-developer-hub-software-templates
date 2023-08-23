@@ -15,15 +15,22 @@ spec:
   parameters:
     - title: Choose a location
       required:
-        - repoUrl
+        - orgName
+        - projectName
+        - repoName
       properties:
-        repoUrl:
-          title: Repository Location
+        orgName:
+          title: Organization
           type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - dev.azure.com
+          description: The Organization that this repo will belong to
+        projectName:
+          title: Project
+          type: string
+          description: The Project that this repo will belong to
+        repoName:
+          title: Repository
+          type: string
+          description: The name of the repository
 
     - title: Provide information about the new component
       required:
@@ -71,8 +78,9 @@ spec:
       input:
         url: ./skeleton
         values:
-          orgName: ${{ parameters.orgName }}
-          repoName: ''
+          # azure devops uses `my-project/my-repo`
+          orgName: ${{ parameters.projectName }}
+          repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           title: ${{ parameters.title }}
@@ -87,8 +95,9 @@ spec:
       input:
         url: ../../../skeletons/catalog-info/
         values:
-          orgName: ${{ parameters.repoUrl }}
-          repoName: ''
+          # azure devops uses `my-project/my-repo`
+          orgName: ${{ parameters.projectName }}
+          repoName: ${{ parameters.repoName }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           title: ${{ parameters.title }}
@@ -103,7 +112,7 @@ spec:
       input:
         allowedHosts: ['dev.azure.com']
         description: ${{ parameters.description }}
-        repoUrl: ${{ parameters.repoUrl }}
+        repoUrl: dev.azure.com?owner=${{ parameters.projectName }}&repo=${{ parameters.repoName }}&organization=${{ parameters.orgName }}
         defaultBranch: main
 
     - id: register
