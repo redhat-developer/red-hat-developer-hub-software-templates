@@ -1,0 +1,15 @@
+# EditorConfig enables consistent styles to be shared across different
+# editors and IDEs. For details, see: http://editorconfig.org/
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+max_line_length = 100
+
+[*.md]
+trim_trailing_whitespace = false

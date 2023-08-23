@@ -55,7 +55,11 @@ spec:
       name: Generating the Catalog Info Component
       action: fetch:template
       input:
+<<<<<<< HEAD
         url: ../../skeletons/catalog-info/
+=======
+        url: ../../../skeletons/catalog-info/
+>>>>>>> 092fa0bcfb9c527dda38bd618d9fdb75c7d1cec1
         values:
           # Gitops specific values
           entityKind: Resource

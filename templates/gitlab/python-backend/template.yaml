@@ -76,7 +76,7 @@ spec:
       name: Generating the Catalog Info Component
       action: fetch:template
       input:
-        url: ../../skeletons/catalog-info/
+        url: ../../../skeletons/catalog-info/
         values:
           orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}

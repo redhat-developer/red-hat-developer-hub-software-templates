@@ -22,7 +22,7 @@ metadata:
     {%- if values.hostUrl %}
     argocd/app-name: ${{ name }}
     {%- endif %}
-    {%- if values.ci == "../../skeletons/tekton/" %}
+    {%- if values.ci == "../../../skeletons/tekton/" %}
     tektonci/build-namespace: ${{ values.namespace }}
     {%- endif %}
     backstage.io/kubernetes-id: ${{ name }}

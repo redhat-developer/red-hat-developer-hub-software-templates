@@ -64,10 +64,17 @@ spec:
           title: Select a CI method
           type: string
           description: This action will create a CI pipeline for your application based on chosen method
+<<<<<<< HEAD
           default: ../../skeletons/github-actions/
           enum:
             - ../../skeletons/github-actions/
             - ../../skeletons/tekton/
+=======
+          default: ../../../skeletons/github-actions/
+          enum:
+            - ../../../skeletons/github-actions/
+            - ../../../skeletons/tekton/
+>>>>>>> 092fa0bcfb9c527dda38bd618d9fdb75c7d1cec1
           enumNames:
             - GitHub Action
             - Tekton
@@ -77,14 +84,22 @@ spec:
             - properties:
                 # Show no extra properties when GitHub Actions is selected
                 ci:
+<<<<<<< HEAD
                   const: ../../skeletons/github-actions/
+=======
+                  const: ../../../skeletons/github-actions/
+>>>>>>> 092fa0bcfb9c527dda38bd618d9fdb75c7d1cec1
             - required:
                 - imageRepository
                 - namespace
                 - imageUrl
               properties:
                 ci:
+<<<<<<< HEAD
                   const: ../../skeletons/tekton/
+=======
+                  const: ../../../skeletons/tekton/
+>>>>>>> 092fa0bcfb9c527dda38bd618d9fdb75c7d1cec1
                 imageRepository:
                   title: Select a registry
                   type: string
@@ -150,7 +165,11 @@ spec:
       name: Generating the Catalog Info Component
       action: fetch:template
       input:
+<<<<<<< HEAD
         url: ../../skeletons/catalog-info/
+=======
+        url: ../../../skeletons/catalog-info/
+>>>>>>> 092fa0bcfb9c527dda38bd618d9fdb75c7d1cec1
         values:
           orgName: ${{ parameters.orgName }}
           repoName: ${{ parameters.repoName }}
