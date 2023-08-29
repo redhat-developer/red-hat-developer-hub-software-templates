@@ -1,0 +1,62 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: tekton-template
+  title: Create a tekton sample
+  description: Create a tekton sample
+  tags:
+    - ci
+    - tekton
+spec:
+  owner: janus-authors
+  system: janus-idp
+  type: service
+
+  parameters:
+    - title: Provide information about the existing component
+      required:
+        - orgName
+        - repoName
+        - prBranch
+        - catalogInfoPath
+      properties:
+        orgName:
+          title: Organization
+          type: string
+        repoName:
+          title: Repository
+          type: string
+        prBranch:
+          title: Pull Request Branch
+          type: string
+          default: add-tekton
+        catalogInfoPath:
+          title: Catalog Info Path
+          type: string
+          default: /catalog-info.yaml
+
+  steps:
+    - id: fetchRepo
+      name: Fetch repo
+      action: fetch:plain
+      input:
+        url: 'https://github.com/${{ parameters.orgName }}/${{ parameters.repoName }}'
+
+    - id: merge
+      name: Merge JSON
+      action: roadiehq:utils:json:merge
+      input:
+        path: ${{ parameters.catalogInfoPath }}
+        content:
+          metadata:
+            annotations:
+              tektonci/build-namespace: test
+
+    - id: publishPR
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repoName }}&owner=${{ parameters.orgName }}
+        branchName: ${{ parameters.prBranch }}
+        title: Add Tekton
+        description: This PR was created by a Backstage scaffolder task
