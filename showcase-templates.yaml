@@ -16,3 +16,4 @@ spec:
     - https://github.com/janus-idp/software-templates/blob/main/templates/github/launch-ansible-job/template.yaml
     - https://github.com/janus-idp/software-templates/blob/main/templates/github/define-ansible-job/template.yaml
     - https://github.com/janus-idp/software-templates/blob/main/templates/github/register-component/template.yaml
+    - https://github.com/janus-idp/software-templates/blob/main/templates/github/techdocs/template.yaml
