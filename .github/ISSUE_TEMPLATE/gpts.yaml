@@ -7,7 +7,7 @@ description: "Submit a proposal for a new Golden Path Template"
 ## Issues in Epic
 
 title: "GPT: "
-labels: [template]
+labels: [template, status/triage]
 body:
   - type: markdown
     attributes:

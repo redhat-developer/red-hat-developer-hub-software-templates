@@ -1,0 +1,16 @@
+---
+apiVersion: tower.ansible.com/v1alpha1
+kind: JobTemplate
+metadata:
+  name: ${{ values.name }}-job-template
+  namespace: ${{ values.namespace }}
+spec:
+  tower_auth_secret: ${{ values.connection_secret }}
+  job_template_name: ${{ values.name }}
+  job_template_project: ${{ values.project }}
+  ask_variables_on_launch: ${{ values.ask_vars_on_launch }}
+  job_template_playbook: ${{ values.playbook }}
+  job_template_inventory: ${{ values.inventory }}
+  job_template_credentials: ${{ values.credential }}
+  job_template_extra_vars:
+    ${{ values.extra_vars }}
