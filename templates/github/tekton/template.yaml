@@ -33,18 +33,18 @@ spec:
         catalogInfoPath:
           title: Catalog Info Path
           type: string
-          default: /catalog-info.yaml
+          default: catalog-info.yaml
 
   steps:
     - id: fetchRepo
-      name: Fetch repo
+      name: Fetch Repo
       action: fetch:plain
       input:
         url: 'https://github.com/${{ parameters.orgName }}/${{ parameters.repoName }}'
 
     - id: merge
-      name: Merge JSON
-      action: roadiehq:utils:json:merge
+      name: Merge YAML
+      action: roadiehq:utils:merge
       input:
         path: ${{ parameters.catalogInfoPath }}
         content:
