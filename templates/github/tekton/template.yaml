@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: tekton-template
-  title: Create a tekton sample
-  description: Create a tekton sample
+  title: Create a tekton CI Pipeline
+  description: Create a tekton CI Pipeline
   tags:
     - ci
     - tekton
