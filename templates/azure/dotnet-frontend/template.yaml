@@ -2,7 +2,7 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: dotnet-frontend-template
-  title: Create a .NET Frontend application with a CI pipeline
+  title: Create a .NET Frontend application in Azure DevOps with a CI pipeline
   description: Create a starter .NET frontend application with a CI pipeline
   tags:
     - recommended
