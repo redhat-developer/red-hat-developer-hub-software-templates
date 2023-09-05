@@ -1,7 +1,7 @@
 ---
 name: Documentation
 about: Improve an existing feature or workflow
-labels: ['kind/documentation', 'status/triage']
+labels: ["kind/documentation", "status/triage"]
 ---
 
 ### What do you want to improve?
