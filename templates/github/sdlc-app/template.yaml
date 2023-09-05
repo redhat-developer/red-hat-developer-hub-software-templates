@@ -1,0 +1,101 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: sdlc-app-template
+  title: Application Template
+  description: An application is a set of components that will run together in the same SDLC environments
+  tags:
+    - application
+spec:
+  owner: service@example.com
+  type: system
+
+  parameters:
+    - title: Provide information on this application
+      required:
+        - application_id
+        - owner
+        - organization
+        - size
+        - environments
+        - description
+      properties:
+        application_id:
+          title: Name
+          type: string
+          description: Unique name of this application
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this application is for.
+        owner:
+          title: Owner
+          type: string
+          description: Owner of this applications
+          ui:field: OwnerPicker
+          ui:options:
+            allowedKinds:
+              - Group
+        organization:
+          title: Organization
+          type: string
+          description: Organization of this application
+          ui:field: OrganizationPicker
+          ui:options:
+            allowedKinds:
+              - Group
+        size:
+          title: Size
+          type: string
+          description: Desired size of the environments in which this application will run
+          enum: ['small', 'medium', 'large']
+        environments:
+          title: Environments
+          type: string
+          description: Environments needed by this application
+          enum: ['build,dev,qa,prod']
+
+  steps:
+    - id: template-namespaces
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        copyWithoutTemplating: []
+        values:
+          application_id: ${{ parameters.application_id }}
+          description: ${{ parameters.description }}
+          size: ${{ parameters.size }}
+          owner: ${{ parameters.owner }}
+          organization: ${{ parameters.organization }}
+          environments: ${{ parameters.environments }}
+
+    - id: pull-request
+      name: make a pr with the new namespaces
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=approved-namespaces&owner=${{ parameters.organization }}
+        branchName: ${{ parameters.application_id }}
+        title: namespaces for ${{ parameters.application_id }}
+        description: namespaces for ${{ parameters.application_id }}
+
+    - id: template-gitops
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./app-gitops
+        copyWithoutTemplating: []
+        values: {}
+        targetPath: ./app-gitops
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.application_id }}
+        repoUrl: github.com?repo=${{ parameters.application_id }}-gitops&owner=${{ parameters.organization }}
+        repoVisibility: public
+        sourcePath: ./app-gitops
+        deleteBranchOnMerge: true
+        access: ${{ parameters.application_id }}/${{ parameters.owner }}

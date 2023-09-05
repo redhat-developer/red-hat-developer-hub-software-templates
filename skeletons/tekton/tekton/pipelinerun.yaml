@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: ${{ values.repoName }}-pipeline-run-init
+  namespace: ${{ values.namespace }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+  labels:
+    tekton.dev/pipeline: ${{ values.repoName }}-pipeline
+    type: pipeline
+spec:
+  params:
+    - name: source-repo
+      value: 'https://${{ values.sourceControl }}/${{ values.orgName }}/${{ values.repoName }}.git'
+    - name: source-branch
+      value: main
+    - name: output-image
+      value: ${{ values.imageRepository }}/${{ values.imageUrl }}/${{ values.repoName }}
+  pipelineRef:
+    name: ${{ values.repoName }}-pipeline
+  serviceAccountName: pipeline
+  workspaces:
+    - name: source-folder
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
