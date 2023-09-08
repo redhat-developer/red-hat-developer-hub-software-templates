@@ -1,0 +1,11 @@
+site_name: ${{ values.repoName }}
+site_description: ${{ values.description }}
+repo_url: https://${{ values.sourceControl }}/${{ values.orgName }}/${{ values.repoName }}
+edit_uri: edit/main/docs
+
+plugins:
+  - techdocs-core
+
+# Note for content editors, edit only the section below
+nav:
+  - ${{ values.repoName }} Documentation: index.md
