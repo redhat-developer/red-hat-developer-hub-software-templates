@@ -1,0 +1,112 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: tekton-template
+  title: Create a tekton CI Pipeline
+  description: Create a tekton CI Pipeline
+  tags:
+    - ci
+    - tekton
+spec:
+  owner: janus-authors
+  system: janus-idp
+  type: service
+
+  parameters:
+    - title: Provide information about the existing component
+      required:
+        - orgName
+        - repoName
+        - prBranch
+        - catalogInfoPath
+      properties:
+        orgName:
+          title: Organization
+          type: string
+        repoName:
+          title: Repository
+          type: string
+        prBranch:
+          title: Pull Request Branch
+          type: string
+          default: add-tekton
+        catalogInfoPath:
+          title: Catalog Info Path
+          type: string
+          default: catalog-info.yaml
+
+    - title: Provide information about the CI method
+      required:
+        - imageBuilder
+        - imageRepository
+        - imageUrl
+        - namespace
+        - port
+      properties:
+        imageBuilder:
+          title: Image Builder
+          type: string
+          description: The Source-To-Image (S2I) builder to use
+        imageRepository:
+          title: Select a registry
+          type: string
+          default: quay.io
+          enum:
+            - quay.io
+            - image-registry.openshift-image-registry.svc:5000
+          enumNames:
+            - Quay
+            - Internal OpenShift Registry
+        imageUrl:
+          title: Image URL
+          type: string
+          description: The Quay.io or OpenShift Image URL <REGISTRY>/<IMAGE_URL>/<REPO_NAME>
+        namespace:
+          title: Namespace
+          type: string
+          description: The namespace for deploying resources
+        port:
+          title: Port
+          type: number
+          description: The port exposed for the application
+
+  steps:
+    - id: fetchRepo
+      name: Fetch Repo
+      action: fetch:plain
+      input:
+        url: 'https://github.com/${{ parameters.orgName }}/${{ parameters.repoName }}'
+
+    - id: merge
+      name: Merge YAML
+      action: roadiehq:utils:merge
+      input:
+        path: ${{ parameters.catalogInfoPath }}
+        content:
+          metadata:
+            annotations:
+              tektonci/build-namespace: ${{ parameters.namespace }}
+
+    - id: ciTemplate
+      name: Generating the CI Component
+      action: fetch:template
+      input:
+        url: ../../../skeletons/tekton/
+        values:
+          orgName: ${{ parameters.orgName }}
+          repoName: ${{ parameters.repoName }}
+          imageBuilder: ${{ parameters.imageBuilder }}
+          imageUrl: ${{ parameters.imageUrl }}
+          imageRepository: ${{ parameters.imageRepository }}
+          namespace: ${{ parameters.namespace }}
+          port: ${{ parameters.port }}
+          sourceControl: github.com
+
+    - id: publishPR
+      name: Publish PR
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repoName }}&owner=${{ parameters.orgName }}
+        branchName: ${{ parameters.prBranch }}
+        title: Add Tekton
+        description: This PR was created by a Backstage scaffolder task to add Tekton to the project.
