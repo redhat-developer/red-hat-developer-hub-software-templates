@@ -141,8 +141,9 @@ spec:
       name: Registering the Catalog Info Component
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        repoContentsUrl: https://github.com/${{ parameters.githubOrg }}/${{ parameters.repoName }}/blob/${{ steps.publish.output.targetBranchName }}
         catalogInfoPath: /catalog-info.yaml
+        optional: true
 
   output:
     links:
