@@ -1,4 +1,4 @@
-package ${{ values.groupId }}.${{ values.artifactId }};
+package ${{values.javaPackageName}};
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ public class GreetingResourceTest {
     @Test
     public void testHelloEndpoint() {
         given()
-          .when().get("/hello-resteasy")
+          .when().get("/hello")
           .then()
              .statusCode(200)
-             .body(is("Hello RESTEasy"));
+             .body(is("Hello from RESTEasy Reactive"));
     }
 
 }

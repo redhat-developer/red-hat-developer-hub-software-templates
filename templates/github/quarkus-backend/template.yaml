@@ -58,6 +58,7 @@ spec:
       required:
         - groupId
         - artifactId
+        - version
         - javaPackageName
       properties:
         groupId:
@@ -70,11 +71,16 @@ spec:
           type: string
           default: quarkusapp
           description: Maven Artifact ID
+        version: 
+          title: Version
+          type: string
+          default: 1.0.0-SNAPSHOT
+          description: Maven Artifact Version
         javaPackageName:
           title: Java Package Namespace
           type: string
-          default: io/janus/quarkusapp
-          description: Name for the Java Package (ensure to use the / character as this is used for folder structure) should match Group ID and Artifact ID
+          default: io.janus.quarkusapp
+          description: Name for the Java Package (e.g. io.janus.quarkusapp) should match Group ID and Artifact ID
     - title: Provide information about the CI method
       required:
         - ci
@@ -143,7 +149,8 @@ spec:
           ci: ${{ parameters.ci }}
           groupId: ${{ parameters.groupId }}
           artifactId: ${{ parameters.artifactId }}
-          javaPackageName: ${{ parameters.javaPackageName }}
+          version: ${{ parameters.version }}
+          javaPackageName: ${{ parameters.javaPackageName}}
           sourceControl: github.com
 
     - id: ciTemplate
@@ -168,7 +175,7 @@ spec:
           ci: ${{ parameters.ci }}
           groupId: ${{ parameters.groupId }}
           artifactId: ${{ parameters.artifactId }}
-          javaPackageName: ${{ parameters.javaPackageName }}
+          javaPackageName: ${{ parameters.javaPackageName}}
           sourceControl: github.com
 
     - id: catalogTemplate
@@ -191,7 +198,7 @@ spec:
           ci: ${{ parameters.ci }}
           groupId: ${{ parameters.groupId }}
           artifactId: ${{ parameters.artifactId }}
-          javaPackageName: ${{ parameters.javaPackageName }}
+          javaPackageName: ${{ parameters.javaPackageName}}
           sourceControl: github.com
 
     - id: publish
