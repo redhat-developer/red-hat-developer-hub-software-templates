@@ -1,18 +1,18 @@
-name: Golden Path Template (GPT)
-description: "Submit a proposal for a new Golden Path Template"
+name: New Software Template Proposal
+description: "Submit a proposal for a new Software Template"
 ## Goal
 ## What problem does this solve?
 ## Use cases
 ## Acceptance criteria
 ## Issues in Epic
 
-title: "GPT: "
+title: "Software Template: "
 labels: [status/triage]
 body:
   - type: markdown
     attributes:
       value: |
-        We value your time and efforts to submit this Golden Path Templates request form. 🙏
+        We value your time and efforts to submit this Software Template request form. 🙏
   - type: textarea
     id: description
     validations:
