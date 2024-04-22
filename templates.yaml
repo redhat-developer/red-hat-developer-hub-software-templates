@@ -18,3 +18,5 @@ spec:
     - templates/github/register-component/template.yaml
     - templates/github/tekton/template.yaml
     - templates/github/techdocs/template.yaml
+    - templates/ansible/collection/template.yaml
+    - templates/ansible/playbook/template.yaml

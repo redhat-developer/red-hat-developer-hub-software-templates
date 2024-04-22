@@ -1,0 +1,111 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: playbook-template
+  title: Create a Ansible Playbook Project
+  description: Create a starter Ansible Playbook project preconfigured for tests and pipelines. Includes Development settings and configuration for building an execution environment
+  tags:
+    - recommended
+    - ansible
+    - playbook
+spec:
+  owner: ansible-authors
+  system: ansible
+  type: service
+  parameters:
+    - title: Provide information about the new component
+      required:
+        - repoUrl
+        - system
+        - owner
+        - collectionGroup
+        - collectionName
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+        description:
+          title: Description
+          type: string
+          description: Describe this Collection and its purpose to help other users know what to use it for
+        collectionGroup:
+          title: Collection group name
+          description: The 'collectionOrg' part of 'collectionOrg.collectionName'
+          type: string
+        collectionName:
+          title: Collection name
+          description: The 'collectionName' part of 'collectionOrg.collectionName'
+          type: string
+        owner:
+          title: Owner
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Group
+                - User
+        system:
+          title: System
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - System
+  steps:
+    - id: ansible
+      name: Generating the Ansible Source Code Component
+      action: ansible:content:create
+      input:
+        repoUrl: '${{ parameters.repoUrl }}'
+        description: '${{ parameters.description }}'
+        collectionGroup: '${{ parameters.collectionGroup }}'
+        collectionName: '${{ parameters.collectionName }}'
+        applicationType: playbook-project
+        sourceControl: github.com
+
+    - id: catalogTemplate
+      name: Generating the Catalog Info Component
+      action: fetch:template
+      input:
+        url: ../skeletons/catalog-info/
+        values:
+          repoUrl: '${{ parameters.repoUrl }}'
+          owner: ${{ parameters.owner }}
+          system: ${{ parameters.system }}
+          applicationType: playbook-project
+          description: ${{ parameters.description }}
+          collectionGroup: ${{ parameters.collectionGroup }}
+          collectionName: ${{ parameters.collectionName }}
+          sourceControl: github.com
+          devSpacesBaseUrl: ${{ steps.ansible.output.devSpacesBaseUrl }}
+
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts:
+          - github.com
+        description: ${{ parameters.description }}
+        repoUrl: ${{ parameters.repoUrl }}
+        repoVisibility: 'public'
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
