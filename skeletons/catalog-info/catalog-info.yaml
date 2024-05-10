@@ -1,9 +1,11 @@
+---
 {%- if values.componentName %}
   {%- set name = values.componentName %}
+{%- elif values.applicationType == "playbook-project" or values.applicationType == "collection-project" %}
+  {%- set name = values.collectionGroup ~ "." ~ values.collectionName %}
 {%- else %}
   {%- set name = values.repoName %}
 {% endif -%}
-
 apiVersion: backstage.io/v1alpha1
 {%- if values.entityKind %}
 kind: ${{ values.entityKind }}
@@ -17,6 +19,15 @@ metadata:
   {%- endif %}
   {%- if values.description %}
   description: ${{ values.description }}
+  {%- endif %}
+  {%- if values.applicationType == "playbook-project" %}
+  tags:
+    - ansible
+    - playbook
+  {%- elif values.applicationType == "collection-project" %}
+  tags:
+    - ansible
+    - collection
   {%- endif %}
   annotations:
     {%- if values.hostUrl %}
@@ -34,6 +45,17 @@ metadata:
     {%- elif values.sourceControl == "dev.azure.com" %}
     dev.azure.com/project-repo: ${{ values.orgName }}/${{ values.repoName }}
     {%- endif %}
+  {%- if values.devSpacesBaseUrl %}
+  links:
+    - url: ${{ values.devSpacesBaseUrl }}
+      title:
+        {%- if values.applicationType == "playbook-project" or values.applicationType == "collection-project" %}
+        Open in Ansible development workspaces
+        {%- else %}
+        Open in DevSpaces Workspaces
+        {%- endif %}
+      icon: web
+  {%- endif %}
 spec:
   type: ${{ values.applicationType }}
   {%- if values.system %}
