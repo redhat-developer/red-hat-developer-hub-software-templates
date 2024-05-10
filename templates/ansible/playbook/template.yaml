@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: playbook-template
-  title: Create a Ansible Playbook Project
-  description: Create a starter Ansible Playbook project preconfigured for tests and pipelines. Includes Development settings and configuration for building an execution environment
+  title: Create Ansible Playbook Project
+  description: Create a new starter Ansible playbook Git project preconfigured with best practices. The project also scaffolds a collection to help get you started.
   tags:
     - recommended
     - ansible
@@ -15,34 +15,36 @@ spec:
   parameters:
     - title: Provide information about the new component
       required:
-        - repoUrl
-        - system
+        - repoOwner
+        - repoName
         - owner
         - collectionGroup
         - collectionName
       properties:
-        repoUrl:
-          title: Repository Location
+        repoOwner:
+          title: Source code repository organization name or username
           type: string
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
+          description: The organization name or username of your source code repository. For example, “my-github-username”.
+        repoName:
+          title: Playbook repository name
+          description: The name of the new playbook project repository. For example, “my-new-playbook-repo”.
+          type: string
         description:
-          title: Description
+          title: Playbook description
           type: string
-          description: Describe this Collection and its purpose to help other users know what to use it for
+          description: Describe the playbook and its purpose to help other users understand what to use it for.
         collectionGroup:
-          title: Collection group name
-          description: The 'collectionOrg' part of 'collectionOrg.collectionName'
+          title: Playbook project's collection namespace
+          description: The collection namespace in your new playbook repository. For example, “my-new-collection-namespace”.
           type: string
         collectionName:
-          title: Collection name
-          description: The 'collectionName' part of 'collectionOrg.collectionName'
+          title: Playbook project's collection name
+          description: The collection name in your new playbook repository. For example, “my-new-collection-name”.
           type: string
         owner:
-          title: Owner
+          title: Catalog Owner name
           type: string
+          description: The Red Hat Developer Hub catalog item owner. This will appear on the “My items” tab. For example, “my-devhub-username”.
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
@@ -52,6 +54,7 @@ spec:
         system:
           title: System
           type: string
+          description: The Red Hat Developer Hub system catalog item name. This will appear on the “My items” tab. For example, “my-devhub-system”.
           ui:field: EntityPicker
           ui:options:
             catalogFilter:
@@ -62,7 +65,8 @@ spec:
       name: Generating the Ansible Source Code Component
       action: ansible:content:create
       input:
-        repoUrl: '${{ parameters.repoUrl }}'
+        repoOwner: '${{ parameters.repoOwner }}'
+        repoName: '${{ parameters.repoName }}'
         description: '${{ parameters.description }}'
         collectionGroup: '${{ parameters.collectionGroup }}'
         collectionName: '${{ parameters.collectionName }}'
@@ -73,9 +77,9 @@ spec:
       name: Generating the Catalog Info Component
       action: fetch:template
       input:
-        url: ../skeletons/catalog-info/
+        url: ../../../skeletons/catalog-info/
         values:
-          repoUrl: '${{ parameters.repoUrl }}'
+          repoUrl: ${{ steps.ansible.output.repoUrl }}
           owner: ${{ parameters.owner }}
           system: ${{ parameters.system }}
           applicationType: playbook-project
@@ -92,7 +96,7 @@ spec:
         allowedHosts:
           - github.com
         description: ${{ parameters.description }}
-        repoUrl: ${{ parameters.repoUrl }}
+        repoUrl: ${{ steps.ansible.output.repoUrl }}
         repoVisibility: 'public'
         defaultBranch: main
 
@@ -107,6 +111,7 @@ spec:
     links:
       - title: Repository
         url: ${{ steps.publish.output.remoteUrl }}
+
       - title: Open in catalog
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
