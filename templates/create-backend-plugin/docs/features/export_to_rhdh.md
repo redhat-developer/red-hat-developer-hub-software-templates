@@ -14,16 +14,15 @@ The dynamic plugins require the dev dependency `@janus-idp/cli` on the correspon
 
 ## Installation
 
-After running this command a new folder will be created in root dir: `dist-dynamic`. This folder should be copied to RHDH dynamic plugins root directory and renamed to `${plugin}-dynamic` or it is possible to publish its content to a NPM registry. The plugin can be mapped on `app-config.yaml` using the dynamic section, for example:
+After running this command a new folder will be created in root dir: `dist-dynamic`. This folder should be copied to RHDH dynamic plugins root directory and renamed to `${plugin-id-as-in-package.json}-dynamic`. The plugin can be mapped on `app-config.yaml` using the dynamic section, for example:
 
 ```yaml
 global:
   dynamic:
     plugins:
-      - package: path to your plugin, or @npmPackage@version
+      - package: /path/to/plugin/root/dir
         disabled: false
-        # this is required if not using a package in filesystem
-        integrity: sha512-...
 ```
+Please bear in mind that this way of installing plugins is a TechPreview and it may change in later RHDH releases. 
 
-For more informatino check [Dynamic Plugins](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/dynamic-plugins.md) documentation.
+For more information check [Dynamic Plugins](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/dynamic-plugins.md) documentation.
