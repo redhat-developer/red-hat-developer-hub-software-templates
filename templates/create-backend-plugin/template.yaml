@@ -1,0 +1,108 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-backend-plugin
+  title: Create Backend Plugin Template
+  description: Template for creating a backend plugin skeleton
+  tags:
+    - backend-plugin
+    - backstage-plugin
+spec:
+  owner: janus-authors
+  system: janus-idp
+  type: plugin
+  parameters:
+    - title: Provide some information
+      required:
+        - plugin_id
+      properties:
+        plugin_id:
+          title: Plugin ID
+          type: string
+          pattern: "^[a-z0-9-]*[a-z0-9]$"
+          description: Plugin unique ID.
+          ui:help: Plugin IDs must be lowercase and contain only letters, digits, and dashes.
+          ui:autofocus: true
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+        is_existing_repo:
+          title: Is this an existing repository?
+          type: boolean
+          description: Check the checkbox if repository already exists
+          default: false
+      dependencies:
+        is_existing_repo:
+          allOf:
+            - if:
+                properties:
+                  is_existing_repo:
+                    const: true
+              then:
+                properties:
+                  branchName:
+                    title: Branch Name
+                    type: string
+                    description: The name for the branch
+                    default: ""
+                  targetBranchName:
+                    title: Target Branch Name
+                    type: string
+                    description: The target branch name of the merge request
+                    default: ""
+                # You can use additional fields of parameters within conditional parameters such as required.
+                required:
+                  - branchName
+                  - targetBranchName
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action
+    - id: template
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          plugin_id: ${{ parameters.plugin_id }}
+          repoUrl: ${{ parameters.repoUrl | parseRepoUrl }}
+
+    # This step publishes the contents of the working directory to GitHub if it is a new repository.
+    - id: publish
+      name: Publish the backend plugin skeleton in a new repository
+      if: ${{ parameters.is_existing_repo === false }}
+      action: publish:github
+      input:
+        allowedHosts: ["github.com"]
+        description: This is the ${{ parameters.plugin_id }} backend plugin.
+        repoUrl: ${{ parameters.repoUrl }}
+        sourcePath: plugins/${{parameters.plugin_id}}
+
+    # This step creates a pull request with the contents of the working directory.
+    - id: publishGithub
+      name: Create pull request with the backend plugin skeleton
+      if: ${{ parameters.is_existing_repo  === true }}
+      action: publish:github:pull-request
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        branchName: ${{ parameters.branchName }}
+        targetBranchName: ${{ parameters.targetBranchName }}
+        title: Create backend plugin ${{ parameters.plugin_id }}
+        description: This pull request creates the skeleton for your backend plugin
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: View Plugin
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: View Pull Request
+        url: ${{ steps.publishGithub.output.remoteUrl }}
