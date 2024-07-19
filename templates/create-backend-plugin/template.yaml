@@ -4,6 +4,8 @@ metadata:
   name: create-backend-plugin
   title: Create Backend Plugin Template
   description: Template for creating a backend plugin skeleton
+  annotations:
+    backstage.io/techdocs-ref: dir:.
   tags:
     - backend-plugin
     - backstage-plugin
