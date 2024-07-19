@@ -18,4 +18,5 @@ spec:
     - templates/github/register-component/template.yaml
     - templates/github/tekton/template.yaml
     - templates/github/techdocs/template.yaml
+    - templates/create-backend-plugin/template.yaml
     - templates/create-frontend-plugin/template.yaml
