@@ -1,0 +1,116 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: create-frontend-plugin
+  title: Create Frontend Plugin Template
+  description: Template for the scaffolder that creates a frontend plugin skeleton
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - frontend-plugin
+    - backstage-plugin
+spec:
+  owner: janus-authors
+  system: janus-idp
+  type: plugin
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Provide some information
+      required:
+        - plugin_id
+      properties:
+        plugin_id:
+          title: Plugin ID
+          type: string
+          pattern: "^[a-z0-9-]*[a-z0-9]$"
+          description: Unique ID of the plugin.
+          ui:help: Plugin IDs must be lowercase and contain only letters, digits, and dashes.
+          ui:autofocus: true
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+        pluginLocation:
+          type: string
+          title: Where to publish this new plugin?
+          ui:widget: radio
+          default: Create a new repository within the specified organization
+          enum:
+            - Submit a pull request to the same repository
+            - Create a new repository within the specified organization
+      dependencies:
+        pluginLocation:
+          allOf:
+            - if:
+                properties:
+                  pluginLocation:
+                    const: Submit a pull request to the same repository
+              then:
+                properties:
+                  branchName:
+                    title: Branch Name
+                    type: string
+                    description: The name for the branch
+                    default: ""
+                  targetBranchName:
+                    title: Target Branch Name
+                    type: string
+                    description: The target branch name of the merge request
+                    default: ""
+                # You can use additional fields of parameters within conditional parameters such as required.
+                required:
+                  - branchName
+                  - targetBranchName
+
+    # These steps are executed in the scaffolder backend, using data that we gathered
+    # via the parameters above.
+  steps:
+    # Each step executes an action
+    - id: template
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          plugin_id: ${{ parameters.plugin_id }}
+          repoUrl: ${{ parameters.repoUrl | parseRepoUrl }}
+
+    # This step publishes the contents of the working directory to GitHub if it is a new repository.
+    - id: publish
+      name: Publish the frontend plugin skeleton in a new repository
+      if: ${{ parameters.pluginLocation === 'Create a new repository within the specified organization' }}
+      action: publish:github
+      input:
+        allowedHosts: ["github.com"]
+        description: This is ${{ parameters.plugin_id }} frontend plugin.
+        repoUrl: ${{ parameters.repoUrl }}
+        sourcePath: plugins/${{parameters.plugin_id}}
+
+    # This step creates a pull request with the contents of the working directory.
+    - id: publishGithub
+      name: Create pull request with the frontend plugin skeleton
+      if: ${{ parameters.pluginLocation  === 'Submit a pull request to the same repository' }}
+      action: publish:github:pull-request
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        branchName: ${{ parameters.branchName }}
+        targetBranchName: ${{ parameters.targetBranchName }}
+        title: Create frontend plugin ${{ parameters.plugin_id }}
+        description: This pull request creates the skeleton for your frontend plugin
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: View Plugin
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: View Pull Request
+        url: ${{ steps.publishGithub.output.remoteUrl }}
