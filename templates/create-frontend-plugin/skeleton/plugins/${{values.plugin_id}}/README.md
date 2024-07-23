@@ -2,7 +2,8 @@
 
 Welcome to the ${{values.plugin_id}} plugin!
 
-_This plugin was created through the Software Template_
+_This plugin was created through the Software Template. Please ensure you run it within your Backstage directory._
+
 
 ## Getting started
 
@@ -48,11 +49,7 @@ It is only meant for local development, and the setup for it can be found inside
     <SidebarPage>
       <Sidebar>
         ...
-        <SidebarItem
-          icon={PluginIcon as IconComponent}
-          to="${{values.plugin_id}}"
-          text="${{values.plugin_id}}"
-        />
+        <PluginIcon />
         ...
       <Sidebar>
     </SidebarPage>
