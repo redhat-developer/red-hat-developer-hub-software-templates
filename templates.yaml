@@ -6,17 +6,17 @@ metadata:
 spec:
   type: url
   targets:
-    - templates/github/go-backend/template.yaml
-    - templates/github/nodejs-backend/template.yaml
-    - templates/gitlab/python-backend/template.yaml
-    - templates/azure/dotnet-frontend/template.yaml
-    - templates/github/spring-boot-backend/template.yaml
-    - templates/github/quarkus-backend/template.yaml
-    - templates/github/argocd/template.yaml
-    - templates/github/launch-ansible-job/template.yaml
-    - templates/github/define-ansible-job/template.yaml
-    - templates/github/register-component/template.yaml
-    - templates/github/tekton/template.yaml
-    - templates/github/techdocs/template.yaml
-    - templates/create-backend-plugin/template.yaml
-    - templates/create-frontend-plugin/template.yaml
+    - ./templates/github/go-backend/template.yaml
+    - ./templates/github/nodejs-backend/template.yaml
+    - ./templates/gitlab/python-backend/template.yaml
+    - ./templates/azure/dotnet-frontend/template.yaml
+    - ./templates/github/spring-boot-backend/template.yaml
+    - ./templates/github/quarkus-backend/template.yaml
+    - ./templates/github/argocd/template.yaml
+    - ./templates/github/launch-ansible-job/template.yaml
+    - ./templates/github/define-ansible-job/template.yaml
+    - ./templates/github/register-component/template.yaml
+    - ./templates/github/tekton/template.yaml
+    - ./templates/github/techdocs/template.yaml
+    - ./templates/create-backend-plugin/template.yaml
+    - ./templates/create-frontend-plugin/template.yaml
