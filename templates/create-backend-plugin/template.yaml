@@ -87,7 +87,7 @@ spec:
         allowedHosts: ["github.com"]
         description: This is the ${{ parameters.plugin_id }} backend plugin.
         repoUrl: ${{ parameters.repoUrl }}
-        sourcePath: plugins/${{parameters.plugin_id}}
+        sourcePath: plugins/${{parameters.plugin_id}}-backend
 
     # This step creates a pull request with the contents of the working directory.
     - id: publishGithub
