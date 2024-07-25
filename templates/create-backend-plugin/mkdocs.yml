@@ -1,11 +1,10 @@
-site_name: "software-template"
+site_name: "Create Backend Plugin Template"
 site_description: "User documentation for creating a back-end plugin"
 
 nav:
   - Introduction: index.md
-  - Develop your Backend Plugin with the following features:
-    - Guide to Understand And Extend Your Plugin: features/extend.md
-    - Guide to Handle Authentication and Authorization: features/auth_rbac.md
-    - Guide to Export Your Plugin to Red Hat Developer Hub: features/export_to_rhdh.md
+  - Understand And Extend Your Plugin: features/extend.md
+  - Handle Authentication and Authorization: features/auth_rbac.md
+  - Export Your Plugin to Red Hat Developer Hub: features/export_to_rhdh.md
 plugins:
   - techdocs-core

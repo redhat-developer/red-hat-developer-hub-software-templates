@@ -6,11 +6,9 @@ This plugin is ready to be exported to run on Red Hat Developer Hub (RHDH) 1.2 u
 
 The dynamic plugins require the dev dependency `@janus-idp/cli` on the corresponding version for your target RHDH. This dependency will brings the command `janus-cli`, so a new script can be added to `package.json` to export dynamic plugins:
 
-
 ```json
 "export-dynamic": "janus-cli package export-dynamic-plugin --clean"
 ```
-
 
 ## Installation
 
@@ -23,6 +21,7 @@ global:
       - package: /path/to/plugin/root/dir
         disabled: false
 ```
+
 Please bear in mind that this way of installing plugins is a TechPreview and it may change in later RHDH releases. 
 
 For more information check [Dynamic Plugins](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/dynamic-plugins.md) documentation.

@@ -1,3 +1,5 @@
+# Guide to Integrating Theme in your UI Components
+
 You can customzie your application's response to light and dark modes using themes. Additionally, you can make use of theme to change the color palatte, typography size, font, and more.
 
 Backstage upstream ships with a “unified theme interface” that acts as a thin layer over Material theming, adding additional Backstage specific components and concerns to the underlying Material theming framework. This interface supports two versions of Material theming: v4 and v5.

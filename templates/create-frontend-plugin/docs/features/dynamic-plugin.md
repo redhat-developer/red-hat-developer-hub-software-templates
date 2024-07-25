@@ -1,3 +1,5 @@
+# Guide to Dynamic Plugin Enablement
+
 To be able to run your frontend plugin as a dynamic plugin on Red Hat Developer Hub, follow the steps below:
 
 - To build the plugin and the dynamic entrypoint:
