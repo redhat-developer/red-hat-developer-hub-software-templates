@@ -1,8 +1,6 @@
 # Guide to Handle Authentication and Authorization
 
-
 This plugin exports two routes: `/health` and `/message`. The route `/health` is configured to have no authentication, and `/message` requires the user to be logged in. By default a route will require authentication, the client will have to add authentication tokens to access it, otherwise the route will respond with `401 Unauthorized`, meaning that the route requires an author (authentication), but was not able to identify it.
-
 
 ## Authorization
 
@@ -11,7 +9,7 @@ There are other cases where Authorization is required. It means that even being 
 Backstage provides a permission framework that can be used to add roles checking to a route. In order to use it you must first create a `permissions.ts` file that will export the required permissions to your route. Here's an example of a permission `read` for `ocm.cluster.read`
 
 ```ts
-import {createPermission } from '@backstage/plugin-permission-common';
+import { createPermission } from '@backstage/plugin-permission-common';
 
 export const ocmClusterReadPermission = createPermission({
   name: 'ocm.cluster.read',
@@ -24,6 +22,7 @@ export const ocmClusterPermissions = [ocmClusterReadPermission];
 ```
 
 Then make sure that the permission is exported from `index.ts`:
+
 ```ts
 export * from './permissions';
 ```
@@ -76,6 +75,7 @@ export const ocmPlugin = createBackendPlugin({
   },
 });
 ```
+
 In our `buildRouter` we must integrate permissions with the router using the constant `permissionsIntegrationRouter` with the permissions from our `permissions.ts` file:
 
 ```ts
@@ -99,21 +99,22 @@ const buildRouter = (
 ```
 
 After the permission integration router has been set, we will need to handle authorization within our Backend plugin. For this we create a method `authorize`, call it and and handle `DENY` results:
+
 ```ts
 const authorize = async (request: Request, permission: BasicPermission) => {
-    const decision = (
-        await permissions.authorize([{ permission: permission }], {
-        credentials: await httpAuth.credentials(request),
-        })
-    )[0];
-    return decision;
+  const decision = (
+    await permissions.authorize([{ permission: permission }], {
+      credentials: await httpAuth.credentials(request),
+    })
+  )[0];
+  return decision;
 }
 
 router.get('/myRoute', async (request, response) => {
-    const decision = await authorize(request, ocmEntityReadPermission);
-    if (decision.result === AuthorizeResult.DENY) {
-        throw new NotAllowedError('Unauthorized');
-    }
-    // Continue here if user is allowed...
+  const decision = await authorize(request, ocmEntityReadPermission);
+  if (decision.result === AuthorizeResult.DENY) {
+    throw new NotAllowedError('Unauthorized');
+  }
+  // Continue here if user is allowed...
 }
 ```

@@ -14,14 +14,14 @@ When calling `registerInit` in `plugin.ts` it is possible to access other [servi
 
 ```ts
 env.registerInit({
-    deps: {
-        // services to be injected
-    },
-    async init({ 
-        // services are passed as parameters to init
-     }) {
-        // use the services here
-    };      
+  deps: {
+    // services to be injected
+  },
+  async init({
+    // services are passed as parameters to init
+  }) {
+    // use the services here
+  };      
 });
 ```
 
@@ -47,7 +47,5 @@ export const myCustomPluginIdModuleId = createBackendModule({
   },
 });
 ```
+
 So if you are looking to create actions, catalog processors or other extensions that are for a existing plugin, check if a module is not the suitable way of doing that.
-
-
-  
