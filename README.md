@@ -27,7 +27,7 @@ To get started with any template, follow these steps:
 - Browse the template list below and select a template that suits your needs.
 - Fork that template and create your own branch.
 - Customize the template to fit your specific requirements.
-- Import the template in Developer Hub and start using it. For detailed instructions on how to import templates in Developer Hub, refer to the [Getting Started with Developer Hub](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/GettingStarted.md).
+- Import the template in Developer Hub and start using it. For detailed instructions on how to import templates in Developer Hub, refer to the [Getting Started with Developer Hub](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/GettingStarted.md).
 
 ## Template List
 
