@@ -1,8 +1,8 @@
-# Red Hat Developer Hub Software Templates 
+# Red Hat Developer Hub Software Templates Library
 
-## Welcome to Templates
+## Welcome to Software Templates Library
 
-Welcome to the Red Hat Developer Hub Software Templates Repository. This repository contains a collection of software templates designed to illustrate best practices in software development and deployment. Our templates cover a wide range of technologies and frameworks, ensuring you have a suitable starting point for your project's needs.
+Welcome to the Red Hat Developer Hub Software Templates Library. This repository contains a collection of software templates designed to illustrate best practices in software development and deployment. Our templates cover a wide range of technologies and frameworks, ensuring you have a suitable starting point for your project's needs.
 
 ## Overview
 
