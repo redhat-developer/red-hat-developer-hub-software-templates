@@ -62,8 +62,11 @@ Below is a table of templates along with their related tags and links to their r
 [Spring Boot - Trusted Application Pipeline](https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/templates/devfile-sample-java-springboot-dance) | Java, sscs, sbom, acs, Spring Boot, Maven, Rest
 [Node.js Express - Trusted Application Pipeline](https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/templates/devfile-sample-nodejs-dance) | sscs, sbom, acs, ubi8, NodeJs, Express
 [Python - Trusted Application Pipeline](https://github.com/redhat-appstudio/tssc-sample-templates/tree/main/templates/devfile-sample-python-dance) | Python, sscs, sbom, acs, pip
-[Chatbot Application](https://github.com/redhat-ai-dev/ai-lab-template/tree/main/templates/chatbot) | AI, Python, VLLM, LLAMACPP
-[Audio to Text Application](https://github.com/redhat-ai-dev/ai-lab-template/tree/main/templates/audio-to-text) | ASR, Python, AI, Whispercpp
+[Audio to Text Application](https://github.com/redhat-ai-dev/ai-lab-template/tree/release-v0.9.x/templates/audio-to-text) | ASR, Python, AI, Whispercpp
+[Chatbot Application](https://github.com/redhat-ai-dev/ai-lab-template/tree/release-v0.9.x/templates/chatbot) | AI, Python, VLLM, LLAMACPP
+[Codegen Application](https://github.com/redhat-ai-dev/ai-lab-template/tree/release-v0.9.x/templates/codegen) | AI, Python, VLLM, LLAMACPP
+[Object Detection Application](https://github.com/redhat-ai-dev/ai-lab-template/tree/release-v0.9.x/templates/object-detection) | AI, Python, DETR
+[RAG Chatbot Application](https://github.com/redhat-ai-dev/ai-lab-template/tree/release-v0.9.x/templates/rag) | AI, Python, VLLM, LLAMACPP, RAG, Database
 [Create frontend app for the workshop](https://github.com/rh-mad-workshop/coolstore-software-templates/tree/main/scaffolder-templates/frontend) | npm, Frontend, Workshop
 [Create Java gateway app for the workshop](https://github.com/rh-mad-workshop/coolstore-software-templates/tree/main/scaffolder-templates/gateway) | vertx, Java, Maven, Workshop
 [Create Quarkus backend app for the workshop](https://github.com/rh-mad-workshop/coolstore-software-templates/tree/main/scaffolder-templates/quarkus-backend) | Java, Quarkus, Maven, Workshop
