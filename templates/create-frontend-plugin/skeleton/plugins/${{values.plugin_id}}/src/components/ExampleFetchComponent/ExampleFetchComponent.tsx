@@ -6,7 +6,7 @@ import {
   Progress,
   ResponseErrorPanel,
 } from "@backstage/core-components";
-import { discoveryApiRef, useApi } from "@backstage/core-plugin-api";
+import { discoveryApiRef, fetchApiRef, useApi } from "@backstage/core-plugin-api";
 import { Avatar, Chip } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import { getChipStyle } from "../../utils/getChipStyle";
@@ -55,9 +55,11 @@ export const DenseTable = ({ users }: any) => {
 export const ExampleFetchComponent = () => {
   const discoveryApi = useApi(discoveryApiRef);
   const proxyURL = discoveryApi.getBaseUrl("proxy");
+  const fetchApi = useApi(fetchApiRef);
 
   const { value, loading, error } = useAsync(async (): Promise<User[]> => {
-    const res = await fetch(`${await proxyURL}/github/users`);
+    const res = await fetchApi.fetch(`${await proxyURL}/github/users`);
+    if (!res.ok) throw new Error(res.statusText || "Error occured");
     const users = await res.json();
     return users;
   }, []);

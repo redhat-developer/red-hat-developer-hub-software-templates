@@ -2,7 +2,7 @@
 
 Welcome to the ${{values.plugin_id}} plugin!
 
-_This plugin was created through the Software Template. Please ensure you run it within your Backstage directory._
+_This plugin was created through the Software Template. Please ensure you run it within your Backstage plugin's workspace._
 
 
 ## Getting started
@@ -20,13 +20,13 @@ This method of serving the plugin provides quicker iteration speed and a faster 
 It is only meant for local development, and the setup for it can be found inside the [/dev](./dev) directory.
 
 
-### To access it from the Root of your backstage directory:
+### To access the plugin from your Backstage plugin's workspace:
 
 
 1. Add the package in the `packages/app/package.json`
 
   ```
-  "@janus-idp/backstage-plugin-${{values.plugin_id}}": "^0.1.0",
+  "@red-hat-developer-hub/backstage-plugin-${{values.plugin_id}}": "^0.1.0",
   ```
 
 
@@ -34,7 +34,7 @@ It is only meant for local development, and the setup for it can be found inside
 
   ```tsx title="packages/app/src/App.tsx"
    /* highlight-add-next-line */
-   import { PluginPage } from '@janus-idp/backstage-plugin-${{values.plugin_id}}';
+   import { PluginPage } from '@red-hat-developer-hub/backstage-plugin-${{values.plugin_id}}';
 
    <Route path="/${{values.plugin_id}}" element={<PluginPage />} />
    ```
@@ -43,7 +43,7 @@ It is only meant for local development, and the setup for it can be found inside
 
   ```tsx title="packages/app/src/components/Root/Root.tsx"
    /* highlight-add-next-line */
-   import { PluginIcon } from '@janus-idp/backstage-plugin-${{values.plugin_id}}';
+   import { PluginIcon } from '@red-hat-developer-hub/backstage-plugin-${{values.plugin_id}}';
 
    export const Root = ({ children }: PropsWithChildren<{}>) => (
     <SidebarPage>
@@ -67,4 +67,4 @@ It is only meant for local development, and the setup for it can be found inside
           Authorization: 'token ${GITHUB_TOKEN}' 
   ```
 
-5. Start your application from the root directory, and then navigate to [/${{values.plugin_id}}](http://localhost:3000/${{values.plugin_id}}).
+5. Start your application from `workspaces/<Plugin>`, and then navigate to [/${{values.plugin_id}}](http://localhost:3000/${{values.plugin_id}}).

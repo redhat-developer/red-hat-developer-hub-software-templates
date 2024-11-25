@@ -10,8 +10,8 @@ metadata:
     - frontend-plugin
     - backstage-plugin
 spec:
-  owner: janus-authors
-  system: janus-idp
+  owner: red-hat-developer-hub-authors
+  system: red-hat-developer-hub
   type: plugin
 
   # These parameters are used to generate the input form in the frontend, and are
