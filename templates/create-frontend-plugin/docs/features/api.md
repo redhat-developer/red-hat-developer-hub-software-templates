@@ -88,5 +88,5 @@ You may customize the components as needed to fit your requirements.
 
 ## References
 
-- [RBAC frontend plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/rbac)
-- [Orchestrator frontend plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/orchestrator)
+- [RBAC frontend plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/rbac/plugins/rbac)
+- [Orchestrator frontend plugin](https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/orchestrator/plugins/orchestrator)

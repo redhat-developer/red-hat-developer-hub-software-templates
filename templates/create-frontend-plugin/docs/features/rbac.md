@@ -102,9 +102,9 @@ export const ClusterInfoCard = () => {
 
 Additional documentation:
 
-- [OCM frontend plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/ocm)
-- [RBAC frontend plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/rbac)
-- [Topology frontend plugin](https://github.com/janus-idp/backstage-plugins/tree/main/plugins/topology)
+- [OCM frontend plugin](https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/orchestrator/plugins/orchestrator)
+- [RBAC frontend plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/rbac/plugins/rbac)
+- [Topology frontend plugin](https://github.com/backstage/community-plugins/tree/main/workspaces/topology/plugins/topology)
 - [Youtube video on permissions framework](https://www.youtube.com/watch?v=BDoQhegtw6E)
 - [Permission Concepts](https://backstage.io/docs/permissions/concepts)
 
