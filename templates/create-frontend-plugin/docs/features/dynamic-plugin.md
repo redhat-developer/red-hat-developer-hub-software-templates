@@ -22,14 +22,14 @@ To be able to run your frontend plugin as a dynamic plugin on Red Hat Developer 
   mv package $(echo $archive | sed -e 's:\.tgz$::')
   ```
 
-- Move the resulting directory (janus-idp-backstage-plugin-<pluginName>-<version>) into the `dynamic-plugins-root` folder of your backstage-showcase clone, then run yarn start to start the app.
+- Move the resulting directory (red-hat-developer-hub.backstage-plugin-<pluginName>-<version>) into the `dynamic-plugins-root` folder of your backstage-showcase clone, then run yarn start to start the app.
 
 - This configuration will then enable the plugin to be visible in the UI:
 
   ```yaml
   dynamicPlugins:
     frontend:
-      janus-idp.backstage-plugin-<pluginName>:
+      red-hat-developer-hub.backstage-plugin-<pluginName>:
       appIcons:
         - name: PluginIcon
           importName: PluginIcon

@@ -1,5 +1,4 @@
-// TODO: We should use the MiddlewareFactory from @backstage/backend-defaults/rootHttpRouter, but it is not available in RHDH 1.2.x
-import { MiddlewareFactory } from '@backstage/backend-app-api';
+import { MiddlewareFactory } from '@backstage/backend-defaults/rootHttpRouter';
 import { createLegacyAuthAdapters } from '@backstage/backend-common';
 import {
   DiscoveryService,
