@@ -9,7 +9,7 @@ metadata:
     backstage.io/techdocs-ref: dir:.
     github.com/project-slug: ${{ values.orgName }}/${{ values.repoName }}
 spec:
-  type: website
+  type: service
   {%- if values.lifecycle %}
   lifecycle: ${{ values.lifecycle }}
   {%- else %}

@@ -128,7 +128,7 @@ spec:
     # This step registers the component if the contents are being published to a new repository
     - id: register
       name: Registering the Catalog Info Component
-      if: ${{ parameters.is_existing_repo === false }}
+      if: ${{ parameters.pluginLocation === 'Create a new repository within the specified organization' }}
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
@@ -142,6 +142,6 @@ spec:
       - title: View Pull Request
         url: ${{ steps.publishGithub.output.remoteUrl }}
       - title: Open the Catalog Info Component
-        if: ${{ parameters.is_existing_repo === false }}
+        if: ${{ parameters.pluginLocation === 'Create a new repository within the specified organization' }}
         icon: catalog
         entityRef: ${{ steps.register.output.entityRef }}
