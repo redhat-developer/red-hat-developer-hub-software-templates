@@ -17,14 +17,28 @@ spec:
     - title: Provide some information
       required:
         - plugin_id
+        - owner
       properties:
         plugin_id:
           title: Plugin ID
           type: string
-          pattern: "^[a-z0-9-]*[a-z0-9]$"
+          pattern: '^[a-z0-9-]*[a-z0-9]$'
           description: Plugin unique ID.
           ui:help: Plugin IDs must be lowercase and contain only letters, digits, and dashes.
           ui:autofocus: true
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this component is for
+        owner:
+          title: Owner
+          type: string
+          ui:field: EntityPicker
+          ui:options:
+            catalogFilter:
+              kind:
+                - Group
+                - User
     - title: Choose a location
       required:
         - repoUrl
@@ -36,30 +50,33 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
-        is_existing_repo:
-          title: Is this an existing repository?
-          type: boolean
-          description: Check the checkbox if repository already exists
-          default: false
+        pluginLocation:
+          type: string
+          title: Where to publish this new plugin?
+          ui:widget: radio
+          default: Create a new repository within the specified organization
+          enum:
+            - Submit a pull request to the same repository
+            - Create a new repository within the specified organization
       dependencies:
-        is_existing_repo:
+        pluginLocation:
           allOf:
             - if:
                 properties:
-                  is_existing_repo:
-                    const: true
+                  pluginLocation:
+                    const: Submit a pull request to the same repository
               then:
                 properties:
                   branchName:
                     title: Branch Name
                     type: string
                     description: The name for the branch
-                    default: ""
+                    default: ''
                   targetBranchName:
                     title: Target Branch Name
                     type: string
                     description: The target branch name of the merge request
-                    default: ""
+                    default: ''
                 # You can use additional fields of parameters within conditional parameters such as required.
                 required:
                   - branchName
@@ -77,14 +94,18 @@ spec:
         values:
           plugin_id: ${{ parameters.plugin_id }}
           repoUrl: ${{ parameters.repoUrl | parseRepoUrl }}
+          description: ${{ parameters.description }}
+          owner: ${{ parameters.owner }}
+          repoName: ${{ (parameters.repoUrl | parseRepoUrl).repo }}
+          orgName: ${{ (parameters.repoUrl | parseRepoUrl).owner }}
 
     # This step publishes the contents of the working directory to GitHub if it is a new repository.
     - id: publish
       name: Publish the backend plugin skeleton in a new repository
-      if: ${{ parameters.is_existing_repo === false }}
+      if: ${{ parameters.pluginLocation === 'Create a new repository within the specified organization' }}
       action: publish:github
       input:
-        allowedHosts: ["github.com"]
+        allowedHosts: ['github.com']
         description: This is the ${{ parameters.plugin_id }} backend plugin.
         repoUrl: ${{ parameters.repoUrl }}
         sourcePath: plugins/${{parameters.plugin_id}}-backend
@@ -92,7 +113,7 @@ spec:
     # This step creates a pull request with the contents of the working directory.
     - id: publishGithub
       name: Create pull request with the backend plugin skeleton
-      if: ${{ parameters.is_existing_repo  === true }}
+      if: ${{ parameters.pluginLocation  === 'Submit a pull request to the same repository' }}
       action: publish:github:pull-request
       input:
         repoUrl: ${{ parameters.repoUrl }}
@@ -101,6 +122,15 @@ spec:
         title: Create backend plugin ${{ parameters.plugin_id }}
         description: This pull request creates the skeleton for your backend plugin
 
+    # This step registers the component if the contents are being published to a new repository
+    - id: register
+      name: Registering the Catalog Info Component
+      if: ${{ parameters.pluginLocation === 'Create a new repository within the specified organization' }}
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
   # Outputs are displayed to the user after a successful execution of the template.
   output:
     links:
@@ -108,3 +138,7 @@ spec:
         url: ${{ steps.publish.output.remoteUrl }}
       - title: View Pull Request
         url: ${{ steps.publishGithub.output.remoteUrl }}
+      - title: Open the Catalog Info Component
+        if: ${{ parameters.pluginLocation === 'Create a new repository within the specified organization' }}
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}
