@@ -1,6 +1,6 @@
 # Guide to Export Your Plugin to Red Hat Developer Hub
 
-This plugin is ready to be exported to run on Red Hat Developer Hub (RHDH) 1.2 using the [Dynamic Plugins](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/dynamic-plugins.md) mechanism.
+This plugin is ready to be exported to run on Red Hat Developer Hub (RHDH) 1.2 using the [Dynamic Plugins](https://github.com/redhat-developer/rhdh/blob/main/docs/dynamic-plugins/index.md) mechanism.
 
 ## Exporting Dynamic Plugins
 
@@ -24,4 +24,4 @@ global:
 
 Please bear in mind that this way of installing plugins is a TechPreview and it may change in later RHDH releases. 
 
-For more information check [Dynamic Plugins](https://github.com/janus-idp/backstage-showcase/blob/main/showcase-docs/dynamic-plugins.md) documentation.
+For more information check [Dynamic Plugins](https://github.com/redhat-developer/rhdh/blob/main/docs/dynamic-plugins/index.md) documentation.
