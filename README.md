@@ -107,6 +107,7 @@ Below is a table of templates along with their related tags and links to their r
 [Create a Spring Boot Backend application with a CI pipeline](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/tree/main/templates/github/spring-boot-backend) | Spring Boot, Java, Maven
 [Create a Techdocs sample](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/tree/main/templates/github/techdocs) | Techdocs, Documentation, Janus Idp
 [Create a tekton CI Pipeline](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/tree/main/templates/github/tekton) | Tekton, CI Pipeline, Janus Idp, Backend
+[Create a Jenkins CI Pipeline](https://github.com/maximilianoPizarro/software-template-jenkins-rhdh/tree/main/scaffolder-templates/dotnet-frontend-template) | Jenkins, CI Pipeline, ArgoCD, Helm
 [Create a Python backend application in GitLab with a CI pipeline](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/tree/main/templates/gitlab/python-backend) | Python, GitLab, CI Pipeline, Backend, Flask
 [Create a .NET Frontend application with a CI pipeline](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/tree/main/templates/azure/dotnet-frontend) | .Net, Frontend
 [Add ArgoCD to an existing project](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/templates/github/argocd/template.yaml) | ArgoCD
