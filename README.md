@@ -119,6 +119,6 @@ Below is a table of templates along with their related tags and links to their r
 [Staged Deployment Patch Template](https://github.com/developer-hub-books/rhdh-book1-templates/tree/main/custom-deployment-patch) | Quarkus, Patch, Book, Deployment 
 [Create a NestJS Service with backing PostgreSQL Database](https://github.com/developer-hub-books/rhdh-book1-templates/tree/main/nestjs-with-postgres) | NodeJs, NestJS, Postgresql, Book, Database
 [Create Quarkus Service with hosted Angular Frontend](https://github.com/developer-hub-books/rhdh-book1-templates/tree/main/quarkus-with-angular) |	Java, Quarkus, Quinoa, Angular, Book
-
+[Create AI-Powered Application Templates](https://github.com/RHEcosystemAppEng/RHDH-templates/tree/main/scaffolder-templates) | RAG, Chatbot, OpenShift AI, Virtual Agent
 ## How to Contribute
 You can contribute to the template library by creating a pull request for enhancements/bug-fix. If you have suggestions for additional template or improvements, open up an issue.
