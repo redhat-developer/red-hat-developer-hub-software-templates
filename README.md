@@ -1,24 +1,29 @@
 # Red Hat Developer Hub Software Templates Library
 
-## Welcome to Software Templates Library
+## Welcome to Software Template Library
 
-Welcome to the Red Hat Developer Hub Software Templates Library. This repository contains a collection of software templates designed to illustrate best practices in software development and deployment. Our templates cover a wide range of technologies and frameworks, ensuring you have a suitable starting point for your project's needs.
+Welcome to the Red Hat Developer Hub Software Templates Library. This repository contains a collection of software templates that platform engineers and developers can use as a learning resource for their own template development. These templates cover a wide range of technologies and frameworks, offering multiple potential starting point for your template project's needs.
+
+> [!CAUTION]
+>
+> - **These templates are learning aids, they are NOT intended for production use**.
+> - Templates should ONLY contain code that **you trust*. Never use someone else's template without validating, testing, and customizing for your needs!
+> - These templates are NOT supported or maintained by Red Hat
+> - Use of these templates is entirely at your own risk.
 
 ## Overview
 
-### Software / Golden Templates
+### What Are Software / Golden Templates
 
-Software / Golden Templates are pre-configured, best practice templates that are considered the standard for certain types of applications or environments. They are maintained with the latest recommendations and practices. Using Software Templates can help ensure that your projects adhere to industry standards and organizational policies.
+Software / Golden Templates are pre-configured software project templates that are encapsulate *your* best practices and standards. As a developer, software templates allow you to start new projects quickly and in a way that respects your organization's software development policies and best practices. As a platform engineer is it your responsibility to create, test, and maintain your organization's templates to ensure they remain inline with your organization's best practices and security policies. As an organization, using Software Templates ensures that the software projects you create will adhere to your industry standards and organizational policies.
 
-Our software templates are crafted to provide you with a solid foundation for your projects. Each template is a blueprint that includes predefined configurations, dependencies, and deployment procedures. These templates are intended to help you quickly set up and deploy applications with industry best practices.
+Each template is a code blueprint that includes predefined configurations, dependencies, libraries, and deployment procedures. Templates are intended to help you quickly set up and deploy applications whaile maintaining alignment with your preferred industry best practices and standards.
 
 ## Disclaimer
 
-**The software templates provided in this repository are examples meant to serve as a starting point. Users are strongly encouraged to customize and modify these templates to fit their specific project requirements and organizational standards.**
+**The software templates provided in this repository are examples meant to use as a learning aid. Users MUST customize and modify these templates to fit their specific project requirements and organizational standards.**
 
-The software templates provided here are examples meant to serve as a starting point.
-
-By using these templates, you agree to do so at your own risk and discretion. Red Hat shall not be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of these templates, even if advised of the possibility of such damage.
+Many of these templates are NOT maintained or updated by Red Hat, and no promise is made to do so. If using these templates, you agree to do so at your own risk and discretion and undetake any maintenance or modification required. Red Hat shall not be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of these templates, even if advised of the possibility of such damage.
 
 ## How to Use Software Templates
 
@@ -27,7 +32,7 @@ To get started with any template, follow these steps:
 - Browse the template list below and select a template that suits your needs.
 - Fork that template and create your own branch.
 - Customize the template to fit your specific requirements.
-- Import the template in Developer Hub and start using it. For detailed instructions on how to import templates in Developer Hub, refer to the [Getting Started with Developer Hub](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/GettingStarted.md).
+- Import the template into a safe Developer Hub environment (e.g. Dev. or Staging) and test it thoroughly. For detailed instructions on how to import templates in Developer Hub, refer to the [Getting Started with Developer Hub](https://github.com/redhat-developer/red-hat-developer-hub-software-templates/blob/main/GettingStarted.md).
 
 ## Template List
 
