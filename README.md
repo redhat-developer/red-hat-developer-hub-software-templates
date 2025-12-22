@@ -7,7 +7,7 @@ Welcome to the Red Hat Developer Hub Software Templates Library. This repository
 > [!CAUTION]
 >
 > - **These templates are learning aids, they are NOT intended for production use**.
-> - Templates should ONLY contain code that **you trust*. Never use someone else's template without validating, testing, and customizing for your needs!
+> - Templates should ONLY contain code that **you trust**. Never use someone else's template without validating, testing, and customizing for your needs!
 > - These templates are NOT supported or maintained by Red Hat
 > - Use of these templates is entirely at your own risk.
 
