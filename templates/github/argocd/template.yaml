@@ -85,7 +85,6 @@ spec:
         namespace:
           title: Namespace
           type: string
-          default: system:janus-idp
           description: The namespace for deploying resources
         hostUrl:
           title: Host URL
