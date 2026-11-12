@@ -7,8 +7,8 @@ metadata:
   tags:
     - obc
 spec:
-  owner: janus-authors
-  system: janus-idp
+  owner: rhdh-authors
+  system: rhdh-examples
   type: service
 
   parameters:

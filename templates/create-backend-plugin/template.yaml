@@ -10,8 +10,8 @@ metadata:
     - backend-plugin
     - backstage-plugin
 spec:
-  owner: janus-authors
-  system: janus-idp
+  owner: rhdh-authors
+  system: rhdh-examples
   type: plugin
   parameters:
     - title: Provide some information
